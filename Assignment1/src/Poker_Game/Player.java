@@ -16,19 +16,29 @@ public class Player {
     private int balance;
     private Card[] holeCards = new Card[2];
     private boolean isInGame;
+    private Hand hand;
 
-    public Player(String name, int balance, Card[] holeCards) {
-        this.name = name;
-        this.balance = balance;
-        this.holeCards = holeCards;
-        this.isInGame = true;
+    public void setHand(Hand hand) {
+        this.hand = hand;
     }
 
+    public Player(String name, int balance) {
+        this.name = name;
+        this.balance = balance;
+        this.isInGame = true;
+        this.holeCards = null;
+    }
+
+    
     
     public String getName() {
         return name;
     }
 
+    public void setName(String name)
+    {
+        this.name = name;
+    }
     
     public int getBalance() {
         return balance;
@@ -50,6 +60,20 @@ public class Player {
     public void setHoleCards(Card[] holeCards) {
         this.holeCards = holeCards;
     }
+    
+    public void addCardToHand(Card card)
+    {
+        if(this.holeCards == null)
+        {
+            this.holeCards[0] = card;
+            this.hand.addCard(card);
+        }
+        else if(this.holeCards[0] != null && this.holeCards[1] == null)
+        {
+            this.holeCards[1] = card;
+            this.hand.addCard(card);
+        }
+    }
 
    
     public boolean getIsInGame() {
@@ -60,6 +84,7 @@ public class Player {
         this.isInGame = isInGame;
     }
     
+    @Override
     public String toString() {
         
         return ("Player " +this.name+ " has a balance of "+this.balance+ ".\nHole cards " +Arrays.toString(this.holeCards)+ ".\nIs in the Game: "+this.isInGame);
@@ -70,7 +95,8 @@ public class Player {
     public static void main(String[] args) {
         
         Card[] holeCards = {new Card(1, "Hearts"), new Card(2, "Spades")};
-        Player p1 = new Player("Simon", 100, holeCards);
+        Player p1 = new Player("Simon", 100);
+        p1.setHoleCards(holeCards);
         System.out.println(p1.getName());
         System.out.println(p1.getBalance());
         p1.addToBalance(2);
@@ -83,6 +109,10 @@ public class Player {
         p1.setHoleCards(holeCards2);
         System.out.println(Arrays.toString(p1.getHoleCards()));
         
+    }
+
+    public Hand getHand() {
+        return hand;
     }
     
     
