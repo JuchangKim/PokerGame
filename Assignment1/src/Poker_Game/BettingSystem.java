@@ -9,5 +9,17 @@ package Poker_Game;
  * @author user
  */
 public class BettingSystem {
-    
+    private int pot;
+
+    public void addToPot(int amount) {
+        pot += amount;
+    }
+
+    public int getPot() {
+        return pot;
+    }
+
+    public void clearPot() {
+        pot = 0;
+    }
 }
