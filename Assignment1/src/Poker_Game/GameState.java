@@ -8,6 +8,23 @@ package Poker_Game;
  *
  * @author user
  */
-public class GameState {
-    
+import java.io.Serializable;
+import java.util.List;
+
+public class GameState implements Serializable {
+    private List<Player> players;
+    private int currentPlayerIndex;
+
+    public GameState(List<Player> players, int currentPlayerIndex) {
+        this.players = players;
+        this.currentPlayerIndex = currentPlayerIndex;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
+    }
 }
