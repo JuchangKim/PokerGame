@@ -16,8 +16,8 @@ public class Deck {
 
     public Deck() {
 
-        reset();
-        shuffleDeck();
+        this.reset();
+        this.shuffleDeck();
 
     }
 
@@ -58,7 +58,7 @@ public class Deck {
         this.deck = tempDeck;
     }
 
-    public Card getNextCard() {
+    public Card getCard() {
 
         return this.deck.remove(this.deck.size() - 1);
 
@@ -68,17 +68,5 @@ public class Deck {
         return this.deck.size();
     }
 
-    public static void main(String[] args) {
-
-        Deck sd = new Deck();
-
-        System.out.println(sd.deck.toString());
-        System.out.println(sd.getNextCard());
-        System.out.println(sd.getNextCard());
-        System.out.println(sd.getNextCard());
-        System.out.println(sd.getNextCard());
-        System.out.println(sd.getRemainingCount());
-
-    }
-
+    
 }
