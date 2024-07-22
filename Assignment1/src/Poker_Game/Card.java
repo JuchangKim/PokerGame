@@ -61,20 +61,11 @@ public class Card {
         }
     }
     
+    @Override
     public String toString() {
         
         return (convertValueToName() + " of "+ this.suit);
         
     }
-    
-    
-    public static void main(String[] args) {
-        // TODO code application logic here
-        
-        Card card = new Card(2, "Hearts");
-        
-        System.out.println(card.toString());
-    }
-
     
 }
