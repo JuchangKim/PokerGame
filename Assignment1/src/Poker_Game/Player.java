@@ -4,29 +4,34 @@
  */
 package Poker_Game;
 
-import java.util.Arrays;
+
 
 /**
  *
  * @author user
  */
+
+import java.util.Arrays;
+
 public class Player {
     
     private String name;
-    private int balance;
+    private int chips;
     private Card[] holeCards = new Card[2];
     private boolean isInGame;
     private Hand hand;
+    
+    //ask 
 
     public void setHand(Hand hand) {
         this.hand = hand;
     }
 
-    public Player(String name, int balance) {
+    public Player(String name, int chips) {
         this.name = name;
-        this.balance = balance;
+        this.chips = chips;
         this.isInGame = true;
-        this.holeCards = null;
+        this.holeCards = new Card[2];
     }
 
     
@@ -40,16 +45,16 @@ public class Player {
         this.name = name;
     }
     
-    public int getBalance() {
-        return balance;
+    public int getChips() {
+        return chips;
     }
     
-    public void addToBalance(int additionAmount) {
-        this.balance += additionAmount;
+    public void addToChips(int additionAmount) {
+        this.chips += additionAmount;
     }
     
-    public void reduceFromBalance(int reduceAmount) {
-        this.balance -= reduceAmount;
+    public void reduceFromChips(int reduceAmount) {
+        this.chips -= reduceAmount;
     }
 
     
@@ -61,19 +66,19 @@ public class Player {
         this.holeCards = holeCards;
     }
     
-    public void addCardToHand(Card card)
-    {
-        if(this.holeCards == null)
-        {
-            this.holeCards[0] = card;
-            this.hand.addCard(card);
-        }
-        else if(this.holeCards[0] != null && this.holeCards[1] == null)
-        {
-            this.holeCards[1] = card;
-            this.hand.addCard(card);
-        }
+    public void addCardToHand(Card card) {
+    if (this.holeCards[0] == null) {
+        this.holeCards[0] = card;
+    } else if (this.holeCards[1] == null) {
+        this.holeCards[1] = card;
+    } else {
+        throw new IllegalStateException("Both hole cards are already set");
     }
+    if (this.hand != null) {
+        this.hand.addCard(card);
+    }
+}
+
 
    
     public boolean getIsInGame() {
@@ -87,7 +92,7 @@ public class Player {
     @Override
     public String toString() {
         
-        return ("Player " +this.name+ " has a balance of "+this.balance+ ".\nHole cards " +Arrays.toString(this.holeCards)+ ".\nIs in the Game: "+this.isInGame);
+        return ("Player " +this.name+ " has a chips of "+this.chips+ ".\nHole cards " +Arrays.toString(this.holeCards)+ ".\nIs in the Game: "+this.isInGame);
         
     }
     
@@ -98,11 +103,11 @@ public class Player {
         Player p1 = new Player("Simon", 100);
         p1.setHoleCards(holeCards);
         System.out.println(p1.getName());
-        System.out.println(p1.getBalance());
-        p1.addToBalance(2);
-        System.out.println(p1.getBalance());
-        p1.reduceFromBalance(1);
-        System.out.println(p1.getBalance());
+        System.out.println(p1.getChips());
+        p1.addToChips(2);
+        System.out.println(p1.getChips());
+        p1.reduceFromChips(1);
+        System.out.println(p1.getChips());
         System.out.println(Arrays.toString(p1.getHoleCards()));
         System.out.println(p1.toString());
         Card[] holeCards2 = {new Card(12, "Clubs"), new Card(7, "Diamonds")};

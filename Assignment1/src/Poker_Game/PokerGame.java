@@ -19,7 +19,7 @@ public class PokerGame {
 
     public PokerGame() {
         players = new ArrayList<>();
-        deck = new Deck();
+        deck = new+ Deck();
         bettingSystem = new BettingSystem();
         communityCards = new ArrayList<>();
     }
