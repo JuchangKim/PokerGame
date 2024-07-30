@@ -19,43 +19,35 @@ public class ComputerPlayer extends Player {
     }
     
     //method for making random decisions for betting
-    public String makeDecision() {
+    @Override
+    public void makeDecision() {
         int decision = random.nextInt(4); // Randomly choose an action 
         switch (decision) {
             case 0:
-                return "Bet";
+                int betAmount = random.nextInt(getChips() / 2) + 1; 
+                bet(betAmount);
+                System.out.println(getName() + " bets "+betAmount+ " chips");
+                break;
             case 1:
-                return "Raise";
+                int raiseAmount = random.nextInt(getChips() / 2) + 1;
+                raise(raiseAmount);
+                System.out.println(getName() + " raises by "+raiseAmount+ " chips");
+                break;
             case 2:
-                return "Fold";
+                fold();
+                setIsInGame(false);
+                System.out.println(getName() + " folds.");
+                break;
             case 3:
-                return "Check";
+                check();
+                System.out.println(getName() + " checks.");
+                break;
             default:
-                return "Check";
+                check();
+                System.out.println(getName() + " checks.");
+                break;
             
         }
     }
-    
-    public void bet() {
-        int betAmount = random.nextInt(getChips() / 2) + 1;   // Randomly bet between 1 and half of the available chips
-        reduceFromChips(betAmount);
-        System.out.println(getName() + " bets "+betAmount+ " chips");
-    }
-    
-    public void raise() {
-        int raiseAmount = random.nextInt(getChips() / 2) + 1; // Randomly raise between 1 and half of the available chips
-        reduceFromChips(raiseAmount);
-        System.out.println(getName() + " raises by "+raiseAmount+ " chips");
-    }
-    
-    public void fold() {
-        setIsInGame(false);
-        System.out.println(getName() + " folds.");
-    }
-    
-    public void check() {
-        System.out.println(getName() + " checks.");
-    }
-    
-        
+            
 }
