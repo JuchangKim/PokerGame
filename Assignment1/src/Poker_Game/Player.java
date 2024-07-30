@@ -12,6 +12,7 @@ package Poker_Game;
  */
 
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Player {
     
@@ -21,12 +22,6 @@ public class Player {
     private boolean isInGame;
     private Hand hand;
     
-    //ask 
-
-    public void setHand(Hand hand) {
-        this.hand = hand;
-    }
-
     public Player(String name, int chips) {
         this.name = name;
         this.chips = chips;
@@ -34,7 +29,13 @@ public class Player {
         this.holeCards = new Card[2];
     }
 
+    public Hand getHand() {
+        return hand;
+    }
     
+    public void setHand(Hand hand) {
+        this.hand = hand;
+    }
     
     public String getName() {
         return name;
@@ -96,6 +97,65 @@ public class Player {
         
     }
     
+    public void bet(int amount) {
+        if(amount > 0 && amount <= chips) {
+            reduceFromChips(amount);
+            System.out.println(name + " bets" +amount+ " chips.");
+        }
+        else {
+            System.out.println(name+" cannot bet that amount due to insufficient chips");
+        }
+    }
+    
+    public void raise(int amount) {
+        if(amount > 0 && amount <= chips) {
+            reduceFromChips(amount);
+            System.out.println(name + " raises by" +amount+ " chips.");
+        }
+        else {
+            System.out.println(name+" cannot raise that amount due to insufficient chips");
+        }
+    }
+    
+    public void fold() {
+        setIsInGame(false);
+        System.out.println(name+" folds.");
+    }
+    
+    public void check() {
+        System.out.println(name+" checks.");
+    }
+    
+    public void makeDecision() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(", it's your turn. You have " + chips + " chips.");
+        System.out.println("Choose an action: \n1: Bet\n2: Raise\n3: Fold\n4:Check");
+        
+        int choice = scanner.nextInt();
+        switch (choice) {
+            case 1:
+                System.out.println("Enter the amount to bet: ");
+                int betAmount = scanner.nextInt();
+                bet(betAmount);
+                break;
+            case 2:
+                System.out.println("Enter the amount to raise: ");
+                int raiseAmount = scanner.nextInt();
+                raise(raiseAmount);
+                break;
+            case 3:
+                fold();
+                break;
+            case 4:
+                check();
+                break;
+            default:
+                System.out.println("Invalid choice. Please choose again.");
+                makeDecision(); // Recurse until a valid choice is made
+                break;
+        }
+    }
+    
     
     public static void main(String[] args) {
         
@@ -116,9 +176,6 @@ public class Player {
         
     }
 
-    public Hand getHand() {
-        return hand;
-    }
     
     
 }
