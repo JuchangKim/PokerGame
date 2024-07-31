@@ -79,7 +79,7 @@ public class PokerGame {
         System.out.println("Community Cards: " + communityCards);
 
         for (Player player : players) {
-            if (player.isInGame()) {
+            if (player.getIsInGame()) {
                 playerTurn(player);
             }
         }
@@ -101,7 +101,7 @@ public class PokerGame {
         int choice = Integer.parseInt(scanner.nextLine());
         switch (choice) {
             case 1: // Call
-                player.reduceFromBalance(currentBet);
+                player.reduceFromChips(currentBet);
                 pot += currentBet;
                 break;
             case 2: // Fold
@@ -109,7 +109,7 @@ public class PokerGame {
                 break;
             case 3: // Raise
                 int raiseAmount = currentBet * 2;
-                player.reduceFromBalance(raiseAmount);
+                player.reduceFromChips(raiseAmount);
                 pot += raiseAmount;
                 currentBet = raiseAmount;
                 break;
@@ -124,7 +124,7 @@ public class PokerGame {
         int choice = (int) (Math.random() * 3) + 1;
         switch (choice) {
             case 1: // Call
-                player.reduceFromBalance(currentBet);
+                player.reduceFromChips(currentBet);
                 pot += currentBet;
                 break;
             case 2: // Fold
@@ -132,7 +132,7 @@ public class PokerGame {
                 break;
             case 3: // Raise
                 int raiseAmount = currentBet * 2;
-                player.reduceFromBalance(raiseAmount);
+                player.reduceFromChips(raiseAmount);
                 pot += raiseAmount;
                 currentBet = raiseAmount;
                 break;
