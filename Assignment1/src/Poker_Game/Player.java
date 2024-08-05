@@ -4,190 +4,161 @@
  */
 package Poker_Game;
 
+
+
 /**
  *
  * @author user
  */
-import java.util.ArrayList;
+
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Scanner;
 
-public class PokerRules {
-    public static int evaluateHand(Hand hand) {
-       
-        List<Card> cards = hand.getCards();
-        // Giving higher rank more points to determine winner
-        if(isRoyalFlush(cards))
-        {
-            return 10;
-        }
-        else if(isStraightFlush(cards))
-        {
-            return 9;
-        }
-        else if(isFourOfAKind(cards))
-        {
-            return 8;
-        }
-        else if(isFullHouse(cards))
-        {
-            return 7;
-        }
-        else if(isFlush(cards))
-        {
-            return 6;
-        }
-        else if(isStraight(cards))
-        {
-            return 5;
-        }
-        else if(isThreeOfAKind(cards))
-        {
-            return 4;
-        }
-        else if(isTwoPair(cards))
-        {
-            return 3;
-        }
-        else if(isOnePair(cards))
-        {
-            return 2;
-        }
-        else
-        {
-        return 1; // High card
-        }
+public class Player {
+    
+    private String name;
+    private int chips;
+    private Card[] holeCards = new Card[2];
+    private boolean isInGame;
+    private Hand hand;
+    
+    public Player(String name, int chips) {
+        this.name = name;
+        this.chips = chips;
+        this.isInGame = true;
+        this.holeCards = new Card[2];
+        this.hand = null;
     }
 
-    public static Player determineWinner(List<Player> players, List<Card> communityCards) {
-        Player winner = null;
-        int bestPoints = 0;
-        Hand bestHand = null;
+    public Hand getHand() {
+        return hand;
+    }
+    
+    public void setHand(Hand hand) {
+        this.hand = hand;
+    }
+    
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+    
+    public int getChips() {
+        return chips;
+    }
+    
+    public void addToChips(int additionAmount) {
+        this.chips += additionAmount;
+    }
+    
+    public void reduceFromChips(int reduceAmount) {
+        this.chips -= reduceAmount;
+    }
+
+    
+    public Card[] getHoleCards() {
+        return holeCards;
+    }
+    
+    public void setHoleCards(Card[] holeCards) {
+        this.holeCards = holeCards;
+    }
+    
+    public void addCardToHand(Card card) {
+    if (this.holeCards[0] == null) {
+        this.holeCards[0] = card;
+    } else if (this.holeCards[1] == null) {
+        this.holeCards[1] = card;
+    } else {
+        throw new IllegalStateException("Both hole cards are already set");
+    }
+    if (this.hand != null) {
+        this.hand.addCard(card);
+    }
+}
+
+
+   
+    public boolean getIsInGame() {
+        return isInGame;
+    }
+    
+    public void setIsInGame(boolean isInGame) {
+        this.isInGame = isInGame;
+    }
+    
+    @Override
+    public String toString() {
         
-        for(Player player : players)
-        {
-            if(player.getIsInGame())
-            {
-                List<Card> allCards = new ArrayList<>(communityCards);
-                allCards.addAll(Arrays.asList(player.getHoleCards()));
-                Hand playerHand = new Hand(allCards);
-                player.setHand(playerHand);
-                
-                int playerRank = evaluateHand(playerHand);
-                if(playerRank > bestPoints || (playerRank == bestPoints && compareHands(playerHand, bestHand) > 0))
-                {
-                    bestPoints = playerRank;
-                    bestHand = playerHand;
-                    winner = player;
-                }
-            }
-        }
-        return winner;
-    }
-    
-    private static boolean isRoyalFlush(List<Card> cards)
-    {
-        return isStraightFlush(cards) && cards.get(4).getValue() == 14;
-    }
-    
-    private static boolean isStraightFlush(List<Card> cards)
-    {
-        return isFlush(cards) && isStraight(cards);
-    }
-    
-    private static boolean isFourOfAKind(List<Card> cards)
-    {
-        return hasNOfAKind(cards, 4);
-    }
-    
-    private static boolean isFullHouse(List<Card> cards)
-    {
-        return hasNOfAKind(cards, 3) && hasNOfAKind(cards, 2);
-    }
-    
-    private static boolean isFlush(List<Card> cards)
-    {
-        String suit = cards.get(0).getSuit();
-        for(Card card : cards)
-        {
-            if(!card.getSuit().equals(suit))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    private static boolean isStraight(List<Card> cards)
-    {
-        for(int i = 0; i < cards.size() - 1; i++)
-        {
-            if(cards.get(i).getValue() + 1 != cards.get(i + 1).getValue())
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-    private static boolean isThreeOfAKind(List<Card> cards)
-    {
-        return hasNOfAKind(cards, 3);
-    }
-    
-    private static boolean isTwoPair(List<Card> cards)
-    {
-        int pairs = 0;
-        Map<Integer, Integer> counts = new HashMap<>();
-        for(Card card : cards)
-        {
-            counts.put(card.getValue(), counts.getOrDefault(card.getValue(), 0) + 1);
-        }
-        for(int count : counts.values())
-        {
-            if(count == 2)
-            {
-                pairs++;
-            }
-        }
-        return pairs == 2;
-    }
-    
-    private static boolean isOnePair(List<Card> cards)
-    {
-        return hasNOfAKind(cards, 2);
-    }
-    
-    private static boolean hasNOfAKind(List<Card> cards, int n)
-    {
-        Map<Integer, Integer> counts = new HashMap<>();
-        for(Card card : cards)
-        {
-            counts.put(card.getValue(), counts.getOrDefault(card.getValue(), 0) + 1);
-        }
-        for(int count : counts.values())
-        {
-            if(count == n)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-    private static int compareHands(Hand hand1, Hand hand2)
-    {
-        List<Card> cards1 = hand1.getCards();
-        List<Card> cards2 = hand2.getCards();
+        return ("Player " +this.name+ " has a chips of "+this.chips+ ".\nHole cards " +Arrays.toString(this.holeCards)+ ".\nIs in the Game: "+this.isInGame);
         
-        for(int i = cards1.size() - 1; i >= 0; i--)
-        {
-            int compare = Integer.compare(cards1.get(i).getValue(), cards2.get(i).getValue());
-            if(compare != 0)
-            {
-                return compare;
-            }
-        }
-        return 0;
     }
+    
+    public void bet(int amount) {
+        if(amount > 0 && amount <= chips) {
+            reduceFromChips(amount);
+            System.out.println(name + " bets" +amount+ " chips.");
+        }
+        else {
+            System.out.println(name+" cannot bet that amount due to insufficient chips");
+        }
+    }
+    
+    public void raise(int amount) {
+        if(amount > 0 && amount <= chips) {
+            reduceFromChips(amount);
+            System.out.println(name + " raises by" +amount+ " chips.");
+        }
+        else {
+            System.out.println(name+" cannot raise that amount due to insufficient chips");
+        }
+    }
+    
+    public void fold() {
+        setIsInGame(false);
+        System.out.println(name+" folds.");
+    }
+    
+    public void check() {
+        System.out.println(name+" checks.");
+    }
+    
+    public void makeDecision() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(", it's your turn. You have " + chips + " chips.");
+        System.out.println("Choose an action: \n1: Bet\n2: Raise\n3: Fold\n4:Check");
+        
+        int choice = scanner.nextInt();
+        switch (choice) {
+            case 1:
+                System.out.println("Enter the amount to bet: ");
+                int betAmount = scanner.nextInt();
+                bet(betAmount);
+                break;
+            case 2:
+                System.out.println("Enter the amount to raise: ");
+                int raiseAmount = scanner.nextInt();
+                raise(raiseAmount);
+                break;
+            case 3:
+                fold();
+                break;
+            case 4:
+                check();
+                break;
+            default:
+                System.out.println("Invalid choice. Please choose again.");
+                makeDecision(); // Recurse until a valid choice is made
+                break;
+        }
+    }
+
+    public void clearHand() {
+        if(this.hand != null)this.hand = null;
+    }
+    
 }
