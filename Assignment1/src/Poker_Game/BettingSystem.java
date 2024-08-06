@@ -11,6 +11,10 @@ package Poker_Game;
 public class BettingSystem {
     private int pot;
 
+    public BettingSystem() {
+        this.pot = 0;
+    }
+
     public void addToPot(int amount) {
         pot += amount;
     }
