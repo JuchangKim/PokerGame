@@ -61,6 +61,7 @@ public class Player {
 
     public void fold() {
         folded = true;
+        this.setIsInGame(false);
     }
     
     public String getName() {
