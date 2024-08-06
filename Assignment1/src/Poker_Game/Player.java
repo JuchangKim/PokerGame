@@ -21,13 +21,15 @@ public class Player {
     private Card[] holeCards = new Card[2];
     private boolean isInGame;
     private Hand hand;
+    private int currentBet; // Track the current bet for the player
+    private boolean folded;
     
     public Player(String name, int chips) {
         this.name = name;
         this.chips = chips;
         this.isInGame = true;
         this.holeCards = new Card[2];
-        this.hand = null;
+        this.hand = new Hand();
     }
 
     public Hand getHand() {
@@ -36,6 +38,29 @@ public class Player {
     
     public void setHand(Hand hand) {
         this.hand = hand;
+    }
+    
+    public void setCurrentBet(int bet) {
+        this.currentBet = bet;
+    }
+
+    public int getCurrentBet() {
+        return currentBet;
+    }
+
+    public void reduceFromChips(int amount) {
+        if (amount > chips) {
+            amount = chips;
+        }
+        chips -= amount;
+    }
+
+    public void addToChips(int amount) {
+        chips += amount;
+    }
+
+    public void fold() {
+        folded = true;
     }
     
     public String getName() {
@@ -51,14 +76,7 @@ public class Player {
         return chips;
     }
     
-    public void addToChips(int additionAmount) {
-        this.chips += additionAmount;
-    }
-    
-    public void reduceFromChips(int reduceAmount) {
-        this.chips -= reduceAmount;
-    }
-
+   
     
     public Card[] getHoleCards() {
         return holeCards;
@@ -70,15 +88,11 @@ public class Player {
     
     public void addCardToHand(Card card) {
     if (this.holeCards[0] == null) {
-        this.holeCards[0] = card;
-    } else if (this.holeCards[1] == null) {
-        this.holeCards[1] = card;
-    } else {
-        throw new IllegalStateException("Both hole cards are already set");
-    }
-    if (this.hand != null) {
+            this.holeCards[0] = card;
+        } else if (this.holeCards[1] == null) {
+            this.holeCards[1] = card;
+        }
         this.hand.addCard(card);
-    }
 }
 
 
@@ -94,7 +108,7 @@ public class Player {
     @Override
     public String toString() {
         
-        return ("Player " +this.name+ " has a chips of "+this.chips+ ".\nHole cards " +Arrays.toString(this.holeCards)+ ".\nIs in the Game: "+this.isInGame);
+        return ("Player " +this.name+ " has a chips of "+this.chips);
         
     }
     
@@ -118,10 +132,7 @@ public class Player {
         }
     }
     
-    public void fold() {
-        setIsInGame(false);
-        System.out.println(name+" folds.");
-    }
+    
     
     public void check() {
         System.out.println(name+" checks.");
@@ -158,7 +169,7 @@ public class Player {
     }
 
     public void clearHand() {
-        if(this.hand != null)this.hand = null;
+        this.holeCards = new Card[2]; // Clear hole cards
+        this.hand.clear();
     }
-    
 }
