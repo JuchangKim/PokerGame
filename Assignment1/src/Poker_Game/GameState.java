@@ -17,6 +17,7 @@ public class GameState implements Serializable {
     private int pot;
     private int currentBet;
     private int currentPlayerIndex;
+     private Player winner;
 
     public GameState(List<Player> players, List<Card> communityCards, int pot, int currentBet, int currentPlayerIndex) {
         this.players = players;
@@ -56,5 +57,13 @@ public class GameState implements Serializable {
 
     public void setCurrentPlayerIndex(int currentPlayerIndex) {
         this.currentPlayerIndex = currentPlayerIndex;
+    }
+    
+    public Player getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Player winner) {
+        this.winner = winner;
     }
 }
