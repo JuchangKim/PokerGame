@@ -8,32 +8,26 @@ package Poker_Game;
  *
  * @author user
  *
-import java.io.*;
-import java.util.List;
-
-public class FileManager {
-    public static void saveGameState(GameState gameState, String filePath) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
-            oos.writeObject(gameState);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static GameState loadGameState(String filePath) {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
-            return (GameState) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-}*/
-
+ * import java.io.*; import java.util.List;
+ *
+ * public class FileManager { public static void saveGameState(GameState
+ * gameState, String filePath) { try (ObjectOutputStream oos = new
+ * ObjectOutputStream(new FileOutputStream(filePath))) {
+ * oos.writeObject(gameState); } catch (IOException e) { e.printStackTrace(); }
+ * }
+ *
+ * public static GameState loadGameState(String filePath) { try
+ * (ObjectInputStream ois = new ObjectInputStream(new
+ * FileInputStream(filePath))) { return (GameState) ois.readObject(); } catch
+ * (IOException | ClassNotFoundException e) { e.printStackTrace(); return null;
+ * } }
+}
+ */
 import java.io.*;
 import java.util.*;
 
 public class FileManager {
+
     private static final String SAVE_DIRECTORY = "saved_games/";
 
     static {
@@ -43,7 +37,7 @@ public class FileManager {
 
     public static void saveGameState(GameState gameState, String fileName) {
         String filePath = SAVE_DIRECTORY + fileName + ".txt";
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
+        try ( PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
             // Assuming the first player is the main player (user)
             Player mainPlayer = gameState.getPlayers().get(0);
             writer.println("Player Name: " + mainPlayer.getName());
@@ -52,7 +46,7 @@ public class FileManager {
             writer.println("Pot: " + gameState.getPot());
             writer.println("Current Bet: " + gameState.getCurrentBet());
             writer.println("Current Player Index: " + gameState.getCurrentPlayerIndex());
-            
+
             // Save winner if exists
             if (gameState.getWinner() != null) {
                 writer.println("Winner: " + gameState.getWinner().getName());
@@ -66,7 +60,7 @@ public class FileManager {
 
     public static GameState loadGameState(String fileName) {
         String filePath = SAVE_DIRECTORY + fileName + ".txt";
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try ( BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             List<Player> players = new ArrayList<>();
             List<Card> communityCards = new ArrayList<>();
             int pot = 0, currentBet = 0, currentPlayerIndex = 0;
@@ -128,5 +122,30 @@ public class FileManager {
             return false;
         }
     }
-}
 
+    public static void appendToGameLog(String fileName, String logEntry) {
+        String filePath = SAVE_DIRECTORY + fileName + "_log.txt";
+        try ( PrintWriter writer = new PrintWriter(new FileWriter(filePath, true))) { // 'true' for appending
+            writer.println(logEntry);
+            System.out.println("Log entry added to " + filePath);
+        } catch (IOException e) {
+            System.err.println("Error appending to log file: " + e.getMessage());
+        }
+    }
+
+    public static List<String> readGameLog(String fileName) {
+        String filePath = SAVE_DIRECTORY + fileName + "_log.txt";
+        List<String> logEntries = new ArrayList<>();
+        try ( BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                logEntries.add(line);
+            }
+            System.out.println("Log entries read from " + filePath);
+        } catch (IOException e) {
+            System.err.println("Error reading log file: " + e.getMessage());
+        }
+        return logEntries;
+    }
+
+}
