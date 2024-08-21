@@ -14,7 +14,7 @@ public class InitializeState implements GameStateAction {
         game.getDeck().reset();
         game.getGameState().getCommunityCards().clear();
         game.getGameState().setPot(0);
-        game.getGameState().setCurrentBet(0);
+        game.getGameState().setCurrentBet(10);
 
         for (Player player : game.getGameState().getPlayers()) {
             player.clearHand();
