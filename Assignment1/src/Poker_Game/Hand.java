@@ -15,14 +15,17 @@ import java.util.List;
 
 public class Hand {
     private List<Card> cards;
+    private String handRank;
     
     public Hand() {
         this.cards = new ArrayList<>();
+        this.handRank = "";
        
     }
     public Hand(List<Card> cards) {
         this.cards = new ArrayList<>(cards);
         this.cards.sort(Comparator.comparingInt(Card::getValue));
+        this.handRank = "";
     }
 
    
@@ -43,5 +46,20 @@ public class Hand {
     public void clear() {
     
         this.cards.clear();
+    }
+
+    /**
+     * @return the handRank
+     */
+    public String getHandRank() {
+        return handRank;
+    }
+
+    /**
+     * @param s
+     * 
+     */
+    public void setHandRank(String s) {
+        this.handRank = s;
     }
 }
