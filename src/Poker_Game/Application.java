@@ -9,9 +9,16 @@ package Poker_Game;
  * @author user
  */
 public class Application {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
+        
         PokerCLI pokerCLI = new PokerCLI();
-        pokerCLI.start();
+        try {
+            pokerCLI.start();
+        } catch (InterruptedException e) {
+            // Handle the exception, perhaps log it or print a message
+            System.out.println("The game was interrupted.");
+            e.printStackTrace();
+        }
     }
 }
 
