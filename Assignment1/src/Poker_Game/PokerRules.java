@@ -21,43 +21,53 @@ public class PokerRules {
         // Giving higher rank more points to determine winner
         if(isRoyalFlush(cards))
         {
+            hand.setHandRank("Royal Flush");
             return 10;
         }
         else if(isStraightFlush(cards))
         {
+            hand.setHandRank("Straight Flush");
             return 9;
         }
         else if(isFourOfAKind(cards))
         {
+            hand.setHandRank("Four Of A Kind");
             return 8;
         }
         else if(isFullHouse(cards))
         {
+            hand.setHandRank("Full House");
             return 7;
         }
         else if(isFlush(cards))
         {
+            hand.setHandRank("Flush");
             return 6;
         }
         else if(isStraight(cards))
         {
+            hand.setHandRank("Straight");
             return 5;
         }
         else if(isThreeOfAKind(cards))
         {
+            hand.setHandRank("Three Of A Kind");
             return 4;
         }
         else if(isTwoPair(cards))
         {
+            hand.setHandRank("Two Pair");
             return 3;
         }
         else if(isOnePair(cards))
         {
+            hand.setHandRank("One Pair");
             return 2;
         }
         else
         {
-        return 1; // High card
+            hand.setHandRank("High Card");
+            return 1; // High card
         }
     }
 
@@ -76,6 +86,7 @@ public class PokerRules {
                 player.setHand(playerHand);
                 
                 int playerRank = evaluateHand(playerHand);
+                
                 if(playerRank > bestPoints || (playerRank == bestPoints && compareHands(playerHand, bestHand) > 0))
                 {
                     bestPoints = playerRank;
