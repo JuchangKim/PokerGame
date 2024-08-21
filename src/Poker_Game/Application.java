@@ -17,7 +17,6 @@ public class Application {
         } catch (InterruptedException e) {
             // Handle the exception, perhaps log it or print a message
             System.out.println("The game was interrupted.");
-            e.printStackTrace();
         }
     }
 }
