@@ -17,6 +17,7 @@ public class DetermineWinnerState implements GameStateAction {
     public void play(PokerGame game) throws InterruptedException {
         System.out.println("Determining winner...\n");
         Player winner = PokerRules.determineWinner(game.getGameState().getPlayers(), game.getGameState().getCommunityCards());
+        
         for(Player p : game.getGameState().getPlayers())
             {
                 if(p.getIsInGame())
@@ -31,6 +32,7 @@ public class DetermineWinnerState implements GameStateAction {
                 }
             }
         System.out.println("The winner is " + winner.getName() + "!\n");
+        game.getGameState().setWinner(winner);
         if (winner != null) {
             winner.addToChips(game.getBettingSystem().getPot()); // Winner takes all
             game.getBettingSystem().resetPot(); // Clear the pot for the next game

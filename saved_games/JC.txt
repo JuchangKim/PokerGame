@@ -1,0 +1,5 @@
+Player Name: JC
+Player Balance: 890
+Community Cards: [Three of Diamonds, Jack of Hearts, Nine of Clubs, Seven of Diamonds, Eight of Diamonds]
+Pot: 0
+Current Bet: 80

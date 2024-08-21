@@ -1,0 +1,21 @@
+JD : Folded, Chips : 990
+Computer 1 : Folded, Chips : 1000
+Computer 2 : Folded, Chips : 1000
+Computer 3 : Folded, Chips : 1000
+Computer 4 : [Ten of Clubs, Jack of Hearts] :  , Chips : 1010
+Winner is : Player Computer 4 has a chips of 1010
+
+JD : [Two of Diamonds, Two of Spades, Three of Clubs, Six of Diamonds, Seven of Hearts, Queen of Spades, Ace of Hearts] : One Pair , Chips : 2210
+Computer 1 : [Two of Diamonds, Three of Clubs, Six of Diamonds, Six of Hearts, Seven of Hearts, Queen of Spades, King of Diamonds] : One Pair , Chips : 580
+Computer 2 : Folded, Chips : 860
+Computer 3 : Folded, Chips : 1000
+Computer 4 : Folded, Chips : 1000
+Winner is : Player JD has a chips of 2210
+
+JD : [Three of Clubs, Three of Hearts, Three of Diamonds, Four of Spades, Eight of Hearts, Ten of Spades, Queen of Hearts] : Three Of A Kind , Chips : 3230
+Computer 1 : Folded, Chips : 560
+Computer 2 : Folded, Chips : 820
+Computer 3 : Folded, Chips : 600
+Computer 4 : Folded, Chips : 440
+Winner is : Player JD has a chips of 3230
+

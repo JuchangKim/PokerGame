@@ -1,0 +1,31 @@
+JC : [Five of Hearts, Six of Spades] , Chips : 1030
+Computer 1 : Folded, Chips : 990
+Computer 2 : Folded, Chips : 980
+Computer 3 : Folded, Chips : 1000
+Computer 4 : Folded, Chips : 1000
+Winner is : null
+
+JC : [Five of Diamonds, Six of Diamonds, Seven of Diamonds, Nine of Spades, Ten of Hearts, Jack of Clubs, King of Spades] , Chips : 950
+Computer 1 : Folded, Chips : 980
+Computer 2 : [Six of Diamonds, Seven of Diamonds, Seven of Spades, Nine of Spades, Ten of Hearts, Jack of Clubs, Ace of Diamonds] , Chips : 1090
+Computer 3 : Folded, Chips : 1000
+Computer 4 : Folded, Chips : 980
+Winner is : Player Computer 2 has a chips of 1090
+
+JC : [Three of Clubs, Six of Spades] , Chips : 980
+Computer 1 : Folded, Chips : 980
+Computer 2 : Folded, Chips : 1080
+Computer 3 : Folded, Chips : 990
+Computer 4 : Folded, Chips : 970
+Winner is : Player Computer 2 has a chips of 1080
+
+JC : [Four of Hearts, Seven of Clubs] :  , Chips : 940
+Winner is : Player JC has a chips of 940
+
+JC : [Three of Diamonds, Five of Spades, Seven of Spades, Eight of Spades, Eight of Diamonds, King of Diamonds, Ace of Hearts] : One Pair , Chips : 930
+Computer 1 : Folded, Chips : 1000
+Computer 2 : Folded, Chips : 1000
+Computer 3 : Folded, Chips : 1000
+Computer 4 : [Three of Diamonds, Five of Spades, Seven of Spades, Jack of Hearts, Jack of Spades, King of Diamonds, Ace of Hearts] : One Pair , Chips : 1010
+Winner is : Player Computer 4 has a chips of 1010
+

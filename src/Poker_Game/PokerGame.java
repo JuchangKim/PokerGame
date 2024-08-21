@@ -10,12 +10,13 @@ public class PokerGame extends FileManager {
     private Scanner scanner;
     private BettingSystem bettingSystem;
     private PokerCLI pokerCli;
+    private String username;
    
     
     public PokerGame() {
         List<Player> players = new ArrayList<>();
         List<Card> communityCards = new ArrayList<>();
-        gameState = new GameState(players, communityCards, 0, 0, 0);
+        gameState = new GameState(players, communityCards, 0, 0);
         deck = new Deck();
         bettingSystem = new BettingSystem();
         scanner = new Scanner(System.in);
@@ -26,7 +27,15 @@ public class PokerGame extends FileManager {
         getGameState().getPlayers().add(new Player(name, chips));
     }
 
-    public void startGame() throws InterruptedException {
+    public void startGame(String username) throws InterruptedException {
+       this.username = username;
+       
+       if(FileManager.createNewSaveFile(username)) {
+           System.out.println("New save file created: " + username);
+       } else {
+           System.out.println("Save file already exists. Loading game state...");
+       }
+       
        
         while (true) {
             for (Player player : getGameState().getPlayers()) {
@@ -43,9 +52,31 @@ public class PokerGame extends FileManager {
             String response = scanner.nextLine();
 
             if (response.equalsIgnoreCase("yes")) {
+                String log = "";
+                for(Player p : gameState.getPlayers()) {
+                    if(p.isFolded()) {
+                        log += p.getName() + " : Folded, Chips : " + p.getChips() + "\n";
+                    } else {
+                        log += p.getName() + " : " + p.getHand() + " : " + p.getHand().getHandRank() + " , Chips : " + p.getChips() + "\n";
+                    }
+                }
+                log += "Winner is : " + gameState.getWinner() + "\n";
+                
+                FileManager.appendToGameLog(username, log);// Append log
                 break; // Continue to the next game
             } else if (response.equalsIgnoreCase("no")) {
-                saveRecord(getGameState().getPlayers().get(0).getName(), getGameState().getPlayers().get(0).getChips());
+                String log = "";
+                for(Player p : gameState.getPlayers()) {
+                    if(p.isFolded()) {
+                        log += p.getName() + " : Folded, Chips : " + p.getChips() + "\n";
+                    } else {
+                        log += p.getName() + " : " + p.getHand() + " : " + p.getHand().getHandRank() + " , Chips : " + p.getChips() + "\n";
+                    }
+                }
+                log += "Winner is : " + gameState.getWinner() + "\n";
+                
+                FileManager.appendToGameLog(username, log);
+                FileManager.saveGameState(gameState, username);// Save game state
                 return; // Exit the method, ending the game
             } else {
                 System.out.println("Invalid input. Please enter 'yes' or 'no'.");
@@ -98,6 +129,7 @@ public class PokerGame extends FileManager {
 
         if (playersInGame == 1 && lastPlayer != null) {
             System.out.println("All other players have folded. " + lastPlayer.getName() + " is the winner!\n");
+            gameState.setWinner(lastPlayer);
             lastPlayer.addToChips(getBettingSystem().getPot());
             getBettingSystem().resetPot();
 
@@ -169,7 +201,7 @@ public class PokerGame extends FileManager {
                 }
                 break;
             case "5":
-                saveRecord(getGameState().getPlayers().get(0).getName(), getGameState().getPlayers().get(0).getChips());
+                FileManager.saveGameState(gameState, username);
                 System.exit(0);
                 break;
             default:
