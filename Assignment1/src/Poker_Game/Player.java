@@ -60,7 +60,7 @@ public class Player {
     }
 
     public void fold() {
-        folded = true;
+        this.setFolded(true);
         this.setIsInGame(false);
     }
     
@@ -114,23 +114,15 @@ public class Player {
     }
     
     public void bet(int amount) {
-        if(amount > 0 && amount <= chips) {
-            reduceFromChips(amount);
-            System.out.println(name + " bets" +amount+ " chips.");
+        if (amount > chips) {
+            throw new IllegalArgumentException("Insufficient chips");
         }
-        else {
-            System.out.println(name+" cannot bet that amount due to insufficient chips");
-        }
+        chips -= amount;
+        currentBet += amount;
     }
     
     public void raise(int amount) {
-        if(amount > 0 && amount <= chips) {
-            reduceFromChips(amount);
-            System.out.println(name + " raises by" +amount+ " chips.");
-        }
-        else {
-            System.out.println(name+" cannot raise that amount due to insufficient chips");
-        }
+        bet(amount);
     }
     
     
@@ -139,38 +131,27 @@ public class Player {
         System.out.println(name+" checks.");
     }
     
-    public void makeDecision() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println(", it's your turn. You have " + chips + " chips.");
-        System.out.println("Choose an action: \n1: Bet\n2: Raise\n3: Fold\n4:Check");
-        
-        int choice = scanner.nextInt();
-        switch (choice) {
-            case 1:
-                System.out.println("Enter the amount to bet: ");
-                int betAmount = scanner.nextInt();
-                bet(betAmount);
-                break;
-            case 2:
-                System.out.println("Enter the amount to raise: ");
-                int raiseAmount = scanner.nextInt();
-                raise(raiseAmount);
-                break;
-            case 3:
-                fold();
-                break;
-            case 4:
-                check();
-                break;
-            default:
-                System.out.println("Invalid choice. Please choose again.");
-                makeDecision(); // Recurse until a valid choice is made
-                break;
-        }
-    }
 
     public void clearHand() {
         this.holeCards = new Card[2]; // Clear hole cards
         this.hand.clear();
+    }
+
+    public void call(int Amount) {
+      bet(Amount);
+    }
+
+    /**
+     * @return the folded
+     */
+    public boolean isFolded() {
+        return folded;
+    }
+
+    /**
+     * @param folded the folded to set
+     */
+    public void setFolded(boolean folded) {
+        this.folded = folded;
     }
 }
