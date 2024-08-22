@@ -1,5 +1,10 @@
 package Poker_Game;
 
+import Poker_Game.FileManager;
+import static Poker_Game.FileManager.getSavedGameFiles;
+import static Poker_Game.FileManager.loadGameState;
+import static Poker_Game.FileManager.readGameLog;
+import java.util.List;
 import java.util.Scanner;
 
 public class PokerCLI {
@@ -18,17 +23,64 @@ public class PokerCLI {
     public void start() throws InterruptedException {
        Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to the Poker Game!");
+        String choice = "";
         
-        System.out.println("Enter your username:");
+        while(!choice.equals("1")) {
+            System.out.println("Enter 1: Start game, "
+                                 + "\nEnter 2: Show list of usernames, "
+                                 + "\nEnter 3: Show the gmae log of a username\n"
+                                 + "Enter 4: Exit program.");
+            choice = scanner.nextLine();
+           switch (choice) {
+               case "1":
+                   break;
+               case "2":
+                   List<String> list = getSavedGameFiles();
+                   System.out.println("List of usernames");
+                   if(list == null) {
+                       System.out.println("There is no user.\n");
+                   } else {
+                        for(String a : list) {
+                           System.out.println(a);
+                         } 
+                   }
+                   System.out.println("");;
+                   break;
+               case "3":
+                   System.out.println("Enter your username: ");
+                   String user = scanner.nextLine();
+                   List<String> gameLog = readGameLog(user);
+                   if(gameLog == null) {
+                       System.out.println("There is no log\n");
+                   } else {
+                        for(String a : gameLog)
+                        {
+                            System.out.println(a);
+                        }
+                   }
+                   System.out.println("");
+                   break;
+               case "4":
+                   System.out.println("Exit program");
+                   System.exit(0);
+                   break;
+               default:
+                   System.out.println("Invalid Input. Try again.");
+                   break;
+           }
+        }
+        System.out.println("Enter your username: ");
+      
         String username = scanner.nextLine();
         
-        GameState record = fileManager.loadGameState(username);
+  
+        GameState record = loadGameState(username);
             if (record != null) {
                 System.out.println("Welcome back, " + record.getPlayers().get(0).getName() + "!");
                 game.addPlayer(record.getPlayers().get(0).getName(), record.getPlayers().get(0).getChips());
               
                 game.setGameState(record);
-                ComputerSetupPlayers();
+                
             } else {
                 System.out.println("Username not found. Starting a new game.");
                 userSetupPlayers(username, 1000);
