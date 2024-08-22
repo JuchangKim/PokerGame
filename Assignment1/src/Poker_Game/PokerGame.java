@@ -130,6 +130,7 @@ public class PokerGame extends FileManager {
         if (playersInGame == 1 && lastPlayer != null) {
             System.out.println("All other players have folded. " + lastPlayer.getName() + " is the winner!\n");
             gameState.setWinner(lastPlayer);
+            lastPlayer.addNumOfWin();
             lastPlayer.addToChips(getBettingSystem().getPot());
             getBettingSystem().resetPot();
 
