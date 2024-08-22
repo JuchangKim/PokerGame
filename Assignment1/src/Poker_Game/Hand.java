@@ -15,7 +15,7 @@ import java.util.List;
 
 public class Hand {
     private List<Card> cards;
-    private String handRank;
+     private String handRank;
     
     public Hand() {
         this.cards = new ArrayList<>();
@@ -47,11 +47,7 @@ public class Hand {
     
         this.cards.clear();
     }
-
-    /**
-     * @return the handRank
-     */
-    public String getHandRank() {
+     public String getHandRank() {
         return handRank;
     }
 
