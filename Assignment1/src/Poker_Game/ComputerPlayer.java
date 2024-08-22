@@ -19,7 +19,7 @@ public class ComputerPlayer extends Player {
     }
     
     //method for making random decisions for betting
-    @Override
+    
     public void makeDecision() {
         int decision = random.nextInt(4); // Randomly choose an action 
         switch (decision) {
