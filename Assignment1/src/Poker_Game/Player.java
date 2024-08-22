@@ -23,6 +23,7 @@ public class Player {
     private Hand hand;
     private int currentBet; // Track the current bet for the player
     private boolean folded;
+    private int numOfWin;
     
     public Player(String name, int chips) {
         this.name = name;
@@ -30,6 +31,7 @@ public class Player {
         this.isInGame = true;
         this.holeCards = new Card[2];
         this.hand = new Hand();
+        this.numOfWin = 0;
     }
 
     public Hand getHand() {
@@ -153,5 +155,23 @@ public class Player {
      */
     public void setFolded(boolean folded) {
         this.folded = folded;
+    }
+
+    /**
+     * @return the numOfWin
+     */
+    public int getNumOfWin() {
+        return numOfWin;
+    }
+
+    /**
+     * @param numOfWin the numOfWin to set
+     */
+    public void setNumOfWin(int numOfWin) {
+        this.numOfWin = numOfWin;
+    }
+    
+    public void addNumOfWin() {
+        this.numOfWin++;
     }
 }
