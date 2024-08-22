@@ -33,6 +33,7 @@ public class DetermineWinnerState implements GameStateAction {
             }
         System.out.println("The winner is " + winner.getName() + "!\n");
         game.getGameState().setWinner(winner);
+        winner.addNumOfWin();
         if (winner != null) {
             winner.addToChips(game.getBettingSystem().getPot()); // Winner takes all
             game.getBettingSystem().resetPot(); // Clear the pot for the next game
