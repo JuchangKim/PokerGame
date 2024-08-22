@@ -20,6 +20,11 @@ public class InitializeState implements GameStateAction {
 
         for (Player player : game.getGameState().getPlayers()) {
             player.clearHand();
+            if(player.getChips() < 100) {
+                System.out.println(player.getName() + " does not have enough chips."
+                                    + "1000 chips are added to the player.");
+                player.addToChips(1000);
+            }
             player.addCardToHand(game.getDeck().getCard());
             player.addCardToHand(game.getDeck().getCard());
             Thread.sleep(1000); // Introduce delay
