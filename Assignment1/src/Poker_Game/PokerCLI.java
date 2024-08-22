@@ -6,31 +6,35 @@ public class PokerCLI {
     private PokerGame game;
     private Scanner scanner;
     private FileManager fileManager;
+    private GameState gameState;
 
     public PokerCLI() {
         game = new PokerGame();
         scanner = new Scanner(System.in);
+        fileManager = new FileManager();
+        
     }
 
     public void start() throws InterruptedException {
-        System.out.println("Welcome to Poker!");
-        System.out.print("Enter your username: ");
-        String username = scanner.nextLine();
-        fileManager = new FileManager();
+       Scanner scanner = new Scanner(System.in);
+        System.out.println("Welcome to the Poker Game!");
         
-        // Check if the username exists in the file and load the corresponding balance
-        GameState gameState = fileManager.loadGameState(username);
-        if (gameState != null) {
-            Player mainPlayer = gameState.getPlayers().get(0);
-            System.out.println("Welcome back, " + mainPlayer.getName() + "! Your current balance is: " + mainPlayer.getChips());
-            game = new PokerGame();
-        } else {
-            System.out.println("Username not found. Starting a new account.");
-            game.addPlayer(username, 1000); // Start with a default balance of 1000
-        }
-
-        ComputerSetupPlayers();
-        game.startGame();
+        System.out.println("Enter your username:");
+        String username = scanner.nextLine();
+        
+        GameState record = fileManager.loadGameState(username);
+            if (record != null) {
+                System.out.println("Welcome back, " + record.getPlayers().get(0).getName() + "!");
+                game.addPlayer(record.getPlayers().get(0).getName(), record.getPlayers().get(0).getChips());
+              
+                game.setGameState(record);
+                ComputerSetupPlayers();
+            } else {
+                System.out.println("Username not found. Starting a new game.");
+                userSetupPlayers(username, 1000);
+                ComputerSetupPlayers();
+            }
+        game.startGame(username);
     }
 
     private void userSetupPlayers(String name, int balance) throws InterruptedException {
