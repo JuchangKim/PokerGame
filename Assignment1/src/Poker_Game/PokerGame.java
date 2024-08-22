@@ -4,35 +4,84 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class PokerGame{
+public class PokerGame extends FileManager {
     private GameState gameState;
     private Deck deck;
     private Scanner scanner;
     private BettingSystem bettingSystem;
-
+    private PokerCLI pokerCli;
+    private String username;
+   
+    
     public PokerGame() {
         List<Player> players = new ArrayList<>();
         List<Card> communityCards = new ArrayList<>();
-        gameState = new GameState(players, communityCards, 0, 0, 0);
+        gameState = new GameState(players, communityCards, 0, 0);
         deck = new Deck();
         bettingSystem = new BettingSystem();
-        gameState = new GameState(players, communityCards, 0, 0, 0);
         scanner = new Scanner(System.in);
+        
     }
 
     public void addPlayer(String name, int chips) {
-        gameState.getPlayers().add(new Player(name, chips));
+        getGameState().getPlayers().add(new Player(name, chips));
     }
 
-    public void startGame() throws InterruptedException {
+    public void startGame(String username) throws InterruptedException {
+       this.username = username;
+       
+       if(FileManager.createNewSaveFile(username)) {
+           System.out.println("New save file created: " + username);
+       } else {
+           System.out.println("Save file already exists. Loading game state...");
+       }
+       
+       
         while (true) {
+            for (Player player : getGameState().getPlayers()) {
+           player.setIsInGame(true);
+           player.setFolded(false);
+           player.setCurrentBet(0);
+        }
+            
             playRound();
             Thread.sleep(1000); // Introduce delay
+            
+            while (true) {
             System.out.println("Do you want to play another game? (yes/no)");
             String response = scanner.nextLine();
-            if (!response.equalsIgnoreCase("yes")) {
-                break;
+
+            if (response.equalsIgnoreCase("yes")) {
+                String log = "";
+                for(Player p : gameState.getPlayers()) {
+                    if(p.isFolded()) {
+                        log += p.getName() + " : Folded, Chips : " + p.getChips() + "\n";
+                    } else {
+                        log += p.getName() + " : " + p.getHand() + " : " + p.getHand().getHandRank() + " , Chips : " + p.getChips() + "\n";
+                    }
+                }
+                log += "Winner is : " + gameState.getWinner() + "\n";
+                
+                FileManager.appendToGameLog(username, log);// Append log
+                break; // Continue to the next game
+            } else if (response.equalsIgnoreCase("no")) {
+                String log = "";
+                for(Player p : gameState.getPlayers()) {
+                    if(p.isFolded()) {
+                        log += p.getName() + " : Folded, Chips : " + p.getChips() + "\n";
+                    } else {
+                        log += p.getName() + " : " + p.getHand() + " : " + p.getHand().getHandRank() + " , Chips : " + p.getChips() + "\n";
+                    }
+                }
+                log += "Winner is : " + gameState.getWinner() + "\n";
+                
+                FileManager.appendToGameLog(username, log);
+                FileManager.saveGameState(gameState, username);// Save game state
+                return; // Exit the method, ending the game
+            } else {
+                System.out.println("Invalid input. Please enter 'yes' or 'no'.");
             }
+        }
         }
     }
 
@@ -40,14 +89,26 @@ public class PokerGame{
         GameStateAction initializeState = new InitializeState();
         initializeState.play(this);
         
+        if (onePlayerIsInGame()) {
+            return;
+        }
+        
         GameStateAction flopState = new DealFlopState();
         flopState.play(this);
         playBettingRound("The Flop");
-
+        
+        if (onePlayerIsInGame()) {
+            return;
+        }
+        
         GameStateAction turnState = new DealTurnState();
         turnState.play(this);
         playBettingRound("The Turn");
-
+        
+        if (onePlayerIsInGame()) {
+            return;
+        }
+        
         GameStateAction riverState = new DealRiverState();
         riverState.play(this);
         playBettingRound("The River");
@@ -55,12 +116,37 @@ public class PokerGame{
         GameStateAction determineWinnerState = new DetermineWinnerState();
         determineWinnerState.play(this);
     }
+    private boolean onePlayerIsInGame(){
+        int playersInGame = 0;
+        Player lastPlayer = null;
 
+        for (Player player : getGameState().getPlayers()) {
+            if (player.getIsInGame()) {
+                playersInGame++;
+                lastPlayer = player;
+            }
+        }
+
+        if (playersInGame == 1 && lastPlayer != null) {
+            System.out.println("All other players have folded. " + lastPlayer.getName() + " is the winner!\n");
+            gameState.setWinner(lastPlayer);
+            lastPlayer.addToChips(getBettingSystem().getPot());
+            getBettingSystem().resetPot();
+
+            for (Player p : getGameState().getPlayers()) {
+                System.out.println(p.getName() + " has " + p.getChips() + " chips \n");
+            }
+
+            return true; // Indicate that the round should end
+        }
+
+    return false; // Continue the round if more than one player is still in the game
+    }
     private void playBettingRound(String roundName) throws InterruptedException {
-        System.out.println(roundName + " Round");
-        System.out.println("Community Cards: " + gameState.getCommunityCards());
+        System.out.println(roundName + " Round\n");
+        System.out.println("Community Cards: " + getGameState().getCommunityCards() + "\n");
 
-        for (Player player : gameState.getPlayers()) {
+        for (Player player : getGameState().getPlayers()) {
             if (player.getIsInGame()) {
                 Thread.sleep(1000); // Introduce delay
                 playerTurn(player);
@@ -69,51 +155,53 @@ public class PokerGame{
     }
 
     public void playerTurn(Player player) throws InterruptedException {
-        if (player.getName().equals("User")) {
-            userTurn(player);
-        } else {
+        if (player.getName().equals("Computer 1") || player.getName().equals("Computer 2") ||
+                player.getName().equals("Computer 3") || player.getName().equals("Computer 4")) {
             computerTurn(player);
+        } else {
+            userTurn(player);
         }
     }
 
     private void userTurn(Player player) throws InterruptedException {
-        System.out.println("Your turn. Your hand: " + player.getHand());
-        System.out.println("Current Pot: " + gameState.getPot() + ", Current Bet: " + gameState.getCurrentBet());
-        System.out.println("Options: 1. Call 2. Fold 3. Raise 4. Check 5. Exit Game");
-        int choice = Integer.parseInt(scanner.nextLine());
+        System.out.println("Your turn. Your hand: " + player.getHand()+ "\n");
+        System.out.println("Current Pot: " + getBettingSystem().getPot() + ", Current Bet: " + getGameState().getCurrentBet() + "\n");
+        System.out.println("Options: 1. Call 2. Fold 3. Raise 4. Check 5. Exit Game \n");
+        String choice = scanner.nextLine();
         switch (choice) {
-            case 1:
-                int callAmount = gameState.getCurrentBet() - player.getCurrentBet();
+            case "1":
+                int callAmount = getGameState().getCurrentBet() - player.getCurrentBet();
                 if (player.getChips() >= callAmount) {
-                    player.reduceFromChips(callAmount);
-                    bettingSystem.addToPot(callAmount);
-                    player.setCurrentBet(gameState.getCurrentBet());
+                    player.call(callAmount);
+                    getBettingSystem().addToPot(callAmount);
+                    player.setCurrentBet(getGameState().getCurrentBet());
                 } else {
                     System.out.println("Insufficient chips to call!");
                 }
                 break;
-            case 2:
+            case "2":
                 player.fold();
                 break;
-            case 3:
-                int raiseAmount = gameState.getCurrentBet() * 2;
+            case "3":
+                int raiseAmount = getGameState().getCurrentBet() * 2;
                 if (player.getChips() >= raiseAmount) {
-                    int increaseAmount = raiseAmount - gameState.getCurrentBet();
-                    player.reduceFromChips(increaseAmount);
-                    bettingSystem.addToPot(increaseAmount);
-                    gameState.setCurrentBet(raiseAmount);
-                    player.setCurrentBet(gameState.getCurrentBet());
+                    int increaseAmount = raiseAmount - getGameState().getCurrentBet();
+                    player.raise(increaseAmount);
+                    getBettingSystem().addToPot(increaseAmount);
+                    getGameState().setCurrentBet(raiseAmount);
+                    player.setCurrentBet(getGameState().getCurrentBet());
                 } else {
                     System.out.println("Insufficient chips to raise!");
                 }
                 break;
-            case 4:
-                if (gameState.getCurrentBet() > player.getCurrentBet()) {
+            case "4":
+                if (getGameState().getCurrentBet() > player.getCurrentBet()) {
                     System.out.println("You need to call before you can check.");
                     userTurn(player);
                 }
                 break;
-            case 5:
+            case "5":
+                FileManager.saveGameState(gameState, username);
                 System.exit(0);
                 break;
             default:
@@ -127,11 +215,11 @@ public class PokerGame{
         int choice = (int) (Math.random() * 3) + 1;
         switch (choice) {
             case 1:
-                int callAmount = gameState.getCurrentBet() - player.getCurrentBet();
+                int callAmount = getGameState().getCurrentBet() - player.getCurrentBet();
                 if (player.getChips() >= callAmount) {
-                    player.reduceFromChips(callAmount);
-                    bettingSystem.addToPot(callAmount);
-                    player.setCurrentBet(gameState.getCurrentBet());
+                    player.call(callAmount);
+                    getBettingSystem().addToPot(callAmount);
+                    player.setCurrentBet(getGameState().getCurrentBet());
                 } else {
                     player.fold();
                 }
@@ -140,13 +228,13 @@ public class PokerGame{
                 player.fold();
                 break;
             case 3:
-                int raiseAmount = gameState.getCurrentBet() * 2;
+                int raiseAmount = getGameState().getCurrentBet() * 2;
                 if (player.getChips() >= raiseAmount) {
-                    int increaseAmount = raiseAmount - gameState.getCurrentBet();
-                    player.reduceFromChips(increaseAmount);
-                    bettingSystem.addToPot(increaseAmount);
-                    gameState.setCurrentBet(raiseAmount);
-                    player.setCurrentBet(gameState.getCurrentBet());
+                    int increaseAmount = raiseAmount - getGameState().getCurrentBet();
+                    player.raise(increaseAmount);
+                    getBettingSystem().addToPot(increaseAmount);
+                    getGameState().setCurrentBet(raiseAmount);
+                    player.setCurrentBet(getGameState().getCurrentBet());
                 } else {
                     player.fold();
                 }
@@ -165,5 +253,19 @@ public class PokerGame{
 
     public BettingSystem getBettingSystem() {
         return bettingSystem;
+    }
+
+    /**
+     * @param bettingSystem the bettingSystem to set
+     */
+    public void setBettingSystem(BettingSystem bettingSystem) {
+        this.bettingSystem = bettingSystem;
+    }
+
+    /**
+     * @param gameState the gameState to set
+     */
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 }
