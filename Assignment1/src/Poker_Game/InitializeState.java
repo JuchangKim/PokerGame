@@ -12,9 +12,11 @@ public class InitializeState implements GameStateAction {
     @Override
     public void play(PokerGame game) throws InterruptedException {
         game.getDeck().reset();
+        game.getDeck().shuffleDeck();
         game.getGameState().getCommunityCards().clear();
         game.getGameState().setPot(0);
         game.getGameState().setCurrentBet(10);
+        
 
         for (Player player : game.getGameState().getPlayers()) {
             player.clearHand();
