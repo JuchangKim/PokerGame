@@ -16,15 +16,14 @@ public class GameState implements Serializable {
     private List<Card> communityCards;
     private int pot;
     private int currentBet;
-    private int currentPlayerIndex;
      private Player winner;
 
-    public GameState(List<Player> players, List<Card> communityCards, int pot, int currentBet, int currentPlayerIndex) {
+    public GameState(List<Player> players, List<Card> communityCards, int pot, int currentBet) {
         this.players = players;
         this.communityCards = communityCards;
         this.pot = pot;
         this.currentBet = currentBet;
-        this.currentPlayerIndex = currentPlayerIndex;
+    
     }
 
     public List<Player> getPlayers() {
@@ -49,14 +48,6 @@ public class GameState implements Serializable {
 
     public void setCurrentBet(int currentBet) {
         this.currentBet = currentBet;
-    }
-
-    public int getCurrentPlayerIndex() {
-        return currentPlayerIndex;
-    }
-
-    public void setCurrentPlayerIndex(int currentPlayerIndex) {
-        this.currentPlayerIndex = currentPlayerIndex;
     }
     
     public Player getWinner() {
