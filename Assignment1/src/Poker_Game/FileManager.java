@@ -39,14 +39,14 @@ public class FileManager {
         String filePath = SAVE_DIRECTORY + fileName + ".txt";
         try ( PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
             // Assuming the first player is the main player (user)
-            Player mainPlayer = gameState.getPlayers().get(0);
-            writer.println("Player Name: " + mainPlayer.getName());
-            writer.println("Player Balance: " + mainPlayer.getChips()); //Hi JC i'm not sure if this is meant to be get Chips?
-            writer.println("Community Cards: " + gameState.getCommunityCards());
-            writer.println("Pot: " + gameState.getPot());
+            for(Player player: gameState.getPlayers()){
+            
+            writer.println("Player Name: " + player.getName());
+            writer.println("Player Balance: " + player.getChips()); //Hi JC i'm not sure if this is meant to be get Chips?
+            writer.println("Number of Win: " + player.getNumOfWin());
             writer.println("Current Bet: " + gameState.getCurrentBet());
-
-
+            writer.println("");
+            }
             System.out.println("Game saved successfully to " + filePath);
         } catch (IOException e) {
             System.err.println("Error saving game: " + e.getMessage());
@@ -62,22 +62,27 @@ public class FileManager {
             Player winner = null;
             
             String line;
+            Player currentPlayer = null;
+            
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("Player Name: ")) {
                     String playerName = line.substring("Player Name: ".length());
-                    players.add(new Player(playerName, 0)); // Add with 0 balance for now
+                    currentPlayer = new Player(playerName, 0);
+                    players.add(currentPlayer); // Add with 0 balance for now
                 } else if (line.startsWith("Player Balance: ")) {
                     int balance = Integer.parseInt(line.substring("Player Balance: ".length()));
-                    players.get(0).addToChips(balance); // Set balance of the main player, i'm not sure if this is meant to be getChps()
+                    if(currentPlayer != null) {
+                        currentPlayer.addToChips(balance); // Set balance of the main player, i'm not sure if this is meant to be getChps()
+                    }
                 } else if (line.startsWith("Community Cards: ")) {
                     // Logic to parse and add community cards
                 } else if (line.startsWith("Pot: ")) {
                     pot = Integer.parseInt(line.substring("Pot: ".length()));
                 } else if (line.startsWith("Current Bet: ")) {
                     currentBet = Integer.parseInt(line.substring("Current Bet: ".length()));
-                } else if (line.startsWith("Winner: ")) {
-                    String winnerName = line.substring("Winner: ".length());
-                    winner = new Player(winnerName, 0); // Winner balance can be set later
+                } else if (line.startsWith("Number Of Win: ")) {
+                    int num = Integer.parseInt(line.substring("Number Of Win: ".length()));
+                    currentPlayer.setNumOfWin(num); // Winner balance can be set later
                 }
             }
 
@@ -98,11 +103,15 @@ public class FileManager {
         File directory = new File(SAVE_DIRECTORY);
         File[] files = directory.listFiles((dir, name) -> name.endsWith(".txt"));
         List<String> fileNames = new ArrayList<>();
-        if (files != null) {
-            for (File file : files) {
-                fileNames.add(file.getName().replace(".txt", ""));
+       if (files != null) {
+        for (File file : files) {
+            String fileName = file.getName().replace(".txt", "");
+            if (!fileName.endsWith("_log")) { // Filter out filenames ending with "_log"
+                fileNames.add(fileName);
             }
         }
+    }
+        
         return fileNames;
     }
 
