@@ -16,14 +16,15 @@ public class BettingSystem {
     }
 
     public void addToPot(int amount) {
-        pot += amount;
+        this.pot += amount;
+    }
+
+    public void resetPot() {
+        this.pot = 0;
     }
 
     public int getPot() {
         return pot;
     }
-
-    public void clearPot() {
-        pot = 0;
-    }
+    
 }
