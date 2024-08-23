@@ -10,14 +10,19 @@ package Poker_Game;
  */
 public class Card {
     
+    // The variables value, suit, and color of the card are private to ensure
+    // changes are made in a controlled manner
     private int value;
     private String suit;
     private String colour;
 
+    // Constructor to initialize the card with a value and suit
     public Card(int value, String suit) {
-        
+        // Assign the value and suit to the card
         this.value = value;
         this.suit = suit;
+
+        // Determine the color of the card based on its suit
         if(this.suit.equals("Hearts") || this.suit.equals("Diamonds")) {
             this.colour = "Red";
         }
@@ -26,20 +31,22 @@ public class Card {
         }
     }
     
+    // Getter method for the card's value
     public int getValue() {
         return value;
     }
 
-    
+    // Getter method for the card's suit
     public String getSuit() {
         return suit;
     }
 
-    
+    // Getter method for the card's color
     public String getColour() {
         return colour;
     }
     
+    // Method to convert the card's numeric value to its corresponding name
     public String convertValueToName() {
         switch(this.value) {
             case 1: return "Ace";
@@ -55,17 +62,16 @@ public class Card {
             case 11: return "Jack";
             case 12: return "Queen";
             case 13: return "King";
-            case 14: return "Ace";
-            default: return "Value not recognised";           
-                
+            case 14: return "Ace";  // Ace can also be high (e.g., in some poker games)
+            default: return "Value not recognised";  // Fallback if the value is invalid
         }
     }
     
+    // Overriding the toString method to provide a string representation of the card
     @Override
     public String toString() {
-        
-        return (convertValueToName() + " of "+ this.suit);
-        
+        // Returns a string with the card's name and suit (e.g., "Ace of Spades")
+        return (convertValueToName() + " of " + this.suit);
     }
     
 }

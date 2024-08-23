@@ -12,11 +12,13 @@ import java.io.Serializable;
 import java.util.List;
 
 public class GameState implements Serializable {
-    private List<Player> players;
-    private List<Card> communityCards;
-    private int pot;
-    private int currentBet;
-     private Player winner;
+    
+    // variable are encapsulated to ensure modifications are controlled
+    private List<Player> players;           // List of players in the game
+    private List<Card> communityCards;      // List of community cards on the table
+    private int pot;                        // The total amount of chips in the pot
+    private int currentBet;                 // The current bet amount in the game
+    private Player winner;                  // The player who won the game
 
     public GameState(List<Player> players, List<Card> communityCards, int pot, int currentBet) {
         this.players = players;

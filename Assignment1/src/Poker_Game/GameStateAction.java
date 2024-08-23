@@ -9,5 +9,8 @@ package Poker_Game;
  * @author user
  */
 public interface GameStateAction {
+    
+    //Executes specific actions related to the current game state
     void play(PokerGame game) throws InterruptedException;
+    
 }

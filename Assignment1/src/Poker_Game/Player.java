@@ -16,14 +16,16 @@ import java.util.Scanner;
 
 public class Player {
     
-    private String name;
-    private int chips;
-    private Card[] holeCards = new Card[2];
-    private boolean isInGame;
-    private Hand hand;
-    private int currentBet; // Track the current bet for the player
-    private boolean folded;
-    private int numOfWin;
+    // Player attributes are encapsulated to ensure modifications are controlled
+    private String name;        // Name of the player
+    private int chips;          // Number of chips the player has
+    private Card[] holeCards = new Card[2]; // The player's two private cards
+    private boolean isInGame;   // Indicates if the player is still in the game
+    private Hand hand;          // The player's current hand (combination of cards)
+    private int currentBet;     // Tracks the current bet for the player
+    private boolean folded;     // Indicates if the player has folded
+    private int numOfWin;       // Tracks the number of wins the player has
+
     
     public Player(String name, int chips) {
         this.name = name;
@@ -49,18 +51,21 @@ public class Player {
     public int getCurrentBet() {
         return currentBet;
     }
-
+    
+    // Reduce the player's chips by a certain amount
     public void reduceFromChips(int amount) {
         if (amount > chips) {
             amount = chips;
         }
         chips -= amount;
     }
-
+    
+     // Add a certain amount to the player's chips
     public void addToChips(int amount) {
         chips += amount;
     }
-
+    
+    // Player folds, indicating they are no longer in the game
     public void fold() {
         this.setFolded(true);
         this.setIsInGame(false);
@@ -89,6 +94,7 @@ public class Player {
         this.holeCards = holeCards;
     }
     
+    // Add a card to the player's hand and hole cards
     public void addCardToHand(Card card) {
     if (this.holeCards[0] == null) {
             this.holeCards[0] = card;
@@ -115,6 +121,7 @@ public class Player {
         
     }
     
+    // Player bets a certain amount of chips
     public void bet(int amount) {
         if (amount > chips) {
             throw new IllegalArgumentException("Insufficient chips");
@@ -123,22 +130,24 @@ public class Player {
         currentBet += amount;
     }
     
+    // Player raises the bet by a certain amount
     public void raise(int amount) {
         bet(amount);
     }
     
     
-    
+    // Player checks, meaning they do not bet but stay in the game
     public void check() {
         System.out.println(name+" checks.");
     }
     
-
+    // Clear the player's hand and hole cards
     public void clearHand() {
         this.holeCards = new Card[2]; // Clear hole cards
-        this.hand.clear();
+        this.hand.clear(); //clear the hand
     }
 
+    // Player calls, matching the current bet
     public void call(int Amount) {
       bet(Amount);
     }
@@ -171,6 +180,7 @@ public class Player {
         this.numOfWin = numOfWin;
     }
     
+    // Increment the number of wins by one to be displayed in the file
     public void addNumOfWin() {
         this.numOfWin++;
     }

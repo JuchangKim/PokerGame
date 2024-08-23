@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 public class PokerRules {
+    
+    // This method evaluates the rank of a given hand and assigns a score
     public static int evaluateHand(Hand hand) {
        
         List<Card> cards = hand.getCards();
@@ -71,12 +73,13 @@ public class PokerRules {
         }
     }
 
-
+    // This method determines the winner among multiple players based on their hands and the community cards
     public static Player determineWinner(List<Player> players, List<Card> communityCards) {
         Player winner = null;
         int bestPoints = 0;
         Hand bestHand = null;
         
+        //Evaluate each player's hand
         for(Player player : players)
         {
             if(player.getIsInGame())
@@ -86,6 +89,7 @@ public class PokerRules {
                 Hand playerHand = new Hand(allCards);
                 player.setHand(playerHand);
                 
+                // Compare the player's hand with the current best hand
                 int playerRank = evaluateHand(playerHand);
                 if(playerRank > bestPoints || (playerRank == bestPoints && compareHands(playerHand, bestHand) > 0))
                 {
@@ -98,26 +102,31 @@ public class PokerRules {
         return winner;
     }
     
+    // Check if the hand is a Royal Flush (the highest possible hand)
     private static boolean isRoyalFlush(List<Card> cards)
     {
         return isStraightFlush(cards) && cards.get(4).getValue() == 14;
     }
     
+    // Check if the hand is a Straight Flush (consecutive cards of the same suit)
     private static boolean isStraightFlush(List<Card> cards)
     {
         return isFlush(cards) && isStraight(cards);
     }
     
+    // Check if the hand is Four of a Kind (four cards of the same value)
     private static boolean isFourOfAKind(List<Card> cards)
     {
         return hasNOfAKind(cards, 4);
     }
     
+    // Check if the hand is a Full House (three of a kind and a pair)
     private static boolean isFullHouse(List<Card> cards)
     {
         return hasNOfAKind(cards, 3) && hasNOfAKind(cards, 2);
     }
     
+    // Check if the hand is a Flush (all cards of the same suit)
     private static boolean isFlush(List<Card> cards)
     {
         String suit = cards.get(0).getSuit();
@@ -131,6 +140,7 @@ public class PokerRules {
         return true;
     }
     
+    // Check if the hand is a Straight (five consecutive cards of any suit)
     private static boolean isStraight(List<Card> cards)
     {
         for(int i = 0; i < cards.size() - 1; i++)
@@ -142,11 +152,14 @@ public class PokerRules {
         }
         return true;
     }
+    
+    // Check if the hand is Three of a Kind (three cards of the same value)
     private static boolean isThreeOfAKind(List<Card> cards)
     {
         return hasNOfAKind(cards, 3);
     }
     
+    // Check if the hand is Two Pair (two different pairs)
     private static boolean isTwoPair(List<Card> cards)
     {
         int pairs = 0;
@@ -165,11 +178,13 @@ public class PokerRules {
         return pairs == 2;
     }
     
+    // Check if the hand is One Pair (two cards of the same value)
     private static boolean isOnePair(List<Card> cards)
     {
         return hasNOfAKind(cards, 2);
     }
     
+    // Helper method to check if the hand has a specific number of cards of the same value (e.g., pair, three of a kind, etc.)
     private static boolean hasNOfAKind(List<Card> cards, int n)
     {
         Map<Integer, Integer> counts = new HashMap<>();
@@ -186,6 +201,8 @@ public class PokerRules {
         }
         return false;
     }
+    
+    // Helper method to compare two hands based on their values (used when two hands have the same rank)
     private static int compareHands(Hand hand1, Hand hand2)
     {
         List<Card> cards1 = hand1.getCards();
@@ -199,6 +216,6 @@ public class PokerRules {
                 return compare;
             }
         }
-        return 0;
+        return 0; //Hands are identical in value
     }
 }
