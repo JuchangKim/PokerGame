@@ -108,6 +108,7 @@ public class FileManager {
     public static List<String> getSavedGameFiles() {
         File directory = new File(SAVE_DIRECTORY);
         File[] files = directory.listFiles((dir, name) -> name.endsWith(".txt"));
+        
         List<String> fileNames = new ArrayList<>();
         if (files != null) {
             for (File file : files) {
@@ -117,7 +118,11 @@ public class FileManager {
                 }
             }
         }
-
+        //If there is no user, printing "There is no user."
+        if(fileNames.isEmpty()) 
+        {
+            System.out.println("There is no user");
+        }
         return fileNames;
     }
 
