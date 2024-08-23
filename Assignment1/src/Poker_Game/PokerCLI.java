@@ -32,7 +32,7 @@ public class PokerCLI {
         while(!choice.equals("1")) {
             System.out.println("Enter 1: Start game, "
                                  + "\nEnter 2: Show list of usernames, "
-                                 + "\nEnter 3: Show the gmae log of a username\n"
+                                 + "\nEnter 3: Show the game log of a username\n"
                                  + "Enter 4: Exit program.");
             choice = scanner.nextLine();
            switch (choice) {
