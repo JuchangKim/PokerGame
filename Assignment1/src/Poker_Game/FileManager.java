@@ -157,6 +157,11 @@ public class FileManager {
             while ((line = reader.readLine()) != null) {
                 logEntries.add(line); // Add each line to the list of log entries
             }
+            //If there is no record. printing "There is no record."
+            if(logEntries.isEmpty())
+            {
+                System.out.println("There is no record.");
+            }
             System.out.println("Log entries read from " + filePath);
         } catch (IOException e) {
             System.err.println("Error reading log file: " + e.getMessage());
