@@ -81,7 +81,7 @@ public class PokerCLI {
       
         String username = scanner.nextLine();
         
-  
+        // Load game state for the user if available, otherwise set up a new game
         GameState record = loadGameState(username);
             if (record != null) {
                 System.out.println("Welcome back, " + record.getPlayers().get(0).getName() + "!");
