@@ -33,6 +33,7 @@ public class PokerGame extends FileManager {
         getGameState().getPlayers().add(new Player(name, chips));
     }
 
+    //startGame() generated with the help of ChatGPT
     //Start the poker game loop, allowing players to play multiple rounds
     public void startGame(String username) throws InterruptedException {
         this.username = username;
@@ -94,7 +95,7 @@ public class PokerGame extends FileManager {
             }
         }
     }
-
+    //playRound() was generated with ChatGPT
     //Plays a single round of poker, including dealing cards and handling bets
     private void playRound() throws InterruptedException {
         GameStateAction initializeState = new InitializeState();
@@ -179,7 +180,7 @@ public class PokerGame extends FileManager {
             userTurn(player); //Handles a human player's turn
         }
     }
-
+    
     //Handles the user's turn, presenting options to call, fold, raise, check, or exit the game
     private void userTurn(Player player) throws InterruptedException {
         System.out.println("Your turn. Your hand: " + player.getHand() + "\n");
