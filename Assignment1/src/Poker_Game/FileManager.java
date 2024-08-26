@@ -58,6 +58,7 @@ public class FileManager {
     //Loads a game state from the specified file.
     public static GameState loadGameState(String fileName) {
         String filePath = SAVE_DIRECTORY + fileName + ".txt";
+          File file = new File(filePath);
         try ( BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             List<Player> players = new ArrayList<>();
             List<Card> communityCards = new ArrayList<>();
@@ -67,6 +68,25 @@ public class FileManager {
             String line;
             Player currentPlayer = null;
 
+if (file.exists() && file.length() == 0) {
+        System.out.println("There is no user record so create new record.");
+
+        // Delete the empty file
+        if (file.delete()) {
+            System.out.println("Empty file deleted: " + filePath);
+
+            // Create a new save file and log file
+            if (createNewSaveFile(fileName)) {
+                System.out.println("New user record created: " + filePath);
+            } else {
+                System.err.println("Failed to create new user record.");
+            } 
+        } else {
+            System.err.println("Failed to delete empty file: " + filePath);
+        }
+        return null; // Return null since there's no game state to load
+    }
+            
             // Read the file line by line and extract the game state information
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("Player Name: ")) {
