@@ -91,6 +91,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Yes"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="YesButton1ActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="NoButton1">
           <Properties>
@@ -99,6 +102,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="No"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="NoButton1ActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

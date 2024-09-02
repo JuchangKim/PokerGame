@@ -56,6 +56,11 @@ public class BetOptionMenu extends javax.swing.JFrame {
 
         ExitGameButton1.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
         ExitGameButton1.setText("5. Exit Game");
+        ExitGameButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExitGameButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout BetOptionsPanel1Layout = new javax.swing.GroupLayout(BetOptionsPanel1);
         BetOptionsPanel1.setLayout(BetOptionsPanel1Layout);
@@ -101,7 +106,7 @@ public class BetOptionMenu extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(BetOptionsPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 831, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(BetOptionsPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,6 +115,10 @@ public class BetOptionMenu extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void ExitGameButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitGameButton1ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_ExitGameButton1ActionPerformed
 
     /**
      * @param args the command line arguments

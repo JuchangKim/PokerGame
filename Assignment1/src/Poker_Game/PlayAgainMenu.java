@@ -40,9 +40,19 @@ public class PlayAgainMenu extends javax.swing.JFrame {
 
         YesButton1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         YesButton1.setText("Yes");
+        YesButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                YesButton1ActionPerformed(evt);
+            }
+        });
 
         NoButton1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         NoButton1.setText("No");
+        NoButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NoButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout PlayAgainPanel1Layout = new javax.swing.GroupLayout(PlayAgainPanel1);
         PlayAgainPanel1.setLayout(PlayAgainPanel1Layout);
@@ -85,6 +95,16 @@ public class PlayAgainMenu extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void NoButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NoButton1ActionPerformed
+        this.dispose();  // Close the current frame
+        new WelcomeMenu().setVisible(true);  // Open the welcome menu
+    }//GEN-LAST:event_NoButton1ActionPerformed
+
+    private void YesButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YesButton1ActionPerformed
+        this.dispose();  // Close current frame
+        new GameStage(playerIds).setVisible(true);  // Open the game stage
+    }//GEN-LAST:event_YesButton1ActionPerformed
 
     /**
      * @param args the command line arguments
