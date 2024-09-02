@@ -39,7 +39,7 @@ public class WelcomeMenu extends javax.swing.JFrame {
         WelcomePanel1.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.selectedBackground"));
 
         EnterGameButton1.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
-        EnterGameButton1.setText("1. Enter Game");
+        EnterGameButton1.setText("1. Play Game");
         EnterGameButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EnterGameButton1ActionPerformed(evt);
@@ -48,9 +48,19 @@ public class WelcomeMenu extends javax.swing.JFrame {
 
         ShowUserListButton1.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
         ShowUserListButton1.setText("2. Show list of Users");
+        ShowUserListButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ShowUserListButton1ActionPerformed(evt);
+            }
+        });
 
         UserGameLogButton1.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
         UserGameLogButton1.setText("3. Show User Game Log");
+        UserGameLogButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UserGameLogButton1ActionPerformed(evt);
+            }
+        });
 
         ExitGameButton1.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
         ExitGameButton1.setText("4. Exit Game");
@@ -135,6 +145,16 @@ public class WelcomeMenu extends javax.swing.JFrame {
         new AddPlayerNames().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_EnterGameButton1ActionPerformed
+
+    private void ShowUserListButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ShowUserListButton1ActionPerformed
+        new ListOfUsersMenu().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_ShowUserListButton1ActionPerformed
+
+    private void UserGameLogButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UserGameLogButton1ActionPerformed
+        new UserNameForLog().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_UserGameLogButton1ActionPerformed
 
     /**
      * @param args the command line arguments

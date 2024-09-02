@@ -1,5 +1,7 @@
 package Poker_Game;
 
+import java.util.List;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -16,6 +18,23 @@ public class ListOfUsersMenu extends javax.swing.JFrame {
      */
     public ListOfUsersMenu() {
         initComponents();
+        displayUsernames();  // Call the method to display usernames when the form is created
+    }
+    
+    // Method to display usernames in the ShowUsersTextPane1
+    private void displayUsernames() {
+        List<String> usernames = FileManager.getSavedGameFiles(); // Get the list of usernames
+        StringBuilder content = new StringBuilder();
+
+        if (usernames.isEmpty()) {
+            content.append("No users found.");
+        } else {
+            for (String username : usernames) {
+                content.append(username).append("\n"); // Append each username to the content
+            }
+        }
+
+        ShowUsersTextArea1.setText(content.toString()); // Set the content to the text pane
     }
 
     /**
@@ -29,42 +48,106 @@ public class ListOfUsersMenu extends javax.swing.JFrame {
 
         ListUsersPanel1 = new javax.swing.JPanel();
         ListOfUsersLabel1 = new javax.swing.JLabel();
+        EnterGameButton1 = new javax.swing.JButton();
+        showUserGameLogButton2 = new javax.swing.JButton();
+        ExitGameButton3 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        ShowUsersTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         ListOfUsersLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         ListOfUsersLabel1.setText("List Of Users");
 
+        EnterGameButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        EnterGameButton1.setText("1. Play Game");
+        EnterGameButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EnterGameButton1ActionPerformed(evt);
+            }
+        });
+
+        showUserGameLogButton2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        showUserGameLogButton2.setText("3. Show User Game Log");
+
+        ExitGameButton3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        ExitGameButton3.setText("4. Return to Main Menu ");
+        ExitGameButton3.setActionCommand("4. Return to Main Menu ");
+        ExitGameButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExitGameButton3ActionPerformed(evt);
+            }
+        });
+
+        ShowUsersTextArea1.setColumns(20);
+        ShowUsersTextArea1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        ShowUsersTextArea1.setRows(5);
+        jScrollPane2.setViewportView(ShowUsersTextArea1);
+
         javax.swing.GroupLayout ListUsersPanel1Layout = new javax.swing.GroupLayout(ListUsersPanel1);
         ListUsersPanel1.setLayout(ListUsersPanel1Layout);
         ListUsersPanel1Layout.setHorizontalGroup(
             ListUsersPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ListUsersPanel1Layout.createSequentialGroup()
-                .addGap(304, 304, 304)
-                .addComponent(ListOfUsersLabel1)
-                .addContainerGap(313, Short.MAX_VALUE))
+                .addGap(29, 29, 29)
+                .addGroup(ListUsersPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ListUsersPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addGroup(ListUsersPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(ExitGameButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(showUserGameLogButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(EnterGameButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(39, 39, 39))
+                    .addGroup(ListUsersPanel1Layout.createSequentialGroup()
+                        .addComponent(ListOfUsersLabel1)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         ListUsersPanel1Layout.setVerticalGroup(
             ListUsersPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ListUsersPanel1Layout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addContainerGap()
                 .addComponent(ListOfUsersLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(348, Short.MAX_VALUE))
+                .addGap(11, 11, 11)
+                .addGroup(ListUsersPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(ListUsersPanel1Layout.createSequentialGroup()
+                        .addComponent(EnterGameButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(showUserGameLogButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(ExitGameButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(ListUsersPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(ListUsersPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(ListUsersPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(ListUsersPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void ExitGameButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitGameButton3ActionPerformed
+        new WelcomeMenu().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_ExitGameButton3ActionPerformed
+
+    private void EnterGameButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnterGameButton1ActionPerformed
+        new AddPlayerNames().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_EnterGameButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -102,7 +185,12 @@ public class ListOfUsersMenu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton EnterGameButton1;
+    private javax.swing.JButton ExitGameButton3;
     private javax.swing.JLabel ListOfUsersLabel1;
     private javax.swing.JPanel ListUsersPanel1;
+    private javax.swing.JTextArea ShowUsersTextArea1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton showUserGameLogButton2;
     // End of variables declaration//GEN-END:variables
 }
