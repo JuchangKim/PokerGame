@@ -114,6 +114,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="3. Show User Game Log"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showUserGameLogButton2ActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="ExitGameButton3">
           <Properties>
@@ -121,7 +124,6 @@
               <Font name="Segoe UI" size="24" style="0"/>
             </Property>
             <Property name="text" type="java.lang.String" value="4. Return to Main Menu "/>
-            <Property name="actionCommand" type="java.lang.String" value="4. Return to Main Menu "/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ExitGameButton3ActionPerformed"/>

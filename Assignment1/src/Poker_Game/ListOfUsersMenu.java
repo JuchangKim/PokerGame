@@ -69,10 +69,14 @@ public class ListOfUsersMenu extends javax.swing.JFrame {
 
         showUserGameLogButton2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         showUserGameLogButton2.setText("3. Show User Game Log");
+        showUserGameLogButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showUserGameLogButton2ActionPerformed(evt);
+            }
+        });
 
         ExitGameButton3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         ExitGameButton3.setText("4. Return to Main Menu ");
-        ExitGameButton3.setActionCommand("4. Return to Main Menu ");
         ExitGameButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ExitGameButton3ActionPerformed(evt);
@@ -148,6 +152,11 @@ public class ListOfUsersMenu extends javax.swing.JFrame {
         new AddPlayerNames().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_EnterGameButton1ActionPerformed
+
+    private void showUserGameLogButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showUserGameLogButton2ActionPerformed
+        new UserNameForLog().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_showUserGameLogButton2ActionPerformed
 
     /**
      * @param args the command line arguments
