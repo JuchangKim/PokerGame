@@ -148,11 +148,8 @@ public class BetOptionMenu extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new BetOptionMenu().setVisible(true);
-            }
-        });
+        new BetOptionMenu().setVisible(true);
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

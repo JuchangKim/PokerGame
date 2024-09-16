@@ -6,6 +6,8 @@ package Poker_Game;
 
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -15,21 +17,30 @@ import javax.swing.JOptionPane;
  */
 public class AddPlayerNames extends javax.swing.JFrame {
 
-       public ArrayList<String> playerIds;
+
+       static String name;
+       private PokerGame game;
+       private PokerCLI pokerCLI;
     /**
      * Creates new form AddPlayerNames
      */
     
     public AddPlayerNames() {
         initComponents();
-        playerIds = new ArrayList<>();
+        game = new PokerGame();
+        
+    }
+
+    public AddPlayerNames(PokerCLI pokerCLI) {
+        initComponents();
+        this.pokerCLI = pokerCLI;
     }
     
-    public String[] getPlayerIds() {
-        String[] pids = playerIds.toArray(new String[playerIds.size()]);
-        
-        return pids;
-    }
+//    public String[] getPlayerIds() {
+//        String[] pids = GameState.getPlayers().toArray(new String[GameState.getPlayers().size()]);
+//        
+//        return pids;
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -92,20 +103,16 @@ public class AddPlayerNames extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(83, 83, 83)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(NameofPlayerLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(NameofPlayerLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(CancelButton1)
                             .addComponent(enterYourNameLabel1))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(PleaseEnterNameTextField1)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(SaveButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 223, Short.MAX_VALUE)))
-                        .addGap(104, 104, 104))))
+                            .addComponent(SaveButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(PleaseEnterNameTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(108, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,15 +147,14 @@ public class AddPlayerNames extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void SaveButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveButton1ActionPerformed
-        if (PleaseEnterNameTextField1.getText().isEmpty()) {
+       if (PleaseEnterNameTextField1.getText().isEmpty()) {
         JLabel message = new JLabel("Please enter your name");
-        message.setFont(new Font("Arial", Font.BOLD, 48));
+        message.setFont(new Font("Arial", Font.BOLD, 24));
         JOptionPane.showMessageDialog(null, message);
-        } 
-        else {
-        String name = PleaseEnterNameTextField1.getText().trim();
+    } else {
+        name = PleaseEnterNameTextField1.getText().trim();
         
-        if (playerIds.size() >= 1) {
+        if (name.contains(" ")) {
             JLabel message = new JLabel("There can only be one player");
             message.setFont(new Font("Arial", Font.BOLD, 48));
             JOptionPane.showMessageDialog(null, message); 
@@ -156,20 +162,44 @@ public class AddPlayerNames extends javax.swing.JFrame {
             return;  // Exit the method if there's already a player
         }
         
+        // FileManager logic to check for existing user
+        GameState record = FileManager.loadGameState(name);
+        
+        if (record.isEmpty() || record.isEmpty()) {
+            // User exists, load game state
+            JLabel message = new JLabel("User found, loading game...");
+            message.setFont(new Font("Arial", Font.BOLD, 24));
+            JOptionPane.showMessageDialog(null, message);
+            game.setGameState(record);  // Set the loaded game state
+        } else {
+            // No user found, create a new user
+            JLabel message = new JLabel("New user, creating record...");
+            message.setFont(new Font("Arial", Font.BOLD, 24));
+            JOptionPane.showMessageDialog(null, message);
+            FileManager.createNewSaveFile(name);  // Create a new user in FileManager
+        }
+        
         // Add player and update label
-        playerIds.add(name);
         NameofPlayerLabel1.setText(name);
         
-        JLabel message = new JLabel("Successful Save!");
-        message.setFont(new Font("Arial", Font.BOLD, 48));
-        JOptionPane.showMessageDialog(null, message);
+        JLabel successMessage = new JLabel("Successful Save!");
+        successMessage.setFont(new Font("Arial", Font.BOLD, 48));
+        JOptionPane.showMessageDialog(null, successMessage);
         PleaseEnterNameTextField1.setText("");
         
         this.dispose();  // Close current frame
-        new GameStage(playerIds).setVisible(true);  // Open the game stage
+        
+        if (pokerCLI == null) {
+        pokerCLI = new PokerCLI();  // Ensure pokerCLI is initialized
+        }
+
+        try {
+            pokerCLI.start();  // Start the game
+        } catch (InterruptedException ex) {
+            Logger.getLogger(AddPlayerNames.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_SaveButton1ActionPerformed
-
+    }
     private void PleaseEnterNameTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PleaseEnterNameTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_PleaseEnterNameTextField1ActionPerformed
@@ -207,11 +237,8 @@ public class AddPlayerNames extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new AddPlayerNames().setVisible(true);
-            }
-        });
+        new AddPlayerNames().setVisible(true);
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

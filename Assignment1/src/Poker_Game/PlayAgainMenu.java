@@ -4,17 +4,25 @@
  */
 package Poker_Game;
 
+import java.util.ArrayList;
+import Poker_Game.PokerGame;
+import java.util.List;
+
 /**
  *
  * @author billi
  */
+
 public class PlayAgainMenu extends javax.swing.JFrame {
 
     /**
      * Creates new form PlayAgainMenu
      */
+    private PokerGame game;
+    
     public PlayAgainMenu() {
         initComponents();
+        
     }
 
     /**
@@ -102,8 +110,11 @@ public class PlayAgainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_NoButton1ActionPerformed
 
     private void YesButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YesButton1ActionPerformed
+        
+        List<Player> players = game.getGameState().getPlayers();
+        new GameStage(players, this.game).setVisible(true);  // Open the game stage
+        game.setResponse("yes");
         this.dispose();  // Close current frame
-        new GameStage(playerIds).setVisible(true);  // Open the game stage
     }//GEN-LAST:event_YesButton1ActionPerformed
 
     /**
@@ -134,11 +145,8 @@ public class PlayAgainMenu extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PlayAgainMenu().setVisible(true);
-            }
-        });
+        new PlayAgainMenu().setVisible(true);
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -23,9 +24,11 @@ import javax.swing.JOptionPane;
  */
 public class GameStage extends javax.swing.JFrame {
 
+    private PokerGame game;
+
     private AddPlayerNames addPlayers = new AddPlayerNames();
     
-    ArrayList<String> playerIds;
+    List<String> players;
     String[] pids;
     String[] cards = { "ace_of_clubs.png", "2_of_clubs.png","3_of_clubs.png","10_of_clubs.png","4_of_clubs.png","5_of_clubs.png","6_of_clubs.png",
         "7_of_clubs.png","8_of_clubs.png","9_of_clubs.png", "10_of_clubs.png","jack_of_clubs.png", "queen_of_clubs.png", "king_of_clubs.png",
@@ -41,12 +44,13 @@ public class GameStage extends javax.swing.JFrame {
     private String currentChipImage = "9_chip (1).png";
             
     
-    public GameStage(ArrayList<String> playerIds) {
+    public GameStage(List<Player> players, PokerGame game) {
         initComponents();
-        this.playerIds = playerIds;
+        this.game = game;
+        
         // Set the first player's name to DisplayNameTextArea2
-        if (!playerIds.isEmpty()) {
-            DisplayNameLabel1.setText(playerIds.get(0));  // Set player's name
+        if (!players.isEmpty()) {
+            DisplayNameLabel1.setText(players.get(0).getName());  // Set player's name
         }
         
         displayRandomCards();  // Call the method to show 2 random cards
@@ -418,15 +422,16 @@ public class GameStage extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                 // Create a sample player list for testing
-                ArrayList<String> playerIds = new ArrayList<>();
-                
-                
-                new GameStage(playerIds).setVisible(true);
-            }
-        });
+         
+        /* Initialize and display the form */
+    PokerGame game = new PokerGame(); // Ensure PokerGame is initialized
+    
+    // Ensure that GameState is properly initialized with players
+    if (game.getGameState() != null && !game.getGameState().getPlayers().isEmpty()) {
+        new GameStage(game.getGameState().getPlayers(), game).setVisible(true);
+    } else {
+        System.out.println("Game state or players are not properly initialized.");
+    }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -59,4 +59,15 @@ public class GameState implements Serializable {
     public void setWinner(Player winner) {
         this.winner = winner;
     }
+    public boolean isEmpty(){
+        return getPlayers().isEmpty();
+            
+    }
+
+    /**
+     * @param players the players to set
+     */
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
 }

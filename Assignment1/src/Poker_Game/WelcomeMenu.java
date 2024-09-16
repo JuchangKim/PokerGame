@@ -4,6 +4,8 @@
  */
 package Poker_Game;
 
+
+
 /**
  *
  * @author billi
@@ -13,6 +15,9 @@ public class WelcomeMenu extends javax.swing.JFrame {
     /**
      * Creates new form WelcomeMenu
      */
+    
+    private PokerCLI pokerCLI; // Reference to PokerCLI for game logic
+    
     public WelcomeMenu() {
         initComponents();
     }
@@ -142,7 +147,8 @@ public class WelcomeMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_ExitGameButton1ActionPerformed
 
     private void EnterGameButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnterGameButton1ActionPerformed
-        new AddPlayerNames().setVisible(true);
+        // When the "Play Game" button is clicked, open the AddPlayerNames GUI.
+        new AddPlayerNames().setVisible(true); // Pass a new PokerCLI instance
         this.dispose();
     }//GEN-LAST:event_EnterGameButton1ActionPerformed
 
@@ -184,11 +190,8 @@ public class WelcomeMenu extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new WelcomeMenu().setVisible(true);
-            }
-        });
+        new WelcomeMenu().setVisible(true);
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
