@@ -111,8 +111,8 @@ public class PlayAgainMenu extends javax.swing.JFrame {
 
     private void YesButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YesButton1ActionPerformed
         
-        List<Player> players = game.getGameState().getPlayers();
-        new GameStage(players, this.game).setVisible(true);  // Open the game stage
+        
+        new GameStage(this.game).setVisible(true);  // Open the game stage
         game.setResponse("yes");
         this.dispose();  // Close current frame
     }//GEN-LAST:event_YesButton1ActionPerformed

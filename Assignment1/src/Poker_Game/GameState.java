@@ -19,7 +19,8 @@ public class GameState implements Serializable {
     private int pot;                        // The total amount of chips in the pot
     private int currentBet;                 // The current bet amount in the game
     private Player winner;                  // The player who won the game
-
+    private String announcement;
+    
     public GameState(List<Player> players, List<Card> communityCards, int pot, int currentBet) {
         this.players = players;
         this.communityCards = communityCards;
@@ -69,5 +70,19 @@ public class GameState implements Serializable {
      */
     public void setPlayers(List<Player> players) {
         this.players = players;
+    }
+
+    /**
+     * @return the announcement
+     */
+    public String getAnnouncement() {
+        return announcement + " \n";
+    }
+
+    /**
+     * @param announcement the announcement to set
+     */
+    public void setAnnouncement(String announcement) {
+        this.announcement = announcement;
     }
 }

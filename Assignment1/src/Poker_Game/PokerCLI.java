@@ -1,9 +1,6 @@
 package Poker_Game;
 
 import Poker_Game.FileManager;
-import static Poker_Game.FileManager.getSavedGameFiles;
-import static Poker_Game.FileManager.loadGameState;
-import static Poker_Game.FileManager.readGameLog;
 import java.util.List;
 
 public class PokerCLI {
@@ -12,12 +9,12 @@ public class PokerCLI {
     private PokerGame game; // The poker game instance
     private FileManager fileManager; // File manager for handling game files
     private GameState gameState; // The current state of the game
-    private WelcomeMenu welcomemenu;
+
     
     public PokerCLI() {
-        game = new PokerGame();
-        fileManager = new FileManager();
-        welcomemenu = new WelcomeMenu();
+        this.game = new PokerGame();
+        this.fileManager = new FileManager();
+
         
     }
     
@@ -33,8 +30,8 @@ public class PokerCLI {
         if (record != null) {
             // If user data is found, continue the game with the loaded state
             System.out.println("Welcome back, " + record.getPlayers().get(0).getName() + "!");
-            game.addPlayer(record.getPlayers().get(0).getName(), record.getPlayers().get(0).getChips());
-            game.setGameState(record);
+            this.getGame().addPlayer(record.getPlayers().get(0).getName(), record.getPlayers().get(0).getChips());
+            this.getGame().setGameState(record);
         } else {
             // No saved game, create a new one
             System.out.println("Username not found. Starting a new game.");
@@ -42,23 +39,37 @@ public class PokerCLI {
             ComputerSetupPlayers();
         }
         
-        new GameStage(game.getGameState().getPlayers(), this.game).setVisible(true);  // Open the game stage
-        game.startGame(username);
+        new GameStage(this.getGame()).setVisible(true);  // Open the game stage
+        
     }
 
     // Adds the user as a player with the given balance
     private void userSetupPlayers(String name, int balance) throws InterruptedException {
-        game.addPlayer(name, balance); // Add user with the provided balance
+        getGame().addPlayer(name, balance); // Add user with the provided balance
     }
 
     // Adds computer players to the game
     private void ComputerSetupPlayers() throws InterruptedException {
         for (int i = 1; i < 4; i++) {
             Thread.sleep(1000); //simulate a delay for adding players
-            game.addPlayer("Computer" + " " + i, 1000); // Add computer players
+            getGame().addPlayer("Computer" + " " + i, 1000); // Add computer players
         }
     }
 
     // Save the user's data when the game ends
+
+    /**
+     * @return the game
+     */
+    public PokerGame getGame() {
+        return game;
+    }
+
+    /**
+     * @param game the game to set
+     */
+    public void setGame(PokerGame game) {
+        this.game = game;
+    }
     
 }

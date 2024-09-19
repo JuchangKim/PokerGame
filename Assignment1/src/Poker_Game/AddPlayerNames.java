@@ -4,6 +4,7 @@
  */
 package Poker_Game;
 
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -28,6 +29,7 @@ public class AddPlayerNames extends javax.swing.JFrame {
     public AddPlayerNames() {
         initComponents();
         game = new PokerGame();
+        pokerCLI = new PokerCLI();
         
     }
 
@@ -162,42 +164,22 @@ public class AddPlayerNames extends javax.swing.JFrame {
             return;  // Exit the method if there's already a player
         }
         
-        // FileManager logic to check for existing user
-        GameState record = FileManager.loadGameState(name);
-        
-        if (record.isEmpty() || record.isEmpty()) {
-            // User exists, load game state
-            JLabel message = new JLabel("User found, loading game...");
-            message.setFont(new Font("Arial", Font.BOLD, 24));
-            JOptionPane.showMessageDialog(null, message);
-            game.setGameState(record);  // Set the loaded game state
-        } else {
-            // No user found, create a new user
-            JLabel message = new JLabel("New user, creating record...");
-            message.setFont(new Font("Arial", Font.BOLD, 24));
-            JOptionPane.showMessageDialog(null, message);
-            FileManager.createNewSaveFile(name);  // Create a new user in FileManager
-        }
-        
         // Add player and update label
         NameofPlayerLabel1.setText(name);
         
         JLabel successMessage = new JLabel("Successful Save!");
-        successMessage.setFont(new Font("Arial", Font.BOLD, 48));
+        successMessage.setFont(new Font("Arial", Font.BOLD, 24));
         JOptionPane.showMessageDialog(null, successMessage);
         PleaseEnterNameTextField1.setText("");
         
         this.dispose();  // Close current frame
         
-        if (pokerCLI == null) {
-        pokerCLI = new PokerCLI();  // Ensure pokerCLI is initialized
-        }
-
         try {
-            pokerCLI.start();  // Start the game
+            pokerCLI.start();  // Start the game    
         } catch (InterruptedException ex) {
             Logger.getLogger(AddPlayerNames.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }//GEN-LAST:event_SaveButton1ActionPerformed
     }
     private void PleaseEnterNameTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PleaseEnterNameTextField1ActionPerformed

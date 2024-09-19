@@ -17,7 +17,9 @@ public class PokerGame extends FileManager {
     private String username;             // The username of the current player (used for saving and loading game states).
     private PlayAgainMenu playagainmenu;
     private String response;
-
+    private GameStage gameStage;
+    private List<GameStateListener> listeners = new ArrayList<>(); // To connect the GameStage
+    
     public PokerGame() {
 
         List<Player> players = new ArrayList<>();
@@ -29,7 +31,20 @@ public class PokerGame extends FileManager {
         playagainmenu = new PlayAgainMenu();
         response = "";
     }
+    
+    public interface GameStateListener {
+        void onGameStateUpdated();
+    }
 
+    public void addGameStateListener(GameStateListener listener) {
+        listeners.add(listener);
+    }
+
+    private void notifyGameStateUpdated() {
+        for (GameStateListener listener : listeners) {
+            listener.onGameStateUpdated();
+        }
+    }
     //add a neew player to the game
     public void addPlayer(String name, int chips) {
 
@@ -55,10 +70,13 @@ public class PokerGame extends FileManager {
                 player.setFolded(false);
                 player.setCurrentBet(0);
             }
-
+            
+            notifyGameStateUpdated();
+            
             playRound(); //Play a round of poker
             Thread.sleep(1000); // Delay to simulate real gameplay
-
+            
+            notifyGameStateUpdated();
             
                 System.out.println("Do you want to play another game? (yes/no)");
                 playagainmenu.setVisible(true);
@@ -104,33 +122,44 @@ public class PokerGame extends FileManager {
     private void playRound() throws InterruptedException {
         GameStateAction initializeState = new InitializeState();
         initializeState.play(this); // Initialize the game state
-
+        
+        notifyGameStateUpdated();
+        
         if (onePlayerIsInGame()) {
             return; // If only one player is in the game, end the round
         }
-
+        notifyGameStateUpdated();
+        
         GameStateAction flopState = new DealFlopState();
         flopState.play(this); //Deal the flop
         playBettingRound("The Flop"); // Play the betting round for the flop
-
+        
+        notifyGameStateUpdated();
+        
         if (onePlayerIsInGame()) {
             return; // If only one player is in the game, end the round
         }
-
+        notifyGameStateUpdated();
+        
         GameStateAction turnState = new DealTurnState();
         turnState.play(this); //Deal the turn
         playBettingRound("The Turn"); // Play the betting round for the turn
-
+        notifyGameStateUpdated();
+        
         if (onePlayerIsInGame()) {
             return; // If only one player is in the game, end the round
         }
-
+        notifyGameStateUpdated();
+        
         GameStateAction riverState = new DealRiverState();
         riverState.play(this); //Deal the river
         playBettingRound("The River"); // Play the betting round for the river
-
+        
+        notifyGameStateUpdated();
+        
         GameStateAction determineWinnerState = new DetermineWinnerState();
         determineWinnerState.play(this); // Determine the winner of the round
+        notifyGameStateUpdated();
     }
 
     //Checks if only one player is still in the game in case all other players have folded
@@ -308,4 +337,5 @@ public class PokerGame extends FileManager {
     public void setResponse(String response) {
         this.response = response;
     }
+  
 }

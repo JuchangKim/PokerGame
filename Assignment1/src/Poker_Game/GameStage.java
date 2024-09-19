@@ -1,458 +1,185 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package Poker_Game;
 
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
-import java.util.Random;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
-/**
- *
- * @author billi
- */
-public class GameStage extends javax.swing.JFrame {
-
+public class GameStage extends JFrame implements PokerGame.GameStateListener {
     private PokerGame game;
+    private JPanel mainPanel;
+    private JLabel[] playerChipLabels, playerCardLabels, playerNameLabels;
+    private JLabel communityCardsLabel, bettingPotLabel, announcementLabel;
+    private JButton callButton, foldButton, raiseButton, checkButton, exitButton;
 
-    private AddPlayerNames addPlayers = new AddPlayerNames();
-    
-    List<String> players;
-    String[] pids;
-    String[] cards = { "ace_of_clubs.png", "2_of_clubs.png","3_of_clubs.png","10_of_clubs.png","4_of_clubs.png","5_of_clubs.png","6_of_clubs.png",
-        "7_of_clubs.png","8_of_clubs.png","9_of_clubs.png", "10_of_clubs.png","jack_of_clubs.png", "queen_of_clubs.png", "king_of_clubs.png",
-        "ace_of_diamonds.png", "2_of_diamonds.png","3_of_diamonds.png","4_of_diamonds.png","5_of_diamonds.png","6_of_diamonds.png",
-        "7_of_diamonds.png", "8_of_diamonds.png", "9_of_diamonds.png","10_of_diamonds.png","jack_of_diamonds.png","queen_of_diamonds.png",
-        "king_of_diamonds.png", "ace_of_hearts.png", "2_of_hearts.png","3_of_hearts.png","4_of_hearts.png","5_of_hearts.png","6_of_hearts.png",
-        "7_of_hearts.png","8_of_hearts.png","9_of_hearts.png","10_of_hearts.png","jack_of_hearts.png","queen_of_hearts.png","king_of_hearts.png",
-        "ace_of_spades.png", "2_of_spades.png", "3_of_spades.png", "4_of_spades.png", "5_of_spades.png", "6_of_spades.png", "7_of_spades.png", 
-        "8_of_spades.png", "9_of_spades.png", "queen_of_spades.png", "king_of_spades.png"
-        
-    };
-    private JLabel[] chipLabels;
-    private String currentChipImage = "9_chip (1).png";
-            
-    
-    public GameStage(List<Player> players, PokerGame game) {
-        initComponents();
+    public GameStage(PokerGame game) {
         this.game = game;
+        setSize(900, 600);
+        setTitle("Poker Game");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null); // Center the window on the screen.s
+        this.game.addGameStateListener(this);
+        initializeComponents();
+    }
+
+    private void initializeComponents() {
+        super.setBackground(Color.GREEN);
+        mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(Color.GREEN); // A vibrant green background
+        announcementLabel = new JLabel("Starting the game...", SwingConstants.CENTER);
+        getContentPane().add(mainPanel); // Add the panel to the JFrame
         
-        // Set the first player's name to DisplayNameTextArea2
-        if (!players.isEmpty()) {
-            DisplayNameLabel1.setText(players.get(0).getName());  // Set player's name
-        }
+        setupPlayerPanels();
+        mainPanel.setBackground(Color.GREEN); // A vibrant green background
+        setupCenterPanel();
+        mainPanel.setBackground(Color.GREEN); // A vibrant green background
+        setupControlButtons();
+        mainPanel.setBackground(Color.GREEN); // A vibrant green background
+        setupAnnouncementPanel(); // New method to handle announcements
         
-        displayRandomCards();  // Call the method to show 2 random cards
-        initializeChipLabels();
-        updateAllChipImages();
+        //pack(); // Adjusts the frame size to fit the components
+        setVisible(true);
+        startGameInBackground();
+    }
+
+    @Override
+    public void onGameStateUpdated() {
+        SwingUtilities.invokeLater(this::updateUI); // Ensure updates are on the EDT
     }
     
-    private void initializeChipLabels() {
-        chipLabels = new JLabel[]{
-            ChipsDispImageLabel1,
-            DisplayChipsLabel1,
-            ChipsImageLabel1,
-            PlayerChipsLabel2
-        };
-    }
-    
-    private void updateAllChipImages() {
-        for (JLabel label : chipLabels) {
-            updateChipImage(label, currentChipImage);
-        }
-    }
-    
-    private void updateChipImage(JLabel label, String imageName) {
-        try {
-            //BufferedImage img = loadImage("/CardsImages/" + imageName);
-            BufferedImage img = loadImage(imageName);
-            if (img != null) {
-                label.setIcon(new ImageIcon(img));
-            } else {
-                throw new IOException("Image could not be read: " + imageName);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error loading chip image: " + e.getMessage(), "Image Load Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-       
-    
-    private void displayRandomCards() {
-        Random rand = new Random();
-        int firstCardIndex = rand.nextInt(cards.length);
-        int secondCardIndex;
+    private void setupPlayerPanels() {
+     
+    playerChipLabels = new JLabel[4]; // Assuming four players
+    playerCardLabels = new JLabel[4];
+    playerNameLabels = new JLabel[4];
+
+    for (int i = 0; i < 4; i++) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        playerNameLabels[i] = new JLabel(game.getGameState().getPlayers().get(i).getName());
+        repaint();
+        playerChipLabels[i] = new JLabel("Chips: " + game.getGameState().getPlayers().get(i).getChips());
+        repaint();
+        playerCardLabels[i] = new JLabel("Cards: " + game.getGameState().getPlayers().get(i).getHand());
+        repaint();
         
-        do {
-            secondCardIndex = rand.nextInt(cards.length);
-        } while (secondCardIndex == firstCardIndex);
-        
-        try {
-            BufferedImage img1 = loadImage(cards[firstCardIndex]);
-            BufferedImage img2 = loadImage(cards[secondCardIndex]);
-            
-            if (img1 == null || img2 == null) {
-                throw new IOException("One or both images could not be read");
-            }
-            
-            int width = img1.getWidth() + img2.getWidth();
-            int height = Math.max(img1.getHeight(), img2.getHeight());
-            
-            BufferedImage combined = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-            Graphics g = combined.getGraphics();
-            g.drawImage(img1, 0, 0, null);
-            g.drawImage(img2, img1.getWidth(), 0, null);
-            g.dispose();
-            
-            ImageIcon combinedIcon = new ImageIcon(combined);
-            MyCardsLabel1.setIcon(combinedIcon);
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error loading card images: " + e.getMessage(), "Image Load Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-              
-     private BufferedImage loadImage(String filename) throws IOException {
-       String resourcePath = "/CardImages/" + filename;
-        
-        java.net.URL imageURL = getClass().getResource(resourcePath);
-        if (imageURL == null) {
-            throw new IOException("Resource not found: " + resourcePath);
-        }
-        return ImageIO.read(imageURL);
-    } 
+        panel.add(playerNameLabels[i]);
+        panel.add(playerChipLabels[i]);
+        panel.add(playerCardLabels[i]);
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        jPanel1 = new javax.swing.JPanel();
-        PlayerCardsLabel1 = new javax.swing.JLabel();
-        PlayerCards2Label1 = new javax.swing.JLabel();
-        MyCardsLabel1 = new javax.swing.JLabel();
-        compPlayerCards3Label1 = new javax.swing.JLabel();
-        compPlayer1Label1 = new javax.swing.JLabel();
-        compPlayer2Label1 = new javax.swing.JLabel();
-        compPlayer3Label1 = new javax.swing.JLabel();
-        DisplayNameLabel1 = new javax.swing.JLabel();
-        CallButton1 = new javax.swing.JButton();
-        FoldButton1 = new javax.swing.JButton();
-        RaiseButton1 = new javax.swing.JButton();
-        CheckButton1 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        ChipsDispImageLabel1 = new javax.swing.JLabel();
-        ChipsImageLabel1 = new javax.swing.JLabel();
-        DisplayChipsLabel1 = new javax.swing.JLabel();
-        PlayerChipsLabel2 = new javax.swing.JLabel();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jPanel1.setBackground(new java.awt.Color(0, 153, 102));
-
-        PlayerCardsLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Poker_Game/sbs_-_2d_poker_pack/Top-Down/Cards/Back - Top Down 88x124.png"))); // NOI18N
-        PlayerCardsLabel1.setText("jLabel1");
-
-        PlayerCards2Label1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Poker_Game/sbs_-_2d_poker_pack/Top-Down/Cards/Back - Top Down 88x124.png"))); // NOI18N
-        PlayerCards2Label1.setText("jLabel1");
-
-        MyCardsLabel1.setText("jLabel1");
-
-        compPlayerCards3Label1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Poker_Game/sbs_-_2d_poker_pack/Top-Down/Cards/Back - Top Down 88x124.png"))); // NOI18N
-        compPlayerCards3Label1.setText("jLabel1");
-
-        compPlayer1Label1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        compPlayer1Label1.setText("Computer Player 1");
-
-        compPlayer2Label1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        compPlayer2Label1.setText("Computer Player 2");
-
-        compPlayer3Label1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        compPlayer3Label1.setText("Computer Player 3");
-
-        DisplayNameLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        DisplayNameLabel1.setText("player name");
-
-        CallButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        CallButton1.setText("Call");
-        CallButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CallButton1ActionPerformed(evt);
-            }
-        });
-
-        FoldButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        FoldButton1.setText("Fold");
-        FoldButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FoldButton1ActionPerformed(evt);
-            }
-        });
-
-        RaiseButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        RaiseButton1.setText("Raise");
-        RaiseButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RaiseButton1ActionPerformed(evt);
-            }
-        });
-
-        CheckButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        CheckButton1.setText("Check");
-        CheckButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CheckButton1ActionPerformed(evt);
-            }
-        });
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
-        ChipsDispImageLabel1.setText("Display Chips");
-
-        ChipsImageLabel1.setText("DisplayChips");
-
-        DisplayChipsLabel1.setText("DisplayChips");
-
-        PlayerChipsLabel2.setText("PlayersChips");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(91, 91, 91)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(compPlayer3Label1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(compPlayerCards3Label1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(DisplayChipsLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(PlayerCards2Label1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(64, 64, 64))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(compPlayer2Label1, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(75, 75, 75))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(376, 376, 376)
-                        .addComponent(CallButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34)
-                        .addComponent(FoldButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(60, 60, 60)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(489, 489, 489)
-                                    .addComponent(ChipsImageLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGap(20, 20, 20)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(MyCardsLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(PlayerCardsLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(compPlayer1Label1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(137, 137, 137)
-                            .addComponent(ChipsDispImageLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(DisplayNameLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(33, 33, 33)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(RaiseButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
-                        .addComponent(CheckButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(PlayerChipsLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 33, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(compPlayer1Label1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(PlayerCardsLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(ChipsImageLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(83, 83, 83)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(compPlayer2Label1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(compPlayer3Label1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(compPlayerCards3Label1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(PlayerCards2Label1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(DisplayChipsLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(85, 85, 85)))
-                        .addComponent(DisplayNameLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(ChipsDispImageLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(MyCardsLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(51, 51, 51)
-                                .addComponent(PlayerChipsLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(CheckButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
-                            .addComponent(RaiseButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(FoldButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(CallButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(89, 89, 89)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(51, 51, 51))
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void CallButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CallButton1ActionPerformed
-        currentChipImage = "5_chip (1).png";
-        updateAllChipImages();
-    }//GEN-LAST:event_CallButton1ActionPerformed
-
-    private void FoldButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FoldButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_FoldButton1ActionPerformed
-
-    private void CheckButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CheckButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_CheckButton1ActionPerformed
-
-    private void RaiseButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RaiseButton1ActionPerformed
-        currentChipImage = "2_chip.png";
-        updateAllChipImages();
-    }//GEN-LAST:event_RaiseButton1ActionPerformed
-
-    //I'm not sure about this code
-    public void computerPlayerAction(String action) {
-        switch (action.toLowerCase()) {
-            case "call":
-                currentChipImage = "5_chip (1).png";
+        switch (i) {
+            case 0:
+                panel.setBounds(375, 490, 150, 100);
                 break;
-            case "raise":
-                currentChipImage = "2_chip.png";
+            case 1:
+                panel.setBounds(375, 10, 150, 100);
                 break;
-            case "fold":
-            case "check":
-                // Do nothing, keep current image
-                return;
+            case 2:
+                panel.setBounds(730, 200, 150, 100);
+                break;
+            case 3:
+                panel.setBounds(10, 200, 150, 100);
+                break;
+            default:
+                break;
         }
-        updateAllChipImages();
+        mainPanel.add(panel);
+        panel.setBackground(Color.GREEN); // A vibrant green background
     }
-    /*
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GameStage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GameStage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GameStage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GameStage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-         
-        /* Initialize and display the form */
-    PokerGame game = new PokerGame(); // Ensure PokerGame is initialized
+    }
+
+    private void setupAnnouncementPanel() {
     
-    // Ensure that GameState is properly initialized with players
-    if (game.getGameState() != null && !game.getGameState().getPlayers().isEmpty()) {
-        new GameStage(game.getGameState().getPlayers(), game).setVisible(true);
-    } else {
-        System.out.println("Game state or players are not properly initialized.");
-    }
+    announcementLabel = new JLabel("Game Announcements Here", SwingConstants.CENTER);
+    announcementLabel.setBounds(200, 360, 500, 50);
+    mainPanel.add(announcementLabel);
+    announcementLabel.setBackground(Color.GREEN); // A vibrant green background
+}
+    private void startGameInBackground() {
+        Thread gameThread = new Thread(() -> {
+            try {
+                game.startGame(game.getGameState().getPlayers().get(0).getName());
+                SwingUtilities.invokeLater(this::updateUI);
+                repaint();
+            } catch (Exception e) {
+                SwingUtilities.invokeLater(() -> announcementLabel.setText("Failed to start game: " + e.getMessage()));
+            }
+        });
+        gameThread.start();
+        repaint();
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton CallButton1;
-    private javax.swing.JButton CheckButton1;
-    private javax.swing.JLabel ChipsDispImageLabel1;
-    private javax.swing.JLabel ChipsImageLabel1;
-    private javax.swing.JLabel DisplayChipsLabel1;
-    private javax.swing.JLabel DisplayNameLabel1;
-    private javax.swing.JButton FoldButton1;
-    private javax.swing.JLabel MyCardsLabel1;
-    private javax.swing.JLabel PlayerCards2Label1;
-    private javax.swing.JLabel PlayerCardsLabel1;
-    private javax.swing.JLabel PlayerChipsLabel2;
-    private javax.swing.JButton RaiseButton1;
-    private javax.swing.JLabel compPlayer1Label1;
-    private javax.swing.JLabel compPlayer2Label1;
-    private javax.swing.JLabel compPlayer3Label1;
-    private javax.swing.JLabel compPlayerCards3Label1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    // End of variables declaration//GEN-END:variables
+    private void setupCenterPanel() {
+        JPanel centerUpPanel = new JPanel(new BorderLayout());
+        JPanel centerDownPanel = new JPanel(new BorderLayout());
+        communityCardsLabel = new JLabel("Community Cards : " + game.getGameState().getCommunityCards());
+        bettingPotLabel = new JLabel("Betting Pot: " + game.getBettingSystem().getPot());
+        announcementLabel = new JLabel(game.getGameState().getAnnouncement(), SwingConstants.CENTER);
+
+        centerDownPanel.add(communityCardsLabel);
+        centerUpPanel.add(bettingPotLabel);
+
+        centerUpPanel.setBounds(350, 150, 200, 100);
+        centerDownPanel.setBounds(350, 250, 200, 100);
+        centerUpPanel.setBackground(Color.GREEN); // A vibrant green background
+        centerDownPanel.setBackground(Color.GREEN); // A vibrant green background
+        mainPanel.add(centerUpPanel);
+        mainPanel.add(centerDownPanel);
+        
+    }
+
+    private void setupControlButtons() {
+        JPanel buttonPanel = new JPanel();
+        callButton = new JButton("Call");
+        foldButton = new JButton("Fold");
+        raiseButton = new JButton("Raise");
+        checkButton = new JButton("Check");
+        exitButton = new JButton("Exit Game");
+
+        // Add action listeners to handle game logic on button press
+        callButton.addActionListener(e -> performAction("Call"));
+        foldButton.addActionListener(e -> performAction("Fold"));
+        raiseButton.addActionListener(e -> performAction("Raise"));
+        checkButton.addActionListener(e -> performAction("Check"));
+        exitButton.addActionListener(e -> System.exit(0)); // Close the application
+        
+        buttonPanel.add(callButton);
+        buttonPanel.add(foldButton);
+        buttonPanel.add(raiseButton);
+        buttonPanel.add(checkButton);
+        buttonPanel.add(exitButton);
+
+        buttonPanel.setBounds(250, 450, 400, 50);
+        mainPanel.add(buttonPanel);
+        buttonPanel.setBackground(Color.GREEN); // A vibrant green background
+    }
+    
+    private void performAction(String action) {
+        // Placeholder for integrating with game logic
+        announcementLabel.setText(action + " button pressed.");
+        // Update game state based on action
+    }
+    
+    public void updateUI() {
+        java.util.List<Player> players = game.getGameState().getPlayers();
+        for (int i = 0; i < 4; i++) {
+            playerNameLabels[i].setText(players.get(i).getName());
+            playerChipLabels[i].setText("Chips: " + players.get(i).getChips());
+            playerCardLabels[i].setText("Cards: " + players.get(i).getHand());
+        }
+        communityCardsLabel.setText("Community Cards : " + game.getGameState().getCommunityCards().toString());
+        bettingPotLabel.setText("Betting Pot: " + game.getBettingSystem().getPot() + "       "
+                                + "Current Bet: " + game.getGameState().getCurrentBet());
+        announcementLabel.setText(game.getGameState().getAnnouncement());
+        repaint();
+    }
+
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            PokerGame game = new PokerGame(); // Create a new instance of the game.
+            GameStage gameStage = new GameStage(game);
+            gameStage.setVisible(true);
+        });
+    }
 }

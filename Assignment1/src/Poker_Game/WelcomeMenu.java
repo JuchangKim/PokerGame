@@ -16,7 +16,7 @@ public class WelcomeMenu extends javax.swing.JFrame {
      * Creates new form WelcomeMenu
      */
     
-    private PokerCLI pokerCLI; // Reference to PokerCLI for game logic
+     // Reference to PokerCLI for game logic
     
     public WelcomeMenu() {
         initComponents();
