@@ -68,7 +68,7 @@ public class FileManager {
             String line;
             Player currentPlayer = null;
 
-if (file.exists() && file.length() == 0) {
+        if (file.exists() && file.length() == 0) {
         System.out.println("There is no user record so create new record.");
 
         // Delete the empty file

@@ -18,9 +18,9 @@ import java.util.List;
 public class DetermineWinnerState implements GameStateAction {
     @Override
     public void play(PokerGame game) throws InterruptedException {
-        
+        String s;
         System.out.println("Determining winner...\n");
-        
+        s = "Determining winner...\n";
          // Use PokerRules to determine the winner based on the players' hands and community cards.
         Player winner = PokerRules.determineWinner(game.getGameState().getPlayers(), game.getGameState().getCommunityCards());
         
@@ -49,7 +49,7 @@ public class DetermineWinnerState implements GameStateAction {
         
         // Announce the winner of the round.
         System.out.println("The winner is " + winner.getName() + "!\n");
-        
+        s = "The winner is " + winner.getName() + "!\n";
         // Set the winner in the game's state.
         game.getGameState().setWinner(winner);
         
@@ -70,6 +70,7 @@ public class DetermineWinnerState implements GameStateAction {
             
             // If there is no winner, announce that no one won this round
             System.out.println("No winner this round.");
+            s = "No winner this round.";
         }
     }
 }

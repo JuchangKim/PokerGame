@@ -15,7 +15,11 @@ public class PokerGame extends FileManager {
     private BettingSystem bettingSystem; // The betting system managing the pot and bets.
     private PokerCLI pokerCli;           // A command-line interface for interacting with the game (unused in this snippet).
     private String username;             // The username of the current player (used for saving and loading game states).
-
+    private PlayAgainMenu playagainmenu;
+    private String response;
+    private GameStage gameStage;
+    private List<GameStateListener> listeners = new ArrayList<>(); // To connect the GameStage
+    
     public PokerGame() {
 
         List<Player> players = new ArrayList<>();
@@ -24,9 +28,23 @@ public class PokerGame extends FileManager {
         deck = new Deck();
         bettingSystem = new BettingSystem();
         scanner = new Scanner(System.in);
-
+        playagainmenu = new PlayAgainMenu();
+        response = "";
+    }
+    
+    public interface GameStateListener {
+        void onGameStateUpdated();
     }
 
+    public void addGameStateListener(GameStateListener listener) {
+        listeners.add(listener);
+    }
+
+    private void notifyGameStateUpdated() {
+        for (GameStateListener listener : listeners) {
+            listener.onGameStateUpdated();
+        }
+    }
     //add a neew player to the game
     public void addPlayer(String name, int chips) {
 
@@ -45,22 +63,26 @@ public class PokerGame extends FileManager {
             System.out.println("Save file already exists. Loading game state...");
         }
 
-        while (true) {
+        
             // Reset each player's status at the start of a new game.
             for (Player player : getGameState().getPlayers()) {
                 player.setIsInGame(true);
                 player.setFolded(false);
                 player.setCurrentBet(0);
             }
-
+            
+            notifyGameStateUpdated();
+            
             playRound(); //Play a round of poker
             Thread.sleep(1000); // Delay to simulate real gameplay
-
-            while (true) {
+            
+            notifyGameStateUpdated();
+            
                 System.out.println("Do you want to play another game? (yes/no)");
-                String response = scanner.nextLine();
+                playagainmenu.setVisible(true);
+                
 
-                if (response.equalsIgnoreCase("yes")) {
+                if (getResponse().equalsIgnoreCase("yes")) {
                     // Log the results of the round to the game log
                     String log = "";
                     for (Player p : gameState.getPlayers()) {
@@ -73,8 +95,8 @@ public class PokerGame extends FileManager {
                     log += "Winner is : " + gameState.getWinner() + "\n";
 
                     FileManager.appendToGameLog(username, log);// Append log
-                    break; // Continue to the next game
-                } else if (response.equalsIgnoreCase("no")) {
+                    
+                } else if (getResponse().equalsIgnoreCase("no")) {
                     // Save the current game state and exit
                     String log = "";
                     for (Player p : gameState.getPlayers()) {
@@ -88,45 +110,56 @@ public class PokerGame extends FileManager {
 
                     FileManager.appendToGameLog(username, log);
                     FileManager.saveGameState(gameState, username);// Save game state
-                    return; // Exit the method, ending the game
+                    // Exit the method, ending the game
                 } else {
                     System.out.println("Invalid input. Please enter 'yes' or 'no'.");
                 }
-            }
-        }
+            
+        
     }
     //playRound() was generated with ChatGPT
     //Plays a single round of poker, including dealing cards and handling bets
     private void playRound() throws InterruptedException {
         GameStateAction initializeState = new InitializeState();
         initializeState.play(this); // Initialize the game state
-
+        
+        notifyGameStateUpdated();
+        
         if (onePlayerIsInGame()) {
             return; // If only one player is in the game, end the round
         }
-
+        notifyGameStateUpdated();
+        
         GameStateAction flopState = new DealFlopState();
         flopState.play(this); //Deal the flop
         playBettingRound("The Flop"); // Play the betting round for the flop
-
+        
+        notifyGameStateUpdated();
+        
         if (onePlayerIsInGame()) {
             return; // If only one player is in the game, end the round
         }
-
+        notifyGameStateUpdated();
+        
         GameStateAction turnState = new DealTurnState();
         turnState.play(this); //Deal the turn
         playBettingRound("The Turn"); // Play the betting round for the turn
-
+        notifyGameStateUpdated();
+        
         if (onePlayerIsInGame()) {
             return; // If only one player is in the game, end the round
         }
-
+        notifyGameStateUpdated();
+        
         GameStateAction riverState = new DealRiverState();
         riverState.play(this); //Deal the river
         playBettingRound("The River"); // Play the betting round for the river
-
+        
+        notifyGameStateUpdated();
+        
         GameStateAction determineWinnerState = new DetermineWinnerState();
         determineWinnerState.play(this); // Determine the winner of the round
+        notifyGameStateUpdated();
     }
 
     //Checks if only one player is still in the game in case all other players have folded
@@ -174,7 +207,7 @@ public class PokerGame extends FileManager {
     //Handles a player's turn, either for a human player or a computer-controlled player
     public void playerTurn(Player player) throws InterruptedException {
         if (player.getName().equals("Computer 1") || player.getName().equals("Computer 2")
-                || player.getName().equals("Computer 3") || player.getName().equals("Computer 4")) {
+                || player.getName().equals("Computer 3")) {
             computerTurn(player); //Handles a computer player's turn
         } else {
             userTurn(player); //Handles a human player's turn
@@ -290,4 +323,19 @@ public class PokerGame extends FileManager {
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
     }
+
+    /**
+     * @return the response
+     */
+    public String getResponse() {
+        return response;
+    }
+
+    /**
+     * @param response the response to set
+     */
+    public void setResponse(String response) {
+        this.response = response;
+    }
+  
 }
