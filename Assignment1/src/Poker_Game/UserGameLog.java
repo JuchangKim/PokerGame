@@ -29,13 +29,13 @@ public class UserGameLog extends javax.swing.JFrame {
     // Method to load and display the user's game log
     private void displayUserLog() {
         StringBuilder logContent = new StringBuilder();
-        GameState gameState = FileManager.loadGameState(username);
-        if (gameState != null) {
-            for (Player player : gameState.getPlayers()) {
+        PokerGame game = FileManager.loadGame(username);
+        if (game != null) {
+            for (Player player : game.getGameState().getPlayers()) {
                 logContent.append("Player Name: ").append(player.getName()).append("\n");
                 logContent.append("Player Balance: ").append(player.getChips()).append("\n");
                 logContent.append("Number of Wins: ").append(player.getNumOfWin()).append("\n");
-                logContent.append("Current Bet: ").append(gameState.getCurrentBet()).append("\n");
+                logContent.append("Current Bet: ").append(game.getGameState().getCurrentBet()).append("\n");
                 logContent.append("\n");
             }
         } else {

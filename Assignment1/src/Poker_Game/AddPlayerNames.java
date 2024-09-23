@@ -175,7 +175,7 @@ public class AddPlayerNames extends javax.swing.JFrame {
         this.dispose();  // Close current frame
         
         try {
-            pokerCLI.start();  // Start the game    
+            pokerCLI.start(name);  // Start the game    
         } catch (InterruptedException ex) {
             Logger.getLogger(AddPlayerNames.class.getName()).log(Level.SEVERE, null, ex);
         }

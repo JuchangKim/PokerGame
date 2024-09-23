@@ -23,23 +23,24 @@ public class PokerCLI {
     // Start the game with the provided username
     
     // This method will be triggered after the user clicks to start the game in the GUI
-    public void start() throws InterruptedException {
-        String username = AddPlayerNames.name;
-        GameState record = FileManager.loadGameState(username);
+    public void start(String name) throws InterruptedException {
+       
+        PokerGame record = FileManager.loadGame(name);
 
         if (record != null) {
             // If user data is found, continue the game with the loaded state
-            System.out.println("Welcome back, " + record.getPlayers().get(0).getName() + "!");
-            this.getGame().addPlayer(record.getPlayers().get(0).getName(), record.getPlayers().get(0).getChips());
-            this.getGame().setGameState(record);
+            this.setGame(record);
+            System.out.println("Welcome back, " + game.getGameState().getPlayers().get(0).getName() + "!");
+            
+            
         } else {
             // No saved game, create a new one
             System.out.println("Username not found. Starting a new game.");
-            userSetupPlayers(username, 1000);
+            userSetupPlayers(name, 1000);
             ComputerSetupPlayers();
         }
         
-        new GameStage(this.getGame()).setVisible(true);  // Open the game stage
+        new GameStage(game).setVisible(true);  // Open the game stage
         
     }
 

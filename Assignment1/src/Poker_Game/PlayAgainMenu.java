@@ -6,7 +6,11 @@ package Poker_Game;
 
 import java.util.ArrayList;
 import Poker_Game.PokerGame;
+import Poker_Game.GameStage;
+import Poker_Game.PokerCLI;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,8 +23,12 @@ public class PlayAgainMenu extends javax.swing.JFrame {
      * Creates new form PlayAgainMenu
      */
     private PokerGame game;
+    private GameStage gameStage;
     
-    public PlayAgainMenu() {
+    public PlayAgainMenu(PokerGame game) {
+        this.game = game;
+        
+        
         initComponents();
         
     }
@@ -112,43 +120,20 @@ public class PlayAgainMenu extends javax.swing.JFrame {
     private void YesButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YesButton1ActionPerformed
         
         
-        new GameStage(this.game).setVisible(true);  // Open the game stage
+        
         game.setResponse("yes");
-        this.dispose();  // Close current frame
+        try {
+            this.dispose();  // Close current frame
+            PokerCLI pokerCLI = new PokerCLI();
+            pokerCLI.start(game.getGameState().getPlayers().get(0).getName());  // Start a new round in the existing game
+        } catch (InterruptedException ex) {
+            Logger.getLogger(PlayAgainMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+                       
     }//GEN-LAST:event_YesButton1ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PlayAgainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PlayAgainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PlayAgainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PlayAgainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        new PlayAgainMenu().setVisible(true);
-        
-    }
-
+ 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton NoButton1;
     private javax.swing.JLabel PlayAgainLabel1;

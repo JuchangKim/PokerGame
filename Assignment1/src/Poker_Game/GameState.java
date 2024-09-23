@@ -8,7 +8,9 @@ package Poker_Game;
  *
  * @author user
  */
+import java.awt.Image;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameState implements Serializable {
@@ -19,7 +21,7 @@ public class GameState implements Serializable {
     private int pot;                        // The total amount of chips in the pot
     private int currentBet;                 // The current bet amount in the game
     private Player winner;                  // The player who won the game
-    private String announcement;
+    
     
     public GameState(List<Player> players, List<Card> communityCards, int pot, int currentBet) {
         this.players = players;
@@ -37,6 +39,19 @@ public class GameState implements Serializable {
         return communityCards;
     }
 
+    public List<Image> getCommunityCardsImages() {
+        
+        List<Image> images;
+        images = new ArrayList<Image>();
+        
+        for(Card card : communityCards)
+        {
+            images.add(card.getImage());
+        }
+        
+        return images;
+    }
+    
     public int getPot() {
         return pot;
     }
@@ -71,18 +86,5 @@ public class GameState implements Serializable {
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
-
-    /**
-     * @return the announcement
-     */
-    public String getAnnouncement() {
-        return announcement + " \n";
-    }
-
-    /**
-     * @param announcement the announcement to set
-     */
-    public void setAnnouncement(String announcement) {
-        this.announcement = announcement;
-    }
 }
+

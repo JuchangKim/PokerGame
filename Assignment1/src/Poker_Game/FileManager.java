@@ -37,16 +37,16 @@ public class FileManager {
     }
 
     //Saves the current game state to a file with the specified name.
-    public static void saveGameState(GameState gameState, String fileName) {
+    public static void saveGame(PokerGame game, String fileName) {
         String filePath = SAVE_DIRECTORY + fileName + ".txt";
         try ( PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
             // Iterate over all players and save their relevant information
-            for (Player player : gameState.getPlayers()) {
+            for (Player player : game.getGameState().getPlayers()) {
 
                 writer.println("Player Name: " + player.getName()); //Save the player's name
                 writer.println("Player Balance: " + player.getChips()); // Save the player's current chip balance.
                 writer.println("Number of Wins: " + player.getNumOfWin()); // Save the player's number of wins.
-                writer.println("Current Bet: " + gameState.getCurrentBet()); // Save the current bet amount.
+                writer.println("Current Bet: " + game.getGameState().getCurrentBet()); // Save the current bet amount.
                 writer.println(""); // Add an empty line for separation between players.
             }
             System.out.println("Game saved successfully to " + filePath);
@@ -56,7 +56,7 @@ public class FileManager {
     }
 
     //Loads a game state from the specified file.
-    public static GameState loadGameState(String fileName) {
+    public static PokerGame loadGame(String fileName) {
         String filePath = SAVE_DIRECTORY + fileName + ".txt";
           File file = new File(filePath);
         try ( BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -87,37 +87,43 @@ public class FileManager {
         return null; // Return null since there's no game state to load
     }
             
-            // Read the file line by line and extract the game state information
+            // Read each line from the file
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("Player Name: ")) {
                     String playerName = line.substring("Player Name: ".length());
-                    currentPlayer = new Player(playerName, 0); // Create a new player with a starting balance of 0
-                    players.add(currentPlayer); 
+                    currentPlayer = new Player(playerName, 0); // Initialize player with a name and balance 0
+                    players.add(currentPlayer);
                 } else if (line.startsWith("Player Balance: ")) {
                     int balance = Integer.parseInt(line.substring("Player Balance: ".length()));
                     if (currentPlayer != null) {
-                        currentPlayer.addToChips(balance); // Set balance of the main player, i'm not sure if this is meant to be getChps()
+                        currentPlayer.addToChips(balance); // Set the player's balance
                     }
-                } else if (line.startsWith("Community Cards: ")) {
-                    // Logic to parse and add community cards
-                } else if (line.startsWith("Pot: ")) {
-                    pot = Integer.parseInt(line.substring("Pot: ".length())); // Set the pot value.
+                } else if (line.startsWith("Number of Wins: ")) {
+                    int numWins = Integer.parseInt(line.substring("Number of Wins: ".length()));
+                    if (currentPlayer != null) {
+                        currentPlayer.setNumOfWin(numWins); // Set the number of wins
+                    }
                 } else if (line.startsWith("Current Bet: ")) {
-                    currentBet = Integer.parseInt(line.substring("Current Bet: ".length())); // Set the current bet.
-                } else if (line.startsWith("Number Of Wins: ")) {
-                    int num = Integer.parseInt(line.substring("Number Of Wins: ".length()));
-                    currentPlayer.setNumOfWin(num); // Set the player's number of wins.
+                    currentBet = Integer.parseInt(line.substring("Current Bet: ".length()));
+                    if (currentPlayer != null) {
+                        currentPlayer.setCurrentBet(currentBet); // Set the player's current bet
+                    }
+                } else if (line.startsWith("Pot: ")) {
+                    pot = Integer.parseInt(line.substring("Pot: ".length())); // Set the pot value
+                } else if (line.startsWith("Community Cards: ")) {
+                    String cardsString = line.substring("Community Cards: ".length());
+                    // Assuming cards are stored as a comma-separated list
+                 
                 }
             }
             
-            // Create a new GameState object with the loaded values
+            // Create and return a new PokerGame with the loaded game state
             GameState gameState = new GameState(players, communityCards, pot, currentBet);
-            if (winner != null) {
-                gameState.setWinner(winner);
-            }
+            PokerGame game = new PokerGame();
+            game.setGameState(gameState);
 
             System.out.println("Game loaded successfully from " + filePath);
-            return gameState;
+            return game;
         } catch (IOException e) {
             System.err.println("Error loading game: " + e.getMessage());
             return null;
