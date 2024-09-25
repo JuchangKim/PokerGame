@@ -12,6 +12,7 @@ import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ImageIcon;
 
 public class GameState implements Serializable {
     
@@ -39,14 +40,13 @@ public class GameState implements Serializable {
         return communityCards;
     }
 
-    public List<Image> getCommunityCardsImages() {
+    public List<ImageIcon> getCommunityCardsImages() {
         
-        List<Image> images;
-        images = new ArrayList<Image>();
+        List<ImageIcon> images = new ArrayList<>();
         
         for(Card card : communityCards)
         {
-            images.add(card.getImage());
+            images.add(card.getImageIcon());
         }
         
         return images;

@@ -18,7 +18,7 @@ public class Card {
     private int value;
     private String suit;
     private String colour;
-    private Image image;
+    private ImageIcon imageIcon;
     
 
     // Constructor to initialize the card with a value and suit
@@ -26,7 +26,7 @@ public class Card {
         // Assign the value and suit to the card
         this.value = value;
         this.suit = suit;
-        this.image = image;
+        this.imageIcon = new ImageIcon(image);
 
         // Determine the color of the card based on its suit
         if(this.suit.equals("Hearts") || this.suit.equals("Diamonds")) {
@@ -39,8 +39,8 @@ public class Card {
     }
     
     
-    public Image getImage() {
-        return image;
+    public ImageIcon getImageIcon() {
+        return imageIcon;
     }
 
     

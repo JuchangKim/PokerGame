@@ -4,6 +4,7 @@
  */
 package Poker_Game;
 
+import java.awt.Image;
 import java.awt.MediaTracker;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
@@ -33,17 +34,23 @@ public class Deck {
         //clear the current deck
         this.deck.clear();
         
-        //adding a hearts suit with values from 2 to 14. 14 = Ace
+        //adding the card values which are value(rank), suit, image (this code is genreated by chatGPT).
         for (String suit : suits) {
         for (int i = 0; i < values.length; i++) {  // Start from 0 to access the first element "two"
             String cardName = values[i] + "_of_" + suit + ".png"; // Construct filename based on naming convention
-            String imageName = "/Poker_Game/CardImages/" + cardName; // Adjust path as needed
-            ImageIcon icon = new ImageIcon(getClass().getResource(imageName));
-            int cardValue = i + 2; // Card values need to start from 2 for "two"
-            if (icon.getImageLoadStatus() != MediaTracker.COMPLETE) {
-                System.err.println("Error loading image: " + imageName);
-                continue;
+            String imageName = "/Poker_Game/CardImages/" + cardName; 
+            java.net.URL imgUrl = getClass().getResource(imageName);
+            if (imgUrl == null) {
+                System.err.println("Resource not found: " + imageName);
+                continue; // Skip this card if the image is not found
             }
+            ImageIcon icon = new ImageIcon(imgUrl);
+                
+                // Resize the image
+            Image image = icon.getImage().getScaledInstance(50, 90, Image.SCALE_SMOOTH);
+            icon = new ImageIcon(image); // Recreate ImageIcon with the new size
+                
+            int cardValue = i + 2; // Card values need to start from 2 for "two"
             this.deck.add(new Card(cardValue, suit, icon.getImage())); // Add card with image
         }
     }

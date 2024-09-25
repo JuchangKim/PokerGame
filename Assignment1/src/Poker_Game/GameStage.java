@@ -2,6 +2,8 @@ package Poker_Game;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
@@ -11,9 +13,10 @@ import javax.swing.border.Border;
 public class GameStage extends JFrame implements GameListener {
     private PokerGame game;
     private PokerController controller;
-    private JPanel mainPanel, buttonPanel;
+    private JPanel mainPanel, buttonPanel, communityCardsPanel;
+    private JPanel[] playerCardPanels;
     private JLabel[] playerChipLabels, playerCardLabels, playerNameLabels, announcementLabels;
-    private JLabel communityCardsLabel, bettingPotLabel, RoundLabel;
+    private JLabel bettingPotLabel, RoundLabel;
     private JButton callButton, foldButton, raiseButton, checkButton, exitButton;
     private Border border;
     private CountDownLatch userInputLatch;  // Latch to pause the game flow
@@ -63,7 +66,7 @@ public class GameStage extends JFrame implements GameListener {
     private void setupPlayerPanels() {
         
         playerChipLabels = new JLabel[4]; // Assuming four players
-        playerCardLabels = new JLabel[4];
+        playerCardPanels = new JPanel[4];
         playerNameLabels = new JLabel[4];
         
         for (int i = 0; i < 4; i++) {
@@ -75,13 +78,39 @@ public class GameStage extends JFrame implements GameListener {
             repaint();
             playerChipLabels[i] = new JLabel("Chips: " + getGame().getGameState().getPlayers().get(i).getChips());
             repaint();
-            playerCardLabels[i] = new JLabel("Cards: " + getGame().getGameState().getPlayers().get(i).getHand().getCards().get(0).getImage() 
-                                            + getGame().getGameState().getPlayers().get(i).getHand().getCards().get(1).getImage());
-            repaint();
-            
+       // Initialize card labels panel as a JPanel to hold two card images
+        JPanel cardPanel = new JPanel(new FlowLayout()); // To hold the two card labels
+
+        JLabel cardLabel1 = new JLabel(); // Initialize empty label for the first card
+        JLabel cardLabel2 = new JLabel(); // Initialize empty label for the second card
+
+        // Check if the first card image is available and assign it
+        if (getGame().getGameState().getPlayers().get(i).getHand().getCards().size() > 0 &&
+            getGame().getGameState().getPlayers().get(i).getHand().getCards().get(0).getImageIcon() != null) {
+            ImageIcon image1 = getGame().getGameState().getPlayers().get(i).getHand().getCards().get(0).getImageIcon();
+            cardLabel1.setIcon(image1); // Set the card image
+        }
+
+        // Check if the second card image is available and assign it
+        if (getGame().getGameState().getPlayers().get(i).getHand().getCards().size() > 1 &&
+            getGame().getGameState().getPlayers().get(i).getHand().getCards().get(1).getImageIcon() != null) {
+            ImageIcon image2 = getGame().getGameState().getPlayers().get(i).getHand().getCards().get(1).getImageIcon();
+            cardLabel2.setIcon(image2); // Set the card image
+        }
+
+        // Add both card labels to the cardPanel
+        cardPanel.add(cardLabel1);
+        cardPanel.add(cardLabel2);
+        cardPanel.setBackground(Color.GREEN);
+
+        // Store this panel in the playerCardLabels array
+        playerCardPanels[i] = new JPanel(); // Initialize the playerCardLabel (or use JPanel if you want)
+        playerCardPanels[i].add(cardPanel); // Add the cardPanel to the playerCardLabel
+        playerCardPanels[i].setBackground(Color.GREEN);
+
             panel.add(playerNameLabels[i]);
             panel.add(playerChipLabels[i]);
-            panel.add(playerCardLabels[i]);
+            panel.add(playerCardPanels[i]); // Add the card panel directly instead of playerCardLabels[i]
             
             switch (i) {
                 case 0:
@@ -182,9 +211,10 @@ public class GameStage extends JFrame implements GameListener {
         JPanel centerDownPanel = new JPanel(new BorderLayout());
         
         bettingPotLabel = new JLabel("Betting Pot: " + getGame().getBettingSystem().getPot());
-        communityCardsLabel = new JLabel("Community Cards: " + getGame().getGameState().getCommunityCardsImages());
+        communityCardsPanel = new JPanel();
+        communityCardsPanel.setBackground(Color.GREEN);
         
-        centerDownPanel.add(communityCardsLabel);
+        centerDownPanel.add(communityCardsPanel);
         centerUpPanel.add(bettingPotLabel);
         
         centerUpPanel.setBounds(300, 200, 300, 100);
@@ -229,7 +259,6 @@ public class GameStage extends JFrame implements GameListener {
         mainPanel.add(buttonPanel);
     }
     
-        
     @Override
     public void onPlayerTurn(Player player) {
     // Only show buttons if it's the first player's (user's) turn
@@ -260,16 +289,14 @@ public class GameStage extends JFrame implements GameListener {
                 List<Player> players = getGame().getGameState().getPlayers();
                 
                 for (int i = 0; i < Math.min(players.size(), playerNameLabels.length); i++) {
-                    if (playerNameLabels[i] != null && playerChipLabels[i] != null && playerCardLabels[i] != null) {
+                    if (playerNameLabels[i] != null && playerChipLabels[i] != null && playerCardPanels[i] != null) {
                         playerNameLabels[i].setText(players.get(i).getName());
                         playerChipLabels[i].setText("Chips: " + players.get(i).getChips());
-                        playerCardLabels[i].setText("Cards: " + players.get(i).getHand().toString());
+                        updatePlayerCardImages(playerCardPanels[i], players.get(i).getHand().getCards());
                     }
                 }
                 
-                if (communityCardsLabel != null && getGame().getGameState().getCommunityCards() != null) {
-                    communityCardsLabel.setText("Community Cards: " + getGame().getGameState().getCommunityCards().toString());
-                }
+                updateCommunityCardImages(getGame().getGameState().getCommunityCards());
                 
                 if (bettingPotLabel != null) {
                     bettingPotLabel.setText("Pot: " + getGame().getBettingSystem().getPot()
@@ -303,5 +330,37 @@ public class GameStage extends JFrame implements GameListener {
      */
     public void setGame(PokerGame game) {
         this.game = game;
+    }
+
+    // Updating community card images
+    private void updateCommunityCardImages(List<Card> communityCards) {
+       communityCardsPanel.removeAll();
+        // Create a copy of the list to avoid ConcurrentModificationException
+        List<Card> communityCardsCopy = new ArrayList<>(communityCards);
+   
+    for (Card card : communityCardsCopy) {
+        if (card != null && card.getImageIcon() != null) {
+            communityCardsPanel.add(new JLabel(card.getImageIcon()));
+        }
+    }
+    communityCardsPanel.setBackground(Color.GREEN);
+    communityCardsPanel.revalidate();
+    communityCardsPanel.repaint();
+    }
+
+    // Updating player card images
+    private void updatePlayerCardImages(JPanel cardPanel, List<Card> cards) {
+        cardPanel.removeAll();
+    for (Card card : cards) {
+        if (card != null && card.getImageIcon() != null) {
+            cardPanel.add(new JLabel(card.getImageIcon()));
+        }
+    }
+    cardPanel.setBackground(Color.GREEN);
+    cardPanel.revalidate();
+    cardPanel.repaint();
+    
+    
+    
     }
 }
