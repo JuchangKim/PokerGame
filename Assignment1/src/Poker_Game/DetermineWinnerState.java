@@ -36,13 +36,13 @@ public class DetermineWinnerState implements GameStateAction {
                     
                     // Create a new Hand object for the player using all their available cards
                     Hand playerHand = new Hand(allCards);
-                    p.setHand(playerHand);
+                    
                     
                     // Evaluate the player's hand to determine its rank.
                     PokerRules.evaluateHand(playerHand);
                     
                     // Print out the player's hand and its rank.
-                    System.out.println(p.getName() + " has " + p.getHand() + " : " + playerHand.getHandRank() + "\n");
+                    System.out.println(p.getName() + " has " + playerHand.getHandRank() + "\n");
                     Thread.sleep(1000); //Deal of 1 ssecond between display of players hands
                 }
             }

@@ -139,7 +139,6 @@ public class PokerGame extends FileManager {
         GameStateAction initializeState = new InitializeState();
         initializeState.play(this); // Initialize the game state
        
-        
         notifyGameUpdated();
         
         if (onePlayerIsInGame()) {
@@ -218,6 +217,7 @@ public class PokerGame extends FileManager {
     //Plays a betting round for a specified phase of the game such as Flop, Turn, River
     private void playBettingRound(String roundName) throws InterruptedException {
         this.setRound(roundName);
+        
         System.out.println(roundName + " Round\n");
         
         System.out.println("Community Cards: " + getGameState().getCommunityCards() + "\n");
