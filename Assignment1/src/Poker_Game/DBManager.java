@@ -33,7 +33,16 @@ public class DBManager {
     }
 
     public static Connection getConnection() {
-        return conn;
+       try {
+        if (conn == null || conn.isClosed()) {
+            conn = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+            System.out.println("Connection (re)established successfully!");
+        }
+    } catch (SQLException e) {
+        System.err.println("Failed to establish connection: " + e.getMessage());
+        e.printStackTrace();
+    }
+    return conn;
     }
 
     //Establish connection
@@ -46,7 +55,9 @@ public class DBManager {
             Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
 
             // Establish the connection and assign it to the class field
+            
             conn = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+            conn.setSchema("POKER");
             System.out.println("Connection established successfully!");
 
         } catch (ClassNotFoundException e) {

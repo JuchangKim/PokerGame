@@ -201,6 +201,7 @@ public class PokerGame extends FileManager {
             gameState.setWinner(lastPlayer); // Set the last remaining player as the winner.
             lastPlayer.addNumOfWin(); // Increment the player's win count.
             lastPlayer.addToChips(getBettingSystem().getPot()); // Add the pot to the player's chips.
+            FileManager.saveGame(this, this.getGameState().getPlayers().get(0).getName());
             getBettingSystem().resetPot(); // Reset the pot for the next round.
 
             for (Player p : getGameState().getPlayers()) {

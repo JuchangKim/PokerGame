@@ -59,6 +59,7 @@ public class DetermineWinnerState implements GameStateAction {
         // If there is a winner, award them the pot and reset the pot for the next round
         if (winner != null) {
             winner.addToChips(game.getBettingSystem().getPot()); // Winner takes all
+            FileManager.saveGame(game, game.getGameState().getPlayers().get(0).getName());
             game.getBettingSystem().resetPot(); // Clear the pot for the next game
             
             // Print out each player's chip count after the round

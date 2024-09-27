@@ -173,12 +173,7 @@ public class AddPlayerNames extends javax.swing.JFrame {
         PleaseEnterNameTextField1.setText("");
         
         this.dispose();  // Close current frame
-        
-        try {
-            pokerCLI.start(name);  // Start the game    
-        } catch (InterruptedException ex) {
-            Logger.getLogger(AddPlayerNames.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        pokerCLI.start(name);  // Start the game
         
     }//GEN-LAST:event_SaveButton1ActionPerformed
     }

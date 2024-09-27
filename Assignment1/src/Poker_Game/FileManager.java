@@ -33,39 +33,55 @@ import java.util.List;
 public class FileManager {
 
     public static void saveGame(PokerGame game, String userName) {
-    try (Connection conn = DBManager.getConnection();
-         Statement statement = conn.createStatement()) {
+    Connection conn = null;
+    Statement statement = null;
+    ResultSet rs = null;
+    try {
+        conn = DBManager.getConnection();
+        statement = conn.createStatement();
 
-        // Ensure user exists or update existing user's chips
-        String userUpsertQuery = "MERGE INTO USER AS u USING " +
-                                 "(VALUES ('" + userName + "', " + game.getGameState().getPlayers().get(0).getChips() + ")) " +
-                                 "AS vals(USERNAME, CHIPS) ON u.USERNAME = vals.USERNAME " +
-                                 "WHEN MATCHED THEN UPDATE SET u.CHIPS = vals.CHIPS " +
-                                 "WHEN NOT MATCHED THEN INSERT (USERNAME, CHIPS) VALUES (vals.USERNAME, vals.CHIPS)";
-        statement.executeUpdate(userUpsertQuery);
-
-        // Retrieve or get the generated user ID
+        // Check if user exists
+        String checkUserQuery = "SELECT ID FROM \"USER\" WHERE USERNAME = '" + userName + "'";
+        rs = statement.executeQuery(checkUserQuery);
         int userId = 0;
-        ResultSet rs = statement.executeQuery("SELECT ID FROM USER WHERE USERNAME = '" + userName + "'");
+
         if (rs.next()) {
+            // User exists, update their chips
             userId = rs.getInt("ID");
+            String updateUserQuery = "UPDATE \"USER\" SET CHIPS = " + game.getGameState().getPlayers().get(0).getChips() + " WHERE ID = " + userId;
+            statement.executeUpdate(updateUserQuery);
+        } else {
+            // User does not exist, insert new user
+            String insertUserQuery = "INSERT INTO \"USER\" (USERNAME, CHIPS) VALUES ('" + userName + "', " + game.getGameState().getPlayers().get(0).getChips() + ")";
+            statement.executeUpdate(insertUserQuery, Statement.RETURN_GENERATED_KEYS);
+            rs = statement.getGeneratedKeys();
+            if (rs.next()) {
+                userId = rs.getInt(1);
+            }
         }
 
-        // Insert game state for each player
+        // Assume similar logic for inserting game state information
         for (Player player : game.getGameState().getPlayers()) {
-            if(player != game.getGameState().getPlayers().get(0)) {
-            String gameInsertQuery = "INSERT INTO GAME (USER_ID, USER_CHIPS, COMPUTER_PLAYER_NAME, COMPUTER_CHIPS) VALUES (" +
-                                     userId + ", '" + game.getGameState().getPlayers().get(0) + "', " +
-                                     player.getName().replace(" ", "_") + "', " +
-                                     player.getChips() + ", '" +
-                                      "')";
-            statement.executeUpdate(gameInsertQuery);
+            if (player != game.getGameState().getPlayers().get(0)) { // Skip the user player to avoid duplicate handling
+                String gameInsertQuery = "INSERT INTO \"GAME\" (USER_ID, USER_CHIPS, COMPUTER_PLAYER_NAME, COMPUTER_CHIPS) VALUES (" +
+                                         userId + ", " + game.getGameState().getPlayers().get(0).getChips() + ", '" +
+                                         player.getName().replace(" ", "_") + "', " + player.getChips() + ")";
+                statement.executeUpdate(gameInsertQuery);
             }
         }
 
         System.out.println("Game and player states saved successfully.");
     } catch (SQLException e) {
         System.err.println("Error saving game and player states: " + e.getMessage());
+    } finally {
+        // Clean up resources
+        try {
+            if (rs != null) rs.close();
+            if (statement != null) statement.close();
+            if (conn != null) conn.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 }
 
@@ -77,36 +93,46 @@ public class FileManager {
         List<Card> communityCards = new ArrayList<>();
         int pot = 0, currentBet = 0;
 
-        String query = "SELECT * FROM GAME WHERE USER_ID = (SELECT ID FROM USER WHERE USERNAME = '" + userName + "')";
+        // Adjusted query to join USER and GAME tables to fetch all relevant game details including username
+    String query = "SELECT g.USER_CHIPS, g.COMPUTER_PLAYER_NAME, g.COMPUTER_CHIPS, g.GAME_INFO, u.USERNAME " +
+                   "FROM POKER.GAME g " +
+                   "JOIN POKER.\"USER\" u ON g.USER_ID = u.ID " +
+                   "WHERE u.USERNAME = '" + userName + "'";
 
         try (Connection conn = DBManager.getConnection(); 
              Statement statement = conn.createStatement();
              ResultSet rs = statement.executeQuery(query)) {
 
-            if (rs.next()) {
-                Player userPlayer = new Player(userName, rs.getInt("USER_CHIPS"));
-                Player computerPlayer = new Player(rs.getString("COMPUTER_PLAYER_NAME"), rs.getInt("COMPUTER_CHIPS"));
-                players.add(userPlayer);
-                players.add(computerPlayer);
-                currentBet = rs.getInt("GAME_INFO");
-
-                // You can add logic for community cards if needed
+             // Read all results and build player list
+        boolean userAdded = false;
+        while (rs.next()) {
+            if (!userAdded) {
+                players.add(new Player(rs.getString("USERNAME"), rs.getInt("USER_CHIPS"))); // Add user first
+                userAdded = true;
             }
+            players.add(new Player(rs.getString("COMPUTER_PLAYER_NAME"), rs.getInt("COMPUTER_CHIPS"))); // Add computer players
+        }
+
+        // Ensure there are exactly four players, adding default ones if necessary
+        while (players.size() < 4) {
+            players.add(new Player("Computer " + players.size(), 1000)); // Default computer player
+        }
 
             gameState = new GameState(players, communityCards, pot, currentBet);
             game.setGameState(gameState);
             System.out.println("Game loaded successfully from the database.");
-
+            return game;
+    
         } catch (SQLException e) {
             System.err.println("Error loading game from database: " + e.getMessage());
         }
-        return game;
+        return null;
     }
                 
     // This method retrieves a list of saved users (by username) from the USER table.
     public static List<String> getSavedGameFiles() {
         List<String> savedGames = new ArrayList<>();
-        String query = "SELECT USERNAME FROM USER";
+        String query = "SELECT \"USERNAME\" FROM \"POKER\".\"USER\"";
 
         try (Connection conn = DBManager.getConnection(); 
              Statement statement = conn.createStatement(); 
@@ -128,7 +154,7 @@ public class FileManager {
     
      // This method creates a new user save file in the database.
     public static boolean createNewSaveFile(String userName) {
-        String query = "INSERT INTO USER (USERNAME, CHIPS, NUMBER_OF_WINS) VALUES ('" + userName + "', 1000, 0)";
+        String query = "INSERT INTO \"POKER\".\"USER\" (\"USERNAME\", \"CHIPS\", \"NUMBER_OF_WINS\") VALUES ('" + userName + "', 1000, 0)";
 
         try (Connection conn = DBManager.getConnection(); 
              Statement statement = conn.createStatement()) {

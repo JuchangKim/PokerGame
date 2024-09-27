@@ -122,13 +122,9 @@ public class PlayAgainMenu extends javax.swing.JFrame {
         
         
         game.setResponse("yes");
-        try {
-            this.dispose();  // Close current frame
-            PokerCLI pokerCLI = new PokerCLI();
-            pokerCLI.start(game.getGameState().getPlayers().get(0).getName());  // Start a new round in the existing game
-        } catch (InterruptedException ex) {
-            Logger.getLogger(PlayAgainMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.dispose();  // Close current frame
+        PokerCLI pokerCLI = new PokerCLI();
+        pokerCLI.start(game.getGameState().getPlayers().get(0).getName());  // Start a new round in the existing game
         
                        
     }//GEN-LAST:event_YesButton1ActionPerformed
