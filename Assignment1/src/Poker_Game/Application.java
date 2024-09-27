@@ -6,7 +6,7 @@ package Poker_Game;
 
 /**
  *
- * @author user
+ * @author Juchang Kim
  */
 public class Application {
     

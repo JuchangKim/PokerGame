@@ -49,7 +49,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="83" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="NameofPlayerLabel1" min="-2" pref="37" max="-2" attributes="0"/>
+                      <Component id="NameofPlayerLabel1" min="-2" pref="185" max="-2" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="CancelButton1" min="-2" max="-2" attributes="0"/>
@@ -77,8 +77,8 @@
                       <Component id="enterYourNameLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="NameofPlayerLabel1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                  <Component id="NameofPlayerLabel1" min="-2" pref="24" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="CancelButton1" alignment="3" min="-2" pref="59" max="-2" attributes="0"/>
                       <Component id="SaveButton1" alignment="3" min="-2" pref="59" max="-2" attributes="0"/>

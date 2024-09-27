@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
 <<<<<<< Updated upstream
             <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/saved_games/lil.txt</file>
             <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/FileManager.java</file>
@@ -14,6 +15,12 @@
 =======
             <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/Card.java</file>
 >>>>>>> Stashed changes
+=======
+            <file>file:/C:/Users/billi/OneDrive/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/FileManager.java</file>
+            <file>file:/C:/Users/billi/OneDrive/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/GameState.java</file>
+            <file>file:/C:/Users/billi/OneDrive/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/DBManager.java</file>
+            <file>file:/C:/Users/billi/OneDrive/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/DBInitialiser.java</file>
+>>>>>>> origin/Billie-Jean-Laing-0783063-#2
         </group>
     </open-files>
 </project-private>
