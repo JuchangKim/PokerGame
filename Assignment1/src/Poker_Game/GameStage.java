@@ -50,7 +50,7 @@ public class GameStage extends JFrame implements GameListener {
         //pack(); // Adjusts the frame size to fit the components
         setVisible(true);
         startGameInBackground();
-        dispose();
+        
     }
     
     @Override
@@ -176,11 +176,12 @@ public class GameStage extends JFrame implements GameListener {
 
     
     private void startGameInBackground() {
-        SwingWorker<Void, String> gameWorker = new SwingWorker<>() {
+        SwingWorker<Void, String> gameWorker;
+        gameWorker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws Exception {
                 getGame().startGame(getGame().getGameState().getPlayers().get(0).getName());
-                dispose();
+                
                 return null;
             }
             
@@ -191,10 +192,10 @@ public class GameStage extends JFrame implements GameListener {
                     updateUI(); // Update the UI after game has started
                     
                     // When the game finishes, close the GameStage and open PlayAgainMenu
-                if (getGame().isFinished()) {  // Assuming you have a method isGameFinished() in PokerGame
-                    dispose();  // Close the GameStage window
-                    new PlayAgainMenu(getGame()).setVisible(true);  // Show PlayAgainMenu
-                }
+                    if (getGame().isFinished()) {  // Assuming you have a method isGameFinished() in PokerGame
+                        // Close the GameStage window
+                        new PlayAgainMenu(getGame(), GameStage.this).setVisible(true);  // Show PlayAgainMenu
+                    }
                     
                 } catch (Exception e) {
                     SwingUtilities.invokeLater(() -> announcementLabels[1].setText("Failed to start game: " + e.getMessage()));

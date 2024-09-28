@@ -25,9 +25,9 @@ public class PlayAgainMenu extends javax.swing.JFrame {
     private PokerGame game;
     private GameStage gameStage;
     
-    public PlayAgainMenu(PokerGame game) {
+    public PlayAgainMenu(PokerGame game, GameStage gameStage) {
         this.game = game;
-        
+        this.gameStage = gameStage;
         
         initComponents();
         
@@ -114,6 +114,7 @@ public class PlayAgainMenu extends javax.swing.JFrame {
 
     private void NoButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NoButton1ActionPerformed
         this.dispose();  // Close the current frame
+        gameStage.dispose();
         new WelcomeMenu().setVisible(true);  // Open the welcome menu
     }//GEN-LAST:event_NoButton1ActionPerformed
 
@@ -122,6 +123,7 @@ public class PlayAgainMenu extends javax.swing.JFrame {
         
         
         game.setResponse("yes");
+        gameStage.dispose();
         this.dispose();  // Close current frame
         PokerCLI pokerCLI = new PokerCLI();
         pokerCLI.start(game.getGameState().getPlayers().get(0).getName());  // Start a new round in the existing game

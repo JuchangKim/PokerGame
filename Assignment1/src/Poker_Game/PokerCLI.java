@@ -27,6 +27,7 @@ public class PokerCLI {
         try {
             PokerGame loadedGame = FileManager.loadGame(username);
 
+            // the loadGame can not find game information, the user player name will be computer 0.
             if (!loadedGame.getGameState().getPlayers().isEmpty()) {
                 this.game = loadedGame;
                 System.out.println("Welcome back, " + username + "!");

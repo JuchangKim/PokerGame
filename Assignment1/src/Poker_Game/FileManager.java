@@ -60,15 +60,36 @@ public class FileManager {
             }
         }
 
-        // Assume similar logic for inserting game state information
+        // Insert or update game state for each computer player
         for (Player player : game.getGameState().getPlayers()) {
             if (player != game.getGameState().getPlayers().get(0)) { // Skip the user player to avoid duplicate handling
-                String gameInsertQuery = "INSERT INTO \"GAME\" (USER_ID, USER_CHIPS, COMPUTER_PLAYER_NAME, COMPUTER_CHIPS) VALUES (" +
-                                         userId + ", " + game.getGameState().getPlayers().get(0).getChips() + ", '" +
-                                         player.getName().replace(" ", "_") + "', " + player.getChips() + ")";
-                statement.executeUpdate(gameInsertQuery);
+                // Check if computer player data already exists
+                String checkGameQuery = "SELECT COUNT(*) FROM \"GAME\" WHERE USER_ID = " + userId + 
+                                        " AND COMPUTER_PLAYER_NAME = '" + player.getName().replace(" ", "_") + "'";
+                try (ResultSet gameRs = statement.executeQuery(checkGameQuery)) {
+                    int count = 0;
+                    if (gameRs.next()) {
+                        count = gameRs.getInt(1);
+                    }
+                    
+                    if (count > 0) {
+                        // Computer player exists, perform an update
+                        String updateGameQuery = "UPDATE \"GAME\" SET USER_CHIPS = " + game.getGameState().getPlayers().get(0).getChips() +
+                                ", COMPUTER_CHIPS = " + player.getChips() +
+                                " WHERE USER_ID = " + userId +
+                                " AND COMPUTER_PLAYER_NAME = '" + player.getName().replace(" ", "_") + "'";
+                        statement.executeUpdate(updateGameQuery);
+                    } else {
+                        // Computer player does not exist, insert new record
+                        String gameInsertQuery = "INSERT INTO \"GAME\" (USER_ID, USER_CHIPS, COMPUTER_PLAYER_NAME, COMPUTER_CHIPS) VALUES (" +
+                                userId + ", " + game.getGameState().getPlayers().get(0).getChips() + ", '" +
+                                player.getName().replace(" ", "_") + "', " + player.getChips() + ")";
+                        statement.executeUpdate(gameInsertQuery);
+                    }
+                }
             }
         }
+
 
         System.out.println("Game and player states saved successfully.");
     } catch (SQLException e) {
@@ -113,11 +134,7 @@ public class FileManager {
             players.add(new Player(rs.getString("COMPUTER_PLAYER_NAME"), rs.getInt("COMPUTER_CHIPS"))); // Add computer players
         }
 
-        // Ensure there are exactly four players, adding default ones if necessary
-        while (players.size() < 4) {
-            players.add(new Player("Computer " + players.size(), 1000)); // Default computer player
-        }
-
+      
             gameState = new GameState(players, communityCards, pot, currentBet);
             game.setGameState(gameState);
             System.out.println("Game loaded successfully from the database.");
