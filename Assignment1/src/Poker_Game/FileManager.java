@@ -22,176 +22,210 @@ package Poker_Game;
  * (IOException | ClassNotFoundException e) { e.printStackTrace(); return null;
  * } } }
  */
-import java.io.*;
-import java.util.*;
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class FileManager {
 
-    //Directory where saved games will be stored 
-    private static final String SAVE_DIRECTORY = "saved_games/";
+    public static void saveGame(PokerGame game, String userName) {
+    Connection conn = null;
+    Statement statement = null;
+    ResultSet rs = null;
+    try {
+        conn = DBManager.getConnection();
+        statement = conn.createStatement();
 
-    // Static block to ensure the save directory exists when the class is loaded.
-    static {
-        // Ensure the save directory exists
-        new File(SAVE_DIRECTORY).mkdirs();
-    }
+        // Check if user exists
+        String checkUserQuery = "SELECT ID FROM \"USER\" WHERE USERNAME = '" + userName + "'";
+        rs = statement.executeQuery(checkUserQuery);
+        int userId = 0;
 
-    //Saves the current game state to a file with the specified name.
-    public static void saveGameState(GameState gameState, String fileName) {
-        String filePath = SAVE_DIRECTORY + fileName + ".txt";
-        try ( PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
-            // Iterate over all players and save their relevant information
-            for (Player player : gameState.getPlayers()) {
-
-                writer.println("Player Name: " + player.getName()); //Save the player's name
-                writer.println("Player Balance: " + player.getChips()); // Save the player's current chip balance.
-                writer.println("Number of Wins: " + player.getNumOfWin()); // Save the player's number of wins.
-                writer.println("Current Bet: " + gameState.getCurrentBet()); // Save the current bet amount.
-                writer.println(""); // Add an empty line for separation between players.
-            }
-            System.out.println("Game saved successfully to " + filePath);
-        } catch (IOException e) {
-            System.err.println("Error saving game: " + e.getMessage());
-        }
-    }
-
-    //Loads a game state from the specified file.
-    public static GameState loadGameState(String fileName) {
-        String filePath = SAVE_DIRECTORY + fileName + ".txt";
-          File file = new File(filePath);
-        try ( BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            List<Player> players = new ArrayList<>();
-            List<Card> communityCards = new ArrayList<>();
-            int pot = 0, currentBet = 0;
-            Player winner = null;
-
-            String line;
-            Player currentPlayer = null;
-
-if (file.exists() && file.length() == 0) {
-        System.out.println("There is no user record so create new record.");
-
-        // Delete the empty file
-        if (file.delete()) {
-            System.out.println("Empty file deleted: " + filePath);
-
-            // Create a new save file and log file
-            if (createNewSaveFile(fileName)) {
-                System.out.println("New user record created: " + filePath);
-            } else {
-                System.err.println("Failed to create new user record.");
-            } 
+        if (rs.next()) {
+            // User exists, update their chips
+            userId = rs.getInt("ID");
+            String updateUserQuery = "UPDATE \"USER\" SET CHIPS = " + game.getGameState().getPlayers().get(0).getChips() + " WHERE ID = " + userId;
+            statement.executeUpdate(updateUserQuery);
         } else {
-            System.err.println("Failed to delete empty file: " + filePath);
+            // User does not exist, insert new user
+            String insertUserQuery = "INSERT INTO \"USER\" (USERNAME, CHIPS) VALUES ('" + userName + "', " + game.getGameState().getPlayers().get(0).getChips() + ")";
+            statement.executeUpdate(insertUserQuery, Statement.RETURN_GENERATED_KEYS);
+            rs = statement.getGeneratedKeys();
+            if (rs.next()) {
+                userId = rs.getInt(1);
+            }
         }
-        return null; // Return null since there's no game state to load
-    }
-            
-            // Read the file line by line and extract the game state information
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("Player Name: ")) {
-                    String playerName = line.substring("Player Name: ".length());
-                    currentPlayer = new Player(playerName, 0); // Create a new player with a starting balance of 0
-                    players.add(currentPlayer); 
-                } else if (line.startsWith("Player Balance: ")) {
-                    int balance = Integer.parseInt(line.substring("Player Balance: ".length()));
-                    if (currentPlayer != null) {
-                        currentPlayer.addToChips(balance); // Set balance of the main player, i'm not sure if this is meant to be getChps()
+
+        // Insert or update game state for each computer player
+        for (Player player : game.getGameState().getPlayers()) {
+            if (player != game.getGameState().getPlayers().get(0)) { // Skip the user player to avoid duplicate handling
+                // Check if computer player data already exists
+                String checkGameQuery = "SELECT COUNT(*) FROM \"GAME\" WHERE USER_ID = " + userId + 
+                                        " AND COMPUTER_PLAYER_NAME = '" + player.getName().replace(" ", "_") + "'";
+                try (ResultSet gameRs = statement.executeQuery(checkGameQuery)) {
+                    int count = 0;
+                    if (gameRs.next()) {
+                        count = gameRs.getInt(1);
                     }
-                } else if (line.startsWith("Community Cards: ")) {
-                    // Logic to parse and add community cards
-                } else if (line.startsWith("Pot: ")) {
-                    pot = Integer.parseInt(line.substring("Pot: ".length())); // Set the pot value.
-                } else if (line.startsWith("Current Bet: ")) {
-                    currentBet = Integer.parseInt(line.substring("Current Bet: ".length())); // Set the current bet.
-                } else if (line.startsWith("Number Of Wins: ")) {
-                    int num = Integer.parseInt(line.substring("Number Of Wins: ".length()));
-                    currentPlayer.setNumOfWin(num); // Set the player's number of wins.
-                }
-            }
-            
-            // Create a new GameState object with the loaded values
-            GameState gameState = new GameState(players, communityCards, pot, currentBet);
-            if (winner != null) {
-                gameState.setWinner(winner);
-            }
-
-            System.out.println("Game loaded successfully from " + filePath);
-            return gameState;
-        } catch (IOException e) {
-            System.err.println("Error loading game: " + e.getMessage());
-            return null;
-        }
-    }
-
-    //Retrieves the names of all saved game files in the save directory
-    public static List<String> getSavedGameFiles() {
-        File directory = new File(SAVE_DIRECTORY);
-        File[] files = directory.listFiles((dir, name) -> name.endsWith(".txt"));
-        
-        List<String> fileNames = new ArrayList<>();
-        if (files != null) {
-            for (File file : files) {
-                String fileName = file.getName().replace(".txt", "");
-                if (!fileName.endsWith("_log")) { // Filter out filenames ending with "_log"
-                    fileNames.add(fileName);
+                    
+                    if (count > 0) {
+                        // Computer player exists, perform an update
+                        String updateGameQuery = "UPDATE \"GAME\" SET USER_CHIPS = " + game.getGameState().getPlayers().get(0).getChips() +
+                                ", COMPUTER_CHIPS = " + player.getChips() +
+                                " WHERE USER_ID = " + userId +
+                                " AND COMPUTER_PLAYER_NAME = '" + player.getName().replace(" ", "_") + "'";
+                        statement.executeUpdate(updateGameQuery);
+                    } else {
+                        // Computer player does not exist, insert new record
+                        String gameInsertQuery = "INSERT INTO \"GAME\" (USER_ID, USER_CHIPS, COMPUTER_PLAYER_NAME, COMPUTER_CHIPS) VALUES (" +
+                                userId + ", " + game.getGameState().getPlayers().get(0).getChips() + ", '" +
+                                player.getName().replace(" ", "_") + "', " + player.getChips() + ")";
+                        statement.executeUpdate(gameInsertQuery);
+                    }
                 }
             }
         }
-        //If there is no user, printing "There is no user."
-        if(fileNames.isEmpty()) 
-        {
-            System.out.println("There is no user");
-        }
-        return fileNames;
-    }
 
-    //Creates a new save file with the specified name
-    public static boolean createNewSaveFile(String fileName) {
-        File file = new File(SAVE_DIRECTORY + fileName + ".txt");
-        String filePath = SAVE_DIRECTORY + fileName + "_log.txt";
+
+        System.out.println("Game and player states saved successfully.");
+    } catch (SQLException e) {
+        System.err.println("Error saving game and player states: " + e.getMessage());
+    } finally {
+        // Clean up resources
         try {
-            PrintWriter writer = new PrintWriter(new FileWriter(filePath, true));
-            System.out.println("Log is created " + filePath);
-            return file.createNewFile(); // Create the main save file.
-        } catch (IOException e) {
+            if (rs != null) rs.close();
+            if (statement != null) statement.close();
+            if (conn != null) conn.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+}
+
+ // This method will load the game state from the database for a given user.
+    public static PokerGame loadGame(String userName) {
+        GameState gameState = null;
+        PokerGame game = new PokerGame();
+        List<Player> players = new ArrayList<>();
+        List<Card> communityCards = new ArrayList<>();
+        int pot = 0, currentBet = 0;
+
+        // Adjusted query to join USER and GAME tables to fetch all relevant game details including username
+    String query = "SELECT g.USER_CHIPS, g.COMPUTER_PLAYER_NAME, g.COMPUTER_CHIPS, g.GAME_INFO, u.USERNAME " +
+                   "FROM POKER.GAME g " +
+                   "JOIN POKER.\"USER\" u ON g.USER_ID = u.ID " +
+                   "WHERE u.USERNAME = '" + userName + "'";
+
+        try (Connection conn = DBManager.getConnection(); 
+             Statement statement = conn.createStatement();
+             ResultSet rs = statement.executeQuery(query)) {
+
+             // Read all results and build player list
+        boolean userAdded = false;
+        while (rs.next()) {
+            if (!userAdded) {
+                players.add(new Player(rs.getString("USERNAME"), rs.getInt("USER_CHIPS"))); // Add user first
+                userAdded = true;
+            }
+            players.add(new Player(rs.getString("COMPUTER_PLAYER_NAME"), rs.getInt("COMPUTER_CHIPS"))); // Add computer players
+        }
+
+      
+            gameState = new GameState(players, communityCards, pot, currentBet);
+            game.setGameState(gameState);
+            System.out.println("Game loaded successfully from the database.");
+            return game;
+    
+        } catch (SQLException e) {
+            System.err.println("Error loading game from database: " + e.getMessage());
+        }
+        return null;
+    }
+                
+    // This method retrieves a list of saved users (by username) from the USER table.
+    public static List<String> getSavedGameFiles() {
+        List<String> savedGames = new ArrayList<>();
+        String query = "SELECT \"USERNAME\" FROM \"POKER\".\"USER\"";
+
+        try (Connection conn = DBManager.getConnection(); 
+             Statement statement = conn.createStatement(); 
+             ResultSet rs = statement.executeQuery(query)) {
+
+            while (rs.next()) {
+                savedGames.add(rs.getString("USERNAME"));
+            }
+
+            if (savedGames.isEmpty()) {
+                System.out.println("There are no saved games.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving saved games: " + e.getMessage());
+        }
+
+        return savedGames;
+    }
+    
+     // This method creates a new user save file in the database.
+    public static boolean createNewSaveFile(String userName) {
+        String query = "INSERT INTO \"POKER\".\"USER\" (\"USERNAME\", \"CHIPS\", \"NUMBER_OF_WINS\") VALUES ('" + userName + "', 1000, 0)";
+
+        try (Connection conn = DBManager.getConnection(); 
+             Statement statement = conn.createStatement()) {
+
+            statement.executeUpdate(query);
+            System.out.println("New save file created for user: " + userName);
+            return true;
+
+        } catch (SQLException e) {
             System.err.println("Error creating new save file: " + e.getMessage());
             return false;
         }
     }
+    
+    /// This method inserts a log entry into the GameLog table.
+    public static void appendToGameLog(String userName, String logEntry) {
+        String query = "INSERT INTO GAMELOG (USER_ID, COMPUTER_PLAYER_NAME) VALUES " +
+                "((SELECT ID FROM USER WHERE USERNAME = '" + userName + "'), '" + logEntry + "')";
 
-    //Appends a log entry to the specified log file.
-    public static void appendToGameLog(String fileName, String logEntry) {
-        String filePath = SAVE_DIRECTORY + fileName + "_log.txt";
-        //This Try Catch method has been generated from ChatGPT
-        try ( PrintWriter writer = new PrintWriter(new FileWriter(filePath, true))) { // 'true' for appending
-            writer.println(logEntry); // Add the log entry.
-            System.out.println("Log entry added to " + filePath);
-        } catch (IOException e) {
-            System.err.println("Error appending to log file: " + e.getMessage());
+        try (Connection conn = DBManager.getConnection(); 
+             Statement statement = conn.createStatement()) {
+
+            statement.executeUpdate(query);
+            System.out.println("Log entry added for user: " + userName);
+
+        } catch (SQLException e) {
+            System.err.println("Error appending to game log: " + e.getMessage());
         }
     }
 
-    //Reads all log entries from the specified log file
-    public static List<String> readGameLog(String fileName) {
-        String filePath = SAVE_DIRECTORY + fileName + "_log.txt";
-        List<String> logEntries = new ArrayList<>();
-        //This Try Catch method has been generated from ChatGPT
-        try ( BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                logEntries.add(line); // Add each line to the list of log entries
-            }
-            //If there is no record. printing "There is no record."
-            if(logEntries.isEmpty())
-            {
-                System.out.println("There is no record.");
-            }
-            System.out.println("Log entries read from " + filePath);
-        } catch (IOException e) {
-            System.err.println("Error reading log file: " + e.getMessage());
+   // Reads all log entries from the GAMELOG table in the database for a specific user.
+public static List<String> readGameLog(String userName) {
+    List<String> logEntries = new ArrayList<>();
+    String query = "SELECT COMPUTER_PLAYER_NAME FROM GAMELOG WHERE USER_ID = (SELECT ID FROM USER WHERE USERNAME = '" + userName + "')";
+
+    try (Connection conn = DBManager.getConnection(); 
+         Statement statement = conn.createStatement();
+         ResultSet rs = statement.executeQuery(query)) {
+
+        while (rs.next()) {
+            logEntries.add(rs.getString("COMPUTER_PLAYER_NAME")); // Assuming the log entries are stored in the COMPUTER_PLAYER_NAME column
         }
-        return logEntries;
+
+        if (logEntries.isEmpty()) {
+            System.out.println("There are no log entries for user: " + userName);
+        } else {
+            System.out.println("Log entries read from the database for user: " + userName);
+        }
+        
+    } catch (SQLException e) {
+        System.err.println("Error reading log entries from the database: " + e.getMessage());
     }
+
+    return logEntries;
+}
 
 }

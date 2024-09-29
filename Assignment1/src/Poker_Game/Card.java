@@ -4,6 +4,9 @@
  */
 package Poker_Game;
 
+import java.awt.Image;
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author user
@@ -15,12 +18,15 @@ public class Card {
     private int value;
     private String suit;
     private String colour;
+    private ImageIcon imageIcon;
+    
 
     // Constructor to initialize the card with a value and suit
-    public Card(int value, String suit) {
+    public Card(int value, String suit, Image image) {
         // Assign the value and suit to the card
         this.value = value;
         this.suit = suit;
+        this.imageIcon = new ImageIcon(image);
 
         // Determine the color of the card based on its suit
         if(this.suit.equals("Hearts") || this.suit.equals("Diamonds")) {
@@ -29,7 +35,14 @@ public class Card {
         if(this.suit.equals("Spades") || this.suit.equals("Clubs")) {
             this.colour = "Black";
         }
+        
     }
+    
+    
+    public ImageIcon getImageIcon() {
+        return imageIcon;
+    }
+
     
     // Getter method for the card's value
     public int getValue() {
@@ -49,7 +62,7 @@ public class Card {
     // Method to convert the card's numeric value to its corresponding name
     public String convertValueToName() {
         switch(this.value) {
-            case 1: return "Ace";
+            
             case 2: return "Two";
             case 3: return "Three";
             case 4: return "Four";

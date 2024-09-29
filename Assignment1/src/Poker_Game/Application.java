@@ -6,21 +6,14 @@ package Poker_Game;
 
 /**
  *
- * @author user
+ * @author Juchang Kim
  */
 public class Application {
     
     public static void main(String[] args) {
         
-        //this is the logic for connecting to and running PokerCLI
-        PokerCLI pokerCLI = new PokerCLI();
-        try {
-            pokerCLI.start();
-        } catch (InterruptedException e) {
-            // Handle the exception, perhaps log it or print a message
-            System.out.println("The game was interrupted.");
-            e.printStackTrace();
-        }
+        new WelcomeMenu().setVisible(true); // This will start the GUI
+        
     }
 }
 

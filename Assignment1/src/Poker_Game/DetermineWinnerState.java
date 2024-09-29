@@ -36,20 +36,20 @@ public class DetermineWinnerState implements GameStateAction {
                     
                     // Create a new Hand object for the player using all their available cards
                     Hand playerHand = new Hand(allCards);
-                    p.setHand(playerHand);
+                    
                     
                     // Evaluate the player's hand to determine its rank.
                     PokerRules.evaluateHand(playerHand);
                     
                     // Print out the player's hand and its rank.
-                    System.out.println(p.getName() + " has " + p.getHand() + " : " + playerHand.getHandRank() + "\n");
+                    System.out.println(p.getName() + " has " + playerHand.getHandRank() + "\n");
                     Thread.sleep(1000); //Deal of 1 ssecond between display of players hands
                 }
             }
         
         // Announce the winner of the round.
         System.out.println("The winner is " + winner.getName() + "!\n");
-        
+        game.setAnnouncement("The winner is " + winner.getName() + "!\n");
         // Set the winner in the game's state.
         game.getGameState().setWinner(winner);
         
@@ -59,6 +59,7 @@ public class DetermineWinnerState implements GameStateAction {
         // If there is a winner, award them the pot and reset the pot for the next round
         if (winner != null) {
             winner.addToChips(game.getBettingSystem().getPot()); // Winner takes all
+            FileManager.saveGame(game, game.getGameState().getPlayers().get(0).getName());
             game.getBettingSystem().resetPot(); // Clear the pot for the next game
             
             // Print out each player's chip count after the round
@@ -70,6 +71,7 @@ public class DetermineWinnerState implements GameStateAction {
             
             // If there is no winner, announce that no one won this round
             System.out.println("No winner this round.");
+            game.setAnnouncement("No winner this round.");
         }
     }
 }
