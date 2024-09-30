@@ -20,7 +20,7 @@ public class DBManager {
     private static final String PASSWORD = "poker"; //your DB password
     private static final String URL = "jdbc:derby:PokerGameEmbd; create=true";  //url of the DB host
 
-    private static Connection conn;
+    private static Connection conn = null;
 
     public DBManager() {
         establishConnection();
@@ -44,6 +44,8 @@ public class DBManager {
     }
     return conn;
     }
+    
+    
 
     //Establish connection
     public void establishConnection() {
@@ -77,11 +79,26 @@ public class DBManager {
     }
 
     public void closeConnections() {
-        if (conn != null) {
+        try {
+            DriverManager.getConnection("jdbc:derby:;shutdown=true");
+        } catch (SQLException e) {
+            // Derby throws this exception to signal a successful shutdown
+            if (e.getSQLState().equals("XJ015")) {
+                System.out.println("Derby shut down successfully.");
+            } else {
+                e.printStackTrace(); // Handle other exceptions
+            }
+        }
+    }
+    
+    public void closeConnection(Connection connection) {
+        if (connection != null) {
             try {
-                conn.close();
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
+                if (!connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -103,6 +120,12 @@ public class DBManager {
             statement.executeUpdate(sql);
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
+        }
+    }
+    
+    public static void close() throws SQLException {
+        if (conn != null && !conn.isClosed()) {
+            conn.close();
         }
     }
     
