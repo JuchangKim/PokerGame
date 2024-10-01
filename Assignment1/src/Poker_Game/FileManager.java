@@ -23,6 +23,7 @@ package Poker_Game;
  * } } }
  */
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,7 +32,7 @@ import java.util.List;
 
 
 public class FileManager {
-
+    
     public static void saveGame(PokerGame game, String userName) {
     Connection conn = null;
     Statement statement = null;
@@ -64,14 +65,14 @@ public class FileManager {
         for (Player player : game.getGameState().getPlayers()) {
             if (player != game.getGameState().getPlayers().get(0)) { // Skip the user player to avoid duplicate handling
                 // Check if computer player data already exists
-                String checkGameQuery = "SELECT COUNT(*) FROM \"GAME\" WHERE USER_ID = " + userId + 
-                                        " AND COMPUTER_PLAYER_NAME = '" + player.getName().replace(" ", "_") + "'";
+                String checkGameQuery = "SELECT COUNT(*) FROM \"GAME\" WHERE USER_ID = " + userId +
+                        " AND COMPUTER_PLAYER_NAME = '" + player.getName().replace(" ", "_") + "'";
                 try (ResultSet gameRs = statement.executeQuery(checkGameQuery)) {
                     int count = 0;
                     if (gameRs.next()) {
                         count = gameRs.getInt(1);
                     }
-                    
+
                     if (count > 0) {
                         // Computer player exists, perform an update
                         String updateGameQuery = "UPDATE \"GAME\" SET USER_CHIPS = " + game.getGameState().getPlayers().get(0).getChips() +
@@ -90,6 +91,13 @@ public class FileManager {
             }
         }
 
+        // Append to GameLog after saving game states
+        String logEntry = "Game saved for user: " + userName;
+        String winner = game.getGameState().getWinner() != null ? game.getGameState().getWinner().getName() : "None";
+        int chips = game.getGameState().getPlayers().get(0).getChips(); // Assuming the first player is the user
+
+        // Call the appendToGameLog method to log the game state
+        //FileManager.appendToGameLog(userName, logEntry, winner, chips);
 
         System.out.println("Game and player states saved successfully.");
     } catch (SQLException e) {
@@ -187,20 +195,28 @@ public class FileManager {
     }
     
     /// This method inserts a log entry into the GameLog table.
-    public static void appendToGameLog(String userName, String logEntry) {
-        String query = "INSERT INTO GAMELOG (USER_ID, COMPUTER_PLAYER_NAME) VALUES " +
-                "((SELECT ID FROM USER WHERE USERNAME = '" + userName + "'), '" + logEntry + "')";
+    public static void appendToGameLog(String userName, String computerPlayerName, String playerCardRankPerRound, String winnerOfRound) {
+        String query = "INSERT INTO GAMELOG (USER_ID, USERNAME_NAME, COMPUTER_PLAYER_NAME, PLAYER_CARD_RANK_PER_ROUND, WINNER_OF_ROUND) VALUES " +
+                "((SELECT ID FROM \"USER\" WHERE USERNAME = ?), ?, ?, ?, ?)";
 
-        try (Connection conn = DBManager.getConnection(); 
-             Statement statement = conn.createStatement()) {
+        try (Connection conn = DBManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-            statement.executeUpdate(query);
+            pstmt.setString(1, userName);
+            pstmt.setString(2, userName);
+            pstmt.setString(3, computerPlayerName);
+            pstmt.setString(4, playerCardRankPerRound);
+            pstmt.setString(5, winnerOfRound);
+
+            pstmt.executeUpdate();
             System.out.println("Log entry added for user: " + userName);
 
         } catch (SQLException e) {
             System.err.println("Error appending to game log: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+    
 
    // Reads all log entries from the GAMELOG table in the database for a specific user.
 public static List<String> readGameLog(String userName) {

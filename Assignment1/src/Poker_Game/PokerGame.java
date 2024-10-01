@@ -95,21 +95,42 @@ public class PokerGame extends FileManager {
         Thread.sleep(1000);
         
         // Prepare the game log
-        String log = "";
+        StringBuilder playerCardRanks = new StringBuilder();
+        String computerPlayerName = "";
         for (Player p : gameState.getPlayers()) {
+            if (!p.getName().equals(username)) {
+                computerPlayerName = p.getName();
+            }
             if (p.isFolded()) {
-                log += p.getName() + " : Folded, Chips : " + p.getChips() + "\n";
-                this.setAnnouncement(p.getName() + " : Folded, Chips : " + p.getChips() + "\n");
+                playerCardRanks.append(p.getName()).append(" : Folded, ");
             } else {
-                log += p.getName() + " : " + p.getHand() + " : " + p.getHand().getHandRank() + " , Chips : " + p.getChips() + "\n";
-                this.setAnnouncement(p.getName() + " : " + p.getHand() + " : " + p.getHand().getHandRank() + " , Chips : " + p.getChips() + "\n");
+                playerCardRanks.append(p.getName()).append(" : ").append(p.getHand().getHandRank()).append(", ");
             }
         }
-        log += "Winner is : " + gameState.getWinner() + "\n";
-        this.setAnnouncement("Winner is : " + gameState.getWinner() + "\n");
+        // Remove the last comma and space
+        if (playerCardRanks.length() > 2) {
+            playerCardRanks.setLength(playerCardRanks.length() - 2);
+        }
 
         // Append the log to the database using FileManager
-        FileManager.appendToGameLog(username, log); // Append log to the database
+        FileManager.appendToGameLog(username, computerPlayerName, playerCardRanks.toString(), gameState.getWinner().getName());
+                
+//        // Prepare the game log
+//        String log = "";
+//        for (Player p : gameState.getPlayers()) {
+//            if (p.isFolded()) {
+//                log += p.getName() + " : Folded, Chips : " + p.getChips() + "\n";
+//                this.setAnnouncement(p.getName() + " : Folded, Chips : " + p.getChips() + "\n");
+//            } else {
+//                log += p.getName() + " : " + p.getHand() + " : " + p.getHand().getHandRank() + " , Chips : " + p.getChips() + "\n";
+//                this.setAnnouncement(p.getName() + " : " + p.getHand() + " : " + p.getHand().getHandRank() + " , Chips : " + p.getChips() + "\n");
+//            }
+//        }
+//        log += "Winner is : " + gameState.getWinner() + "\n";
+//        this.setAnnouncement("Winner is : " + gameState.getWinner() + "\n");
+//
+//        // Append the log to the database using FileManager
+//        FileManager.appendToGameLog(username, log, gameState.getWinner().getName(), gameState.getWinner().getChips()); // Append log to the database
 
          setIsFinished(true);
         if (getResponse().equalsIgnoreCase("yes")) {
