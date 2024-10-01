@@ -217,6 +217,49 @@ public class FileManager {
         }
     }
     
+    public static void updateWinCount(String playerName, int winCount) {
+    String query = "UPDATE \"USER\" SET NUMBER_OF_WINS = NUMBER_OF_WINS + ? WHERE USERNAME = ?";
+    
+    try (Connection conn = DBManager.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+        
+        pstmt.setInt(1, winCount);
+        pstmt.setString(2, playerName);
+        
+        int rowsAffected = pstmt.executeUpdate();
+        if (rowsAffected > 0) {
+            System.out.println("Updated win count for player: " + playerName);
+        } else {
+            System.out.println("No user found with username: " + playerName);
+        }
+    } catch (SQLException e) {
+        System.err.println("Error updating win count: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
+    
+    public static int countTotalWins(String playerName) {
+    String query = "SELECT COUNT(*) AS WIN_COUNT FROM GAMELOG WHERE WINNER_OF_ROUND = ?";
+    int winCount = 0;
+    
+    try (Connection conn = DBManager.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+        
+        pstmt.setString(1, playerName);
+        
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                winCount = rs.getInt("WIN_COUNT");
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("Error counting total wins: " + e.getMessage());
+        e.printStackTrace();
+    }
+    
+    return winCount;
+}
+    
 
    // Reads all log entries from the GAMELOG table in the database for a specific user.
 public static List<String> readGameLog(String userName) {

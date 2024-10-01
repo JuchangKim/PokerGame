@@ -1,7 +1,9 @@
 package Poker_Game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 
@@ -71,6 +73,8 @@ public class PokerGame extends FileManager {
     
     //startGame() generated with the help of ChatGPT
     //Start the poker game loop, allowing players to play multiple rounds
+    
+    
     public void startGame(String username) throws InterruptedException {
         this.username = username;
         
@@ -115,24 +119,7 @@ public class PokerGame extends FileManager {
         // Append the log to the database using FileManager
         FileManager.appendToGameLog(username, computerPlayerName, playerCardRanks.toString(), gameState.getWinner().getName());
                 
-//        // Prepare the game log
-//        String log = "";
-//        for (Player p : gameState.getPlayers()) {
-//            if (p.isFolded()) {
-//                log += p.getName() + " : Folded, Chips : " + p.getChips() + "\n";
-//                this.setAnnouncement(p.getName() + " : Folded, Chips : " + p.getChips() + "\n");
-//            } else {
-//                log += p.getName() + " : " + p.getHand() + " : " + p.getHand().getHandRank() + " , Chips : " + p.getChips() + "\n";
-//                this.setAnnouncement(p.getName() + " : " + p.getHand() + " : " + p.getHand().getHandRank() + " , Chips : " + p.getChips() + "\n");
-//            }
-//        }
-//        log += "Winner is : " + gameState.getWinner() + "\n";
-//        this.setAnnouncement("Winner is : " + gameState.getWinner() + "\n");
-//
-//        // Append the log to the database using FileManager
-//        FileManager.appendToGameLog(username, log, gameState.getWinner().getName(), gameState.getWinner().getChips()); // Append log to the database
-
-         setIsFinished(true);
+        setIsFinished(true);
         if (getResponse().equalsIgnoreCase("yes")) {
             // If the user wants to play another game, continue, and the log is already appended
             FileManager.saveGame(this, username); // Save game state to the database
