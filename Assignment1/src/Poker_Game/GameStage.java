@@ -86,15 +86,15 @@ public class GameStage extends JFrame implements GameListener {
 
         // Check if the first card image is available and assign it
         if (getGame().getGameState().getPlayers().get(i).getHand().getCards().size() > 0 &&
-            getGame().getGameState().getPlayers().get(i).getHand().getCards().get(0).getImageIcon() != null) {
-            ImageIcon image1 = getGame().getGameState().getPlayers().get(i).getHand().getCards().get(0).getImageIcon();
+            getGame().getGameState().getPlayers().get(i).getHand().getCards().get(0).getBackImageIcon() != null) {
+            ImageIcon image1 = getGame().getGameState().getPlayers().get(i).getHand().getCards().get(0).getBackImageIcon();
             cardLabel1.setIcon(image1); // Set the card image
         }
 
         // Check if the second card image is available and assign it
         if (getGame().getGameState().getPlayers().get(i).getHand().getCards().size() > 1 &&
-            getGame().getGameState().getPlayers().get(i).getHand().getCards().get(1).getImageIcon() != null) {
-            ImageIcon image2 = getGame().getGameState().getPlayers().get(i).getHand().getCards().get(1).getImageIcon();
+            getGame().getGameState().getPlayers().get(i).getHand().getCards().get(1).getBackImageIcon() != null) {
+            ImageIcon image2 = getGame().getGameState().getPlayers().get(i).getHand().getCards().get(1).getBackImageIcon();
             cardLabel2.setIcon(image2); // Set the card image
         }
 
@@ -136,25 +136,25 @@ public class GameStage extends JFrame implements GameListener {
     }
     
     private void setupAnnouncementPanel() {
-        announcementLabels = new JLabel[2];
-        if(getGame().getRound() == null) {
-            getGame().setRound(" ");
-        }
-        announcementLabels[0] = new JLabel(getGame().getRound());
-        if(getGame().getAnnouncement() == null)
-        {
-            getGame().setAnnouncement(" ");
-        }
+        announcementLabels = new JLabel[6];
         
-        announcementLabels[1] = new JLabel(" ");
+       
+        
+        
+         for (int i = 0; i < 6; i++) {
+        // Create and initialize a label for each player’s announcement
+        announcementLabels[i] = new JLabel(" ");
+        }
         
         JPanel announcementPanel = new JPanel();
         announcementPanel.setLayout(new BoxLayout(announcementPanel, BoxLayout.Y_AXIS));
         announcementPanel.setBorder(border); // Apply the defined border to the panel
-        announcementPanel.setBounds(10, 425, 300, 200); // Correctly set the bounds
+        announcementPanel.setBounds(10, 425, 400, 200); // Correctly set the bounds
         announcementPanel.setBackground(Color.GREEN); // Set background color
-        announcementPanel.add(announcementLabels[0]); // Ensure label fills panel
-        announcementPanel.add(announcementLabels[1]);
+        
+        for (int i = 0; i < 6; i++) {
+        announcementPanel.add(announcementLabels[i]);
+        }
         
         mainPanel.add(announcementPanel);
         
@@ -253,7 +253,7 @@ public class GameStage extends JFrame implements GameListener {
         checkButton.addActionListener(e -> handleUserAction("Check"));
         exitButton.addActionListener(e -> System.exit(0)); // Close the application
         
-        buttonPanel.setBounds(400, 425, 400, 50);
+        buttonPanel.setBounds(450, 420, 400, 50);
         
         buttonPanel.setBackground(Color.GREEN); // A vibrant green background
         buttonPanel.setVisible(false);  // Initially hidden
@@ -293,7 +293,7 @@ public class GameStage extends JFrame implements GameListener {
                     if (playerNameLabels[i] != null && playerChipLabels[i] != null && playerCardPanels[i] != null) {
                         playerNameLabels[i].setText(players.get(i).getName());
                         playerChipLabels[i].setText("Chips: " + players.get(i).getChips());
-                        updatePlayerCardImages(playerCardPanels[i], players.get(i).getHand().getCards());
+                        updatePlayerCardImages(playerCardPanels[i], players.get(i));  // Pass the player here
                     }
                 }
                 
@@ -308,9 +308,12 @@ public class GameStage extends JFrame implements GameListener {
                     announcementLabels[0].setText(getGame().getRound() != null ? getGame().getRound() : " ");
                 }
                 
-                if (announcementLabels[1] != null) {
-                    announcementLabels[1].setText(getGame().getAnnouncement() != null ? getGame().getAnnouncement() : " ");
-                }
+                // Update announcements for each player
+                String[] announcements = getGame().getAnnouncement();
+                for (int i = 1; i < 6; i++) {
+                    announcementLabels[i].setText(announcements[i]); // Update the announcement labels
+                 }
+
             }
         } else {
             SwingUtilities.invokeLater(this::updateUI);
@@ -340,8 +343,8 @@ public class GameStage extends JFrame implements GameListener {
         List<Card> communityCardsCopy = new ArrayList<>(communityCards);
    
     for (Card card : communityCardsCopy) {
-        if (card != null && card.getImageIcon() != null) {
-            communityCardsPanel.add(new JLabel(card.getImageIcon()));
+        if (card != null && card.getFrontImageIcon() != null) {
+            communityCardsPanel.add(new JLabel(card.getFrontImageIcon()));
         }
     }
     communityCardsPanel.setBackground(Color.GREEN);
@@ -349,14 +352,31 @@ public class GameStage extends JFrame implements GameListener {
     communityCardsPanel.repaint();
     }
 
-    // Updating player card images
-    private void updatePlayerCardImages(JPanel cardPanel, List<Card> cards) {
-        cardPanel.removeAll();
-    for (Card card : cards) {
-        if (card != null && card.getImageIcon() != null) {
-            cardPanel.add(new JLabel(card.getImageIcon()));
+    // Updating player card images (user -> front, computer -> back)
+private void updatePlayerCardImages(JPanel cardPanel, Player player) {
+    cardPanel.removeAll();
+
+    // If the player is the user (first player), show front side of cards
+    
+    // Check if the game is in the DetermineWinnerState
+    boolean isDetermineWinnerState = getGame().getRound().equalsIgnoreCase("Determining The Winner");
+    
+    if (getGame().getGameState().getPlayers().get(0).equals(player) || isDetermineWinnerState) {
+        // User's cards: show front side
+        for (Card card : player.getHand().getCards()) {
+            if (card != null && card.getFrontImageIcon() != null) {
+                cardPanel.add(new JLabel(card.getFrontImageIcon()));
+            }
+        }
+    } else {
+        // Computer player's cards: show back side
+        for (Card card : player.getHand().getCards()) {
+            if (card != null && card.getBackImageIcon() != null) {
+                cardPanel.add(new JLabel(card.getBackImageIcon()));
+            }
         }
     }
+    
     cardPanel.setBackground(Color.GREEN);
     cardPanel.revalidate();
     cardPanel.repaint();

@@ -43,13 +43,14 @@ public class DetermineWinnerState implements GameStateAction {
                     
                     // Print out the player's hand and its rank.
                     System.out.println(p.getName() + " has " + playerHand.getHandRank() + "\n");
+                    game.setAnnouncement(p.getName() + " has " + playerHand.getHandRank(), game.getGameState().getPlayers().indexOf(p) + 1);
                     Thread.sleep(1000); //Deal of 1 ssecond between display of players hands
                 }
             }
         
         // Announce the winner of the round.
         System.out.println("The winner is " + winner.getName() + "!\n");
-        game.setAnnouncement("The winner is " + winner.getName() + "!\n");
+        game.setAnnouncement("The winner is " + winner.getName() + "!\n", 5);
         // Set the winner in the game's state.
         game.getGameState().setWinner(winner);
         
@@ -71,7 +72,7 @@ public class DetermineWinnerState implements GameStateAction {
             
             // If there is no winner, announce that no one won this round
             System.out.println("No winner this round.");
-            game.setAnnouncement("No winner this round.");
+            game.setAnnouncement("No winner this round.", 5);
         }
     }
 }

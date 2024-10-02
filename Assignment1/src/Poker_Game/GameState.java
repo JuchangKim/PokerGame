@@ -46,7 +46,7 @@ public class GameState implements Serializable {
         
         for(Card card : communityCards)
         {
-            images.add(card.getImageIcon());
+            images.add(card.getFrontImageIcon());
         }
         
         return images;

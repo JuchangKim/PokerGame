@@ -43,7 +43,7 @@ public class InitializeState implements GameStateAction {
         
         // Announce the start of a new round.
         System.out.println("Starting new round...");
-        game.setAnnouncement("Starting new round...");
+        game.setAnnouncement("Starting new round...", 0);
         // Display each player's current state after the initial setup.
         for (Player player : game.getGameState().getPlayers()) {
             System.out.println(player);

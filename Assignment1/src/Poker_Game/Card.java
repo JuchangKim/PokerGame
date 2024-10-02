@@ -18,15 +18,17 @@ public class Card {
     private int value;
     private String suit;
     private String colour;
-    private ImageIcon imageIcon;
+    private ImageIcon card_front;
+    private ImageIcon card_back;
     
 
     // Constructor to initialize the card with a value and suit
-    public Card(int value, String suit, Image image) {
+    public Card(int value, String suit, Image image, Image image1) {
         // Assign the value and suit to the card
         this.value = value;
         this.suit = suit;
-        this.imageIcon = new ImageIcon(image);
+        this.card_front = new ImageIcon(image);
+        this.card_back = new ImageIcon(image1);
 
         // Determine the color of the card based on its suit
         if(this.suit.equals("Hearts") || this.suit.equals("Diamonds")) {
@@ -39,10 +41,15 @@ public class Card {
     }
     
     
-    public ImageIcon getImageIcon() {
-        return imageIcon;
+    public ImageIcon getFrontImageIcon() {
+        return card_front;
     }
 
+    public ImageIcon getBackImageIcon() {
+        return card_back;
+    }
+
+    
     
     // Getter method for the card's value
     public int getValue() {

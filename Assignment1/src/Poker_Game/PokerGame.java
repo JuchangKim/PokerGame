@@ -20,7 +20,7 @@ public class PokerGame extends FileManager {
     private String response;
     private GameStage gameStage;
     private List<GameListener> listeners = new ArrayList<>(); // To connect the GameStage
-    private String announcement;
+    private String[] announcement;
     private String round;
     private boolean isFinished;
     
@@ -60,7 +60,13 @@ public class PokerGame extends FileManager {
         }
         getBettingSystem().resetPot();  // Reset the betting pot
         getDeck().shuffleDeck();  // Shuffle the deck for the new game
-        // Any other necessary resets
+        
+        // Initialize the announcements array with the size of players
+    announcement = new String[6]; // Allocate announcements for each player
+    for (int i = 0; i < announcement.length; i++) {
+        announcement[i] = " "; // Initialize with empty strings
+    }
+    notifyGameUpdated();
     }
     
     //add a neew player to the game
@@ -99,14 +105,14 @@ public class PokerGame extends FileManager {
         for (Player p : gameState.getPlayers()) {
             if (p.isFolded()) {
                 log += p.getName() + " : Folded, Chips : " + p.getChips() + "\n";
-                this.setAnnouncement(p.getName() + " : Folded, Chips : " + p.getChips() + "\n");
+                this.setAnnouncement(p.getName() + " : Folded, Chips : " + p.getChips() + "\n", gameState.getPlayers().indexOf(p) + 1);
             } else {
                 log += p.getName() + " : " + p.getHand() + " : " + p.getHand().getHandRank() + " , Chips : " + p.getChips() + "\n";
-                this.setAnnouncement(p.getName() + " : " + p.getHand() + " : " + p.getHand().getHandRank() + " , Chips : " + p.getChips() + "\n");
+                this.setAnnouncement(p.getName() + " : " + p.getHand() + " : " + p.getHand().getHandRank() + " , Chips : " + p.getChips() + "\n", gameState.getPlayers().indexOf(p) + 1);
             }
         }
         log += "Winner is : " + gameState.getWinner() + "\n";
-        this.setAnnouncement("Winner is : " + gameState.getWinner() + "\n");
+        this.setAnnouncement("Winner is : " + gameState.getWinner() + "\n", 0);
 
         // Append the log to the database using FileManager
         FileManager.appendToGameLog(username, log); // Append log to the database
@@ -171,7 +177,7 @@ public class PokerGame extends FileManager {
         
         notifyGameUpdated();
         
-        this.setRound("Determining The Winnder");
+        this.setRound("Determining The Winner");
         GameStateAction determineWinnerState = new DetermineWinnerState();
         determineWinnerState.play(this); // Determine the winner of the round
         notifyGameUpdated();
@@ -194,7 +200,7 @@ public class PokerGame extends FileManager {
         
         if (playersInGame == 1 && lastPlayer != null) {
             System.out.println("All other players have folded. " + lastPlayer.getName() + " is the winner!\n");
-            this.setAnnouncement("All other players have folded. " + lastPlayer.getName() + " is the winner!\n");
+            this.setAnnouncement("All other players have folded. " + lastPlayer.getName() + " is the winner!\n", 0);
             gameState.setWinner(lastPlayer); // Set the last remaining player as the winner.
             lastPlayer.addNumOfWin(); // Increment the player's win count.
             lastPlayer.addToChips(getBettingSystem().getPot()); // Add the pot to the player's chips.
@@ -214,10 +220,11 @@ public class PokerGame extends FileManager {
     
     //Plays a betting round for a specified phase of the game such as Flop, Turn, River
     private void playBettingRound(String roundName) throws InterruptedException {
-        this.setRound(roundName);
+        
         
         System.out.println(roundName + " Round\n");
-        
+        this.setRound(roundName + " Round\n");
+        notifyGameUpdated();
         System.out.println("Community Cards: " + getGameState().getCommunityCards() + "\n");
         
         for (Player player : getGameState().getPlayers()) {
@@ -241,6 +248,8 @@ public class PokerGame extends FileManager {
         } else {
             computerTurn(player);  // Handle the computer's turn
         }
+        
+       
     }
     
     
@@ -249,7 +258,7 @@ public class PokerGame extends FileManager {
         System.out.println("Your turn. Your hand: " + player.getHand() + "\n");
         System.out.println("Current Pot: " + getBettingSystem().getPot() + ", Current Bet: " + getGameState().getCurrentBet() + "\n");
         
-        // Buttons will handle the actions, no need for scanner input
+        setAnnouncement(player.getName() + " called.", getGameState().getPlayers().indexOf(player) + 1);
         
     }
     
@@ -265,11 +274,14 @@ public class PokerGame extends FileManager {
                     player.call(callAmount);
                     getBettingSystem().addToPot(callAmount);
                     player.setCurrentBet(getGameState().getCurrentBet());
+                    setAnnouncement(player.getName() + " called.", getGameState().getPlayers().indexOf(player) + 1);
                 } else {
+                    setAnnouncement(player.getName() + " folded.", getGameState().getPlayers().indexOf(player) + 1);
                     player.fold();
                 }
                 break;
             case 2: //Fold
+                setAnnouncement(player.getName() + " folded.", getGameState().getPlayers().indexOf(player) + 1);
                 player.fold();
                 break;
             case 3: //Raise
@@ -280,13 +292,15 @@ public class PokerGame extends FileManager {
                     getBettingSystem().addToPot(increaseAmount);
                     getGameState().setCurrentBet(raiseAmount);
                     player.setCurrentBet(getGameState().getCurrentBet());
+                    setAnnouncement(player.getName() + " raised.", getGameState().getPlayers().indexOf(player) + 1);
                 } else {
+                    setAnnouncement(player.getName() + " folded.", getGameState().getPlayers().indexOf(player) + 1);
                     player.fold();
                 }
                 break;
         }
         System.out.println(player.getName() + " chose to " + (choice == 1 ? "Call" : choice == 2 ? "Fold" : "Raise"));
-        this.setAnnouncement(player.getName() + " chose to " + (choice == 1 ? "Call" : choice == 2 ? "Fold" : "Raise"));
+        
         notifyGameUpdated();
         
         
@@ -338,16 +352,19 @@ public class PokerGame extends FileManager {
     /**
      * @return the announcement
      */
-    public String getAnnouncement() {
+    public String[] getAnnouncement() {
         return announcement;
     }
     
     /**
      * @param announcement the announcement to set
+     * @param index
      */
-    public void setAnnouncement(String announcement) {
-        this.announcement = announcement;
+    public void setAnnouncement(String announcement, int index) {
+    if (index >= 0 && index < this.announcement.length) {
+        this.announcement[index] = announcement;
     }
+}
     
     /**
      * @return the round

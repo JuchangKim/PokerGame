@@ -39,19 +39,25 @@ public class Deck {
         for (int i = 0; i < values.length; i++) {  // Start from 0 to access the first element "two"
             String cardName = values[i] + "_of_" + suit + ".png"; // Construct filename based on naming convention
             String imageName = "/Poker_Game/CardImages/" + cardName; 
+            String image1Name = "/Poker_Game/CardImages/cards_back.png";
             java.net.URL imgUrl = getClass().getResource(imageName);
+            java.net.URL imgUrl2 = getClass().getResource(image1Name);
+            
             if (imgUrl == null) {
                 System.err.println("Resource not found: " + imageName);
                 continue; // Skip this card if the image is not found
             }
-            ImageIcon icon = new ImageIcon(imgUrl);
-                
-                // Resize the image
-            Image image = icon.getImage().getScaledInstance(50, 90, Image.SCALE_SMOOTH);
-            icon = new ImageIcon(image); // Recreate ImageIcon with the new size
-                
+            ImageIcon card_front = new ImageIcon(imgUrl);
+            ImageIcon card_back = new ImageIcon(imgUrl2);
+            // Resize the image
+            Image image = card_front.getImage().getScaledInstance(50, 90, Image.SCALE_SMOOTH);
+            Image image2 = card_back.getImage().getScaledInstance(50, 90, Image.SCALE_SMOOTH);
+            
+            card_front = new ImageIcon(image); // Recreate ImageIcon with the new size
+            card_back = new ImageIcon(image2);
+            
             int cardValue = i + 2; // Card values need to start from 2 for "two"
-            this.deck.add(new Card(cardValue, suit, icon.getImage())); // Add card with image
+            this.deck.add(new Card(cardValue, suit, card_front.getImage(), card_back.getImage())); // Add card with image
         }
     }
     }
@@ -60,9 +66,9 @@ public class Deck {
     public void shuffleDeck() {
         
         //create a temporary deck to hold the shuffled cards
-        ArrayList<Card> tempDeck = new ArrayList<Card>();
+        ArrayList<Card> tempDeck = new ArrayList<>();
 
-        while (this.deck.size() > 0) {
+        while (!this.deck.isEmpty()) {
             // Generate a random index within the bounds of the current deck size
             int randomIndex = ((int) (Math.random() * 100)) % this.deck.size();
             // Remove the card at the random index from the original deck and add it to the temp deck

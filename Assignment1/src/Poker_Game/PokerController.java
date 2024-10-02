@@ -58,7 +58,7 @@ public class PokerController {
 
     private void handleCheck(Player player) {
         if (game.getGameState().getCurrentBet() > player.getCurrentBet()) {
-            game.setAnnouncement("You need to call before you can check.");
+            game.setAnnouncement("You need to call before you can check.", 1);
         }
     }
 
