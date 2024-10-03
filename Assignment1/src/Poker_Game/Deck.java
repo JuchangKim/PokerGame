@@ -50,8 +50,8 @@ public class Deck {
             ImageIcon card_front = new ImageIcon(imgUrl);
             ImageIcon card_back = new ImageIcon(imgUrl2);
             // Resize the image
-            Image image = card_front.getImage().getScaledInstance(50, 90, Image.SCALE_SMOOTH);
-            Image image2 = card_back.getImage().getScaledInstance(50, 90, Image.SCALE_SMOOTH);
+            Image image = card_front.getImage().getScaledInstance(70, 100, Image.SCALE_SMOOTH);
+            Image image2 = card_back.getImage().getScaledInstance(70, 100, Image.SCALE_SMOOTH);
             
             card_front = new ImageIcon(image); // Recreate ImageIcon with the new size
             card_back = new ImageIcon(image2);

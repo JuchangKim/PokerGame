@@ -241,10 +241,15 @@ public class PokerGame extends FileManager {
     public void playerTurn(Player player) throws InterruptedException {
         if (getGameState().getPlayers().get(0).getName().equals(player.getName())) {
             // Notify all listeners that it's the user's turn
+            this.setAnnouncement("Choose Your Option", 5);
+            notifyGameUpdated();
             for (GameListener listener : listeners) {
                 listener.onPlayerTurn(player);
             }
+            
             userTurn(player);  // Proceed with the user's turn
+            this.setAnnouncement(" ", 5);
+            notifyGameUpdated();
         } else {
             computerTurn(player);  // Handle the computer's turn
         }
