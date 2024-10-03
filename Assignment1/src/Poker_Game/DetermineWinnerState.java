@@ -41,6 +41,11 @@ public class DetermineWinnerState implements GameStateAction {
                     // Evaluate the player's hand to determine its rank.
                     PokerRules.evaluateHand(playerHand);
                     
+                    //Once you determine the winner, pass the winning hand to the FileManager for GameLog Table
+                    String winningHand = winner != null ? playerHand.toString() : "None";
+                    FileManager.appendToGameLog(winner.getName(), playerHand.getHandRank(), winner.getName(), winningHand);
+
+                    
                     // Print out the player's hand and its rank.
                     System.out.println(p.getName() + " has " + playerHand.getHandRank() + "\n");
                     Thread.sleep(1000); //Deal of 1 ssecond between display of players hands

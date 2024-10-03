@@ -1,6 +1,7 @@
 package Poker_Game;
 
 import java.util.List;
+import java.util.Set;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -23,7 +24,7 @@ public class ListOfUsersMenu extends javax.swing.JFrame {
     
     // Method to display usernames in the ShowUsersTextPane1
     private void displayUsernames() {
-        List<String> usernames = FileManager.getSavedGameFiles(); // Get the list of usernames
+        Set<String> usernames = FileManager.getSavedGameFiles(); // Get the list of usernames
         StringBuilder content = new StringBuilder();
 
         if (usernames.isEmpty()) {

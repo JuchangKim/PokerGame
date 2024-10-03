@@ -1,6 +1,7 @@
 package Poker_Game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,68 +74,95 @@ public class PokerGame extends FileManager {
     
     //startGame() generated with the help of ChatGPT
     //Start the poker game loop, allowing players to play multiple rounds
-    
-    
+        
     public void startGame(String username) throws InterruptedException {
-        this.username = username;
-        
-        // Attempt to create a new save file for the game or load the existing one
-        if (FileManager.createNewSaveFile(username)) {
-            System.out.println("New save file created: " + username);
-        } else {
-            System.out.println("Save file already exists. Loading game state...");
-        }
-        
-        // Reset each player's status at the start of a new game.
-        resetGame();
-        notifyGameUpdated();
-        
-        playRound(); //Play a round of poker
-        Thread.sleep(1000); // Delay to simulate real gameplay
-       
-        notifyGameUpdated();
-        
-        System.out.println("Do you want to play another game? (yes/no)");
-        
-        Thread.sleep(1000);
-        
-        // Prepare the game log
-        StringBuilder playerCardRanks = new StringBuilder();
-        String computerPlayerName = "";
-        for (Player p : gameState.getPlayers()) {
-            if (!p.getName().equals(username)) {
-                computerPlayerName = p.getName();
-            }
-            if (p.isFolded()) {
-                playerCardRanks.append(p.getName()).append(" : Folded, ");
-            } else {
-                playerCardRanks.append(p.getName()).append(" : ").append(p.getHand().getHandRank()).append(", ");
-            }
-        }
-        // Remove the last comma and space
-        if (playerCardRanks.length() > 2) {
-            playerCardRanks.setLength(playerCardRanks.length() - 2);
-        }
+    this.username = username;
 
-        // Append the log to the database using FileManager
-        FileManager.appendToGameLog(username, computerPlayerName, playerCardRanks.toString(), gameState.getWinner().getName());
-                
-        setIsFinished(true);
-        if (getResponse().equalsIgnoreCase("yes")) {
-            // If the user wants to play another game, continue, and the log is already appended
-            FileManager.saveGame(this, username); // Save game state to the database
-        } else if (getResponse().equalsIgnoreCase("no")) {
-            // Save the current game state and exit
-            FileManager.saveGame(this, username); // Save game state to the database
-    
-            // Exit the game
-            System.out.println("Game state saved and exiting...");
-            // Optional: You may add logic to close the game or exit the loop
-        } else {
-            System.out.println("Invalid input. Please enter 'yes' or 'no'.");
-        }
-
+    // Attempt to create a new save file for the game or load the existing one
+    if (FileManager.createNewSaveFile(username)) {
+        System.out.println("New save file created: " + username);
+    } else {
+        System.out.println("Save file already exists. Loading game state...");
     }
+
+    // Reset each player's status at the start of a new game.
+    resetGame();
+    notifyGameUpdated();
+
+    playRound(); //Play a round of poker
+    Thread.sleep(1000); // Delay to simulate real gameplay
+
+    notifyGameUpdated();
+
+    System.out.println("Do you want to play another game? (yes/no)");
+
+    Thread.sleep(1000);
+
+    // Prepare the game log
+    StringBuilder playerCardRanks = new StringBuilder();
+    String computerPlayerName = "";
+    for (Player p : gameState.getPlayers()) {
+        if (!p.getName().equals(username)) {
+            computerPlayerName = p.getName();
+        }
+        if (p.isFolded()) {
+            playerCardRanks.append(p.getName()).append(" : Folded, ");
+        } else {
+            playerCardRanks.append(p.getName()).append(" : ").append(p.getHand().getHandRank()).append(", ");
+        }
+    }
+    // Remove the last comma and space
+    if (playerCardRanks.length() > 2) {
+        playerCardRanks.setLength(playerCardRanks.length() - 2);
+    }
+
+    // Append the log to the database using FileManager
+    // Get the winning player's hand (assuming winner is of type Player and playerHand can be retrieved)
+Player winner = gameState.getWinner();
+Hand winningHand = new Hand(gameState.getCommunityCards()); // Get community cards first
+//winningHand.addCards(Arrays.asList(winner.getHoleCards())); // Add the winner's hole cards
+
+// Evaluate the winning hand to get the hand rank (if needed)
+PokerRules.evaluateHand(winningHand); // This assumes the evaluateHand method assigns the rank correctly
+
+// Append the log to the database using FileManager
+FileManager.appendToGameLog(username, playerCardRanks.toString(), gameState.getWinner().getName(), winningHand.toString());
+
+    
+       //FileManager.appendToGameLog(username, playerCardRanks.toString(), gameState.getWinner().getName());
+
+    // Update the winner's total wins in the database
+    for (Player p : gameState.getPlayers()) {
+        if (p.getName().equals(gameState.getWinner().getName())) {
+            int totalWins = FileManager.countTotalWins(p.getName());
+            FileManager.updateUserWins(p.getName(), totalWins);
+            System.out.println(p.getName() + " total wins updated: " + totalWins);
+        }
+    }
+
+    setIsFinished(true);
+    
+    if (getResponse().equalsIgnoreCase("yes")) {
+        // If the user wants to play another game, continue, and the log is already appended
+        FileManager.saveGame(this, username); // Save game state to the database
+    } else if (getResponse().equalsIgnoreCase("no")) {
+        // Save the current game state and exit
+        FileManager.saveGame(this, username); // Save game state to the database
+
+        // Count and display total wins for each player
+        for (Player p : gameState.getPlayers()) {
+            int totalWins = FileManager.countTotalWins(p.getName());
+            System.out.println(p.getName() + " total wins: " + totalWins);
+        }
+
+        // Exit the game
+        System.out.println("Game state saved and exiting...");
+        // Optional: You may add logic to close the game or exit the loop
+    } else {
+        System.out.println("Invalid input. Please enter 'yes' or 'no'.");
+    }
+}
+    
     //playRound() was generated with ChatGPT
     //Plays a single round of poker, including dealing cards and handling bets
     private void playRound() throws InterruptedException {

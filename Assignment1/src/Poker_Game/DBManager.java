@@ -30,6 +30,9 @@ public class DBManager {
     public static void main(String[] args) {
         DBManager dbManager = new DBManager();
         System.out.println(dbManager.getConnection());
+        
+        // Close connections when done
+        dbManager.closeConnections();
     }
 
     public static Connection getConnection() {
@@ -77,13 +80,24 @@ public class DBManager {
         }
 
     }
-
+    //Code acquired from ChatGPT
+    // Close the database connection and shutdown Derby
     public void closeConnections() {
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+                System.out.println("Connection closed successfully.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error while closing connection: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // Now attempt to shut down the Derby database
         try {
             DriverManager.getConnection("jdbc:derby:;shutdown=true");
         } catch (SQLException e) {
-            // Derby throws this exception to signal a successful shutdown
-            if (e.getSQLState().equals("XJ015")) {
+            if ("XJ015".equals(e.getSQLState())) {
                 System.out.println("Derby shut down successfully.");
             } else {
                 e.printStackTrace(); // Handle other exceptions
@@ -123,10 +137,9 @@ public class DBManager {
         }
     }
     
+    //Code acquired from ChatGPT
     public static void close() throws SQLException {
-        if (conn != null && !conn.isClosed()) {
-            conn.close();
-        }
+        new DBManager().closeConnections();
     }
     
 }

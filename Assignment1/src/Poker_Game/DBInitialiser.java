@@ -10,20 +10,27 @@ package Poker_Game;
  */
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.DatabaseMetaData;
+import java.sql.Timestamp;
 
 public class DBInitialiser {
 
     private static Connection conn;
+    
+    
 
     public DBInitialiser(Connection conn) {
         this.conn = conn;
         createTables();
         alterTablesAddDateColumn();
+        
     }
+    
+    
 
     public void createTables() {
         try (Statement statement = conn.createStatement()) {
@@ -45,9 +52,10 @@ public class DBInitialiser {
                         + "ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, "
                         + "USER_ID INT, "
                         + "USERNAME_NAME VARCHAR(50), "
-                        + "COMPUTER_PLAYER_NAME VARCHAR(50), "
+                        //+ "COMPUTER_PLAYER_NAME VARCHAR(50), "
                         + "PLAYER_CARD_RANK_PER_ROUND VARCHAR(120), "
                         + "WINNER_OF_ROUND VARCHAR(50), "
+                        + "WINNING_HAND VARCHAR(255), "
                         + "FOREIGN KEY (USER_ID) REFERENCES \"USER\"(ID))";
                 statement.executeUpdate(createGameLogTable);
                 System.out.println("GAMELOG table created successfully!");
@@ -89,15 +97,36 @@ public class DBInitialiser {
         }
     }
     
-    // Helper method to check if a column exists in a table
-    private boolean columnExists(String tableName, String columnName) throws SQLException {
-        DatabaseMetaData metadata = conn.getMetaData();
-        ResultSet resultSet = metadata.getColumns(null, null, tableName.toUpperCase(), columnName.toUpperCase());
-        boolean exists = resultSet.next();
-        resultSet.close();
-        return exists;
+    
+//    public void filterRecentUsernames() {
+//    String query = "SELECT gl.* " +
+//                   "FROM GAMELOG gl " +
+//                   "JOIN ( " +
+//                   "    SELECT USERNAME, MAX(CREATED_AT) AS MostRecent " +
+//                   "    FROM \"USER\" " +
+//                   "    GROUP BY USERNAME " +
+//                   ") AS recent_users " +
+//                   "ON gl.USERNAME_NAME = recent_users.USERNAME " +
+//                   "AND gl.LOG_DATE = recent_users.MostRecent";
+//
+//    try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+//        while (rs.next()) {
+//            // Process each game log record
+//            // For example: System.out.println(rs.getString("USERNAME_NAME") + " : " + rs.getTimestamp("LOG_DATE"));
+//        }
+//    } catch (SQLException e) {
+//        System.err.println("Error filtering recent usernames: " + e.getMessage());
+//    }
+//}
+    
+    // Method to check if a column exists in a table
+    public boolean columnExists(String tableName, String columnName) throws SQLException {
+    DatabaseMetaData metaData = conn.getMetaData();
+    try (ResultSet resultSet = metaData.getColumns(null, null, tableName.toUpperCase(), columnName.toUpperCase())) {
+        return resultSet.next();
     }
-
+}
+    
     // Helper method to check if a table exists
     private boolean tableExists(Statement statement, String tableName) throws SQLException {
         String query = "SELECT 1 FROM SYS.SYSTABLES WHERE TABLENAME = '" + tableName.toUpperCase() + "'";
