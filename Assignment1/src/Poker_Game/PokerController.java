@@ -39,9 +39,11 @@ public class PokerController {
             game.getBettingSystem().addToPot(callAmount);
             player.setCurrentBet(game.getGameState().getCurrentBet());
         }
+        game.setAnnouncement(player.getName() + " Choose Call", 1);
     }
 
     private void handleFold(Player player) {
+        game.setAnnouncement(player.getName() + " Choose Fold", 1);
         player.fold();
     }
 
@@ -54,12 +56,14 @@ public class PokerController {
             game.getGameState().setCurrentBet(raiseAmount);
             player.setCurrentBet(game.getGameState().getCurrentBet());
         }
+        game.setAnnouncement(player.getName() + " Choose Raise", 1);
     }
 
     private void handleCheck(Player player) {
         if (game.getGameState().getCurrentBet() > player.getCurrentBet()) {
             game.setAnnouncement("You need to call before you can check.", 1);
         }
+        game.setAnnouncement(player.getName() + " Choose Check", 1);
     }
 
     private void handleExit() {

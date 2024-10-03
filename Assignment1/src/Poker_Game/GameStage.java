@@ -13,13 +13,15 @@ import javax.swing.border.Border;
 public class GameStage extends JFrame implements GameListener {
     private PokerGame game;
     private PokerController controller;
-    private JPanel mainPanel, buttonPanel, communityCardsPanel, exitButtonPanel, cardDeckPanel;
-    private JPanel[] playerCardPanels;
+    private JPanel mainPanel, buttonPanel, communityCardsPanel, exitButtonPanel, cardDeckPanel, bettingPotPanel;
+    private JPanel[] playerCardPanels, playerChipsPanels;
     private JLabel[] playerChipLabels, playerCardLabels, playerNameLabels, announcementLabels;
-    private JLabel bettingPotLabel, RoundLabel;
+    private JLabel bettingPotLabel, communityCardsLabel;
     private JButton callButton, foldButton, raiseButton, checkButton, exitButton;
     private Border border;
     private CountDownLatch userInputLatch;  // Latch to pause the game flow
+    private int chipSize;       // Size of each chip image
+    private int currentChipCount; // Track the number of chips already added
     
     public GameStage(PokerGame game) throws InterruptedException {
         this.game = game;
@@ -29,6 +31,8 @@ public class GameStage extends JFrame implements GameListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Center the window on the screen.s
         this.controller = new PokerController(game);
+        chipSize = 30;
+        currentChipCount = 0;
         
         border = BorderFactory.createLineBorder(Color.BLACK, 2); // Create a border object
         
@@ -65,11 +69,17 @@ public class GameStage extends JFrame implements GameListener {
         playerChipLabels = new JLabel[4]; // Assuming four players
         playerCardPanels = new JPanel[4];
         playerNameLabels = new JLabel[4];
+        playerChipsPanels = new JPanel[4];
         
         for (int i = 0; i < 4; i++) {
             JPanel panel = new JPanel();
+            JPanel chipsPanel = new JPanel();
+            
             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
             panel.setBorder(border); // Apply the border to the panel
+            chipsPanel.setLayout(null); // Set layout to null for manual positioning
+            chipsPanel.setBorder(border);
+            
             
             playerNameLabels[i] = new JLabel(getGame().getGameState().getPlayers().get(i).getName());
             repaint();
@@ -110,24 +120,37 @@ public class GameStage extends JFrame implements GameListener {
             panel.add(playerChipLabels[i]);
             panel.add(playerCardPanels[i]); // Add the card panel directly instead of playerCardLabels[i]
             
+            // Calculate how many chip images to display for each player
+            int chips = getGame().getGameState().getPlayers().get(i).getChips();
+            int chipImagesCount = chips / 90; // Assuming each chip image represents 90 chips
+            setChipsToPanel(chipsPanel, chipImagesCount);
+
+            playerChipsPanels[i] = chipsPanel;
+            
             switch (i) {
                 case 0:
-                    panel.setBounds(500, 500, 250, 150);
+                    panel.setBounds(480, 500, 200, 150);
+                    chipsPanel.setBounds(680, 500, 200, 120);
                     break;
                 case 1:
-                    panel.setBounds(325, 20, 250, 150);
+                    panel.setBounds(270, 20, 200, 150);
+                    chipsPanel.setBounds(470, 50, 250, 120);
                     break;
                 case 2:
-                    panel.setBounds(650, 200, 250, 150);
+                    panel.setBounds(680, 170, 200, 150);
+                    chipsPanel.setBounds(680, 320, 250, 120);
                     break;
                 case 3:
-                    panel.setBounds(10, 200, 250, 150);
+                    panel.setBounds(20, 170, 200, 150);
+                    chipsPanel.setBounds(20, 320, 250, 120);
                     break;
                 default:
                     break;
             }
             
             mainPanel.add(panel);
+            mainPanel.add(chipsPanel);
+            chipsPanel.setBackground(Color.GREEN);
             panel.setBackground(Color.GREEN); // A vibrant green background
         }
         
@@ -144,7 +167,7 @@ public class GameStage extends JFrame implements GameListener {
         JPanel announcementPanel = new JPanel();
         announcementPanel.setLayout(new BoxLayout(announcementPanel, BoxLayout.Y_AXIS));
         announcementPanel.setBorder(border); // Apply the defined border to the panel
-        announcementPanel.setBounds(10, 425, 400, 200); // Correctly set the bounds
+        announcementPanel.setBounds(10, 450, 450, 200); // Correctly set the bounds
         announcementPanel.setBackground(Color.GREEN); // Set background color
         
         for (int i = 0; i < 6; i++) {
@@ -163,7 +186,7 @@ public class GameStage extends JFrame implements GameListener {
         exitButton = new JButton("Exit Game");
         exitButtonPanel.add(exitButton);
         exitButton.addActionListener(e -> System.exit(0)); // Close the application
-        exitButtonPanel.setBounds(700, 50, 100, 70);
+        exitButtonPanel.setBounds(750, 50, 100, 70);
         exitButtonPanel.setBackground(Color.GREEN); // A vibrant green background
         exitButtonPanel.setVisible(true);  // Initially hidden
         
@@ -173,7 +196,6 @@ public class GameStage extends JFrame implements GameListener {
 
     private void setupCardDeckPanel() {
     cardDeckPanel = new JPanel();
-    
 
     // Load the card deck image
     String image1Name = "/Poker_Game/CardImages/cards_back_deck.png"; 
@@ -199,16 +221,16 @@ public class GameStage extends JFrame implements GameListener {
     }
 
     // Set the position and size of the cardDeckPanel on the main panel
-    cardDeckPanel.setBounds(100, 50, 70, 100);  // Position the card deck panel on mainPanel
+    cardDeckPanel.setBounds(570, 200, 70, 100);  // Position the card deck panel on mainPanel
     cardDeckPanel.setLayout(null);  // Set layout to null for manual positioning
     cardDeckPanel.setBackground(Color.GREEN);
     // Add the cardDeckPanel to the main panel
+    mainPanel.setLayout(null);
     mainPanel.add(cardDeckPanel);
 
     repaint();
 }
-     
-     
+ 
     private void handleUserAction(String action) {
         Player player = game.getGameState().getPlayers().get(0);  // Assume player 0 is the user
         updateUI();
@@ -219,6 +241,7 @@ public class GameStage extends JFrame implements GameListener {
         }
         showButtons(false);  // Hide buttons after the action is performed
         userInputLatch.countDown();  // Signal that the user input is complete
+        updateUI();
     }
     
     
@@ -258,15 +281,23 @@ public class GameStage extends JFrame implements GameListener {
         JPanel centerUpPanel = new JPanel(new BorderLayout());
         JPanel centerDownPanel = new JPanel(new BorderLayout());
         
-        bettingPotLabel = new JLabel("Betting Pot: " + getGame().getBettingSystem().getPot());
+        bettingPotLabel = new JLabel("Betting Pot: " + getGame().getBettingSystem().getPot() 
+                + "    Current Bet: " + getGame().getGameState().getCurrentBet(), SwingConstants.CENTER);
         communityCardsPanel = new JPanel();
         communityCardsPanel.setBackground(Color.GREEN);
+        communityCardsLabel = new JLabel("Community Cards", SwingConstants.CENTER);
         
+        bettingPotPanel = new JPanel();
+        bettingPotPanel.setLayout(null); // Manual positioning for the chips
+        bettingPotPanel.setBackground(Color.GREEN); // Set background color
+
+        centerDownPanel.add(communityCardsLabel, BorderLayout.NORTH);
         centerDownPanel.add(communityCardsPanel);
-        centerUpPanel.add(bettingPotLabel);
+        centerUpPanel.add(bettingPotLabel, BorderLayout.NORTH);
+        centerUpPanel.add(bettingPotPanel, BorderLayout.CENTER); // Add the betting pot panel
         
-        centerUpPanel.setBounds(300, 200, 300, 100);
-        centerDownPanel.setBounds(260, 300, 390, 120);
+        centerUpPanel.setBounds(270, 200, 300, 100);
+        centerDownPanel.setBounds(270, 300, 390, 140);
         centerUpPanel.setBackground(Color.GREEN); // A vibrant green background
         centerDownPanel.setBackground(Color.GREEN); // A vibrant green background
         centerUpPanel.setBorder(border); // Apply the border to the panel
@@ -274,7 +305,58 @@ public class GameStage extends JFrame implements GameListener {
         mainPanel.add(centerUpPanel);
         mainPanel.add(centerDownPanel);
         
+        updateBettingPotPanel(); // Initialize with the current pot value
     }
+    
+    // Method to add chips to the betting pot panel based on the current pot value
+private void updateBettingPotPanel() {
+    int pot = getGame().getBettingSystem().getPot();
+    int newChipCount = pot / 10; // Each chip represents 10 chips
+
+    if (newChipCount > currentChipCount) {
+        // Only add the new chips that haven't been added yet
+        addChipsToBettingPot(newChipCount - currentChipCount);
+        currentChipCount = newChipCount; // Update the current chip count to reflect the new total
+    }
+
+    bettingPotPanel.revalidate();
+    bettingPotPanel.repaint();
+    
+    // Update the pot value label
+    bettingPotLabel.setText("Betting Pot: " + getGame().getBettingSystem().getPot() 
+                + "    Current Bet: " + getGame().getGameState().getCurrentBet());
+}
+
+// Method to add a specified number of chips to the betting pot panel
+private void addChipsToBettingPot(int numberOfNewChips) {
+    String chipImageName = "/Poker_Game/CardImages/1_chip.png"; // Path for the chip image
+    java.net.URL imgUrl = getClass().getResource(chipImageName);
+
+    if (imgUrl != null) {
+        ImageIcon chipIcon = new ImageIcon(imgUrl);
+        Image chipImage = chipIcon.getImage().getScaledInstance(chipSize, chipSize, Image.SCALE_SMOOTH); // Resize the chip image
+
+        // Add the specified number of chip images to the betting pot panel with random placement
+        for (int i = 0; i < numberOfNewChips; i++) {
+            JLabel chipLabel = new JLabel(new ImageIcon(chipImage));
+
+            // Generate random x and y positions within the bounds of the bettingPotPanel
+            int xPos = (int) (Math.random() * (bettingPotPanel.getWidth() - chipSize));
+            int yPos = (int) (Math.random() * (bettingPotPanel.getHeight() - chipSize));
+
+            chipLabel.setBounds(xPos, yPos, chipSize, chipSize); // Position the chip
+            bettingPotPanel.add(chipLabel); // Add the chip image to the panel
+        }
+    } else {
+        System.err.println("Chip image not found: " + chipImageName);
+    }
+}
+
+
+// This method should be called whenever the pot value is updated, e.g., after a bet or raise
+public void onBettingSystemUpdated() {
+    updateBettingPotPanel(); // Update the chips in the betting pot panel
+}
     
     private void setupControlButtons() {
         buttonPanel = new JPanel();
@@ -300,7 +382,7 @@ public class GameStage extends JFrame implements GameListener {
         checkButton.addActionListener(e -> handleUserAction("Check"));
         
         
-        buttonPanel.setBounds(450, 430, 400, 70);
+        buttonPanel.setBounds(450, 450, 400, 70);
         
         buttonPanel.setBackground(Color.GREEN); // A vibrant green background
         buttonPanel.setVisible(false);  // Initially hidden
@@ -322,6 +404,39 @@ public class GameStage extends JFrame implements GameListener {
         }
     }
     
+   // Method to add overlapping chip images to the chipsPanel
+    private void setChipsToPanel(JPanel chipsPanel, int chipImagesCount) {
+        String chipImageName = "/Poker_Game/CardImages/9_chips.png"; // Example path for the chip image
+        java.net.URL imgUrl = getClass().getResource(chipImageName);
+
+        if (imgUrl != null) {
+            ImageIcon chipIcon = new ImageIcon(imgUrl);
+            Image chipImage = chipIcon.getImage().getScaledInstance(30, 50, Image.SCALE_SMOOTH); // Resize the chip image
+
+            int overlapOffset = 15; // The overlap offset between chips
+            int chipsPerRow = 15; // Number of chips per row before stacking a new row
+            int startX = 0; // Starting X position for the first chip
+            int startY = 0; // Starting Y position for the first chip
+            
+            // Add the specified number of chip images to the panel with overlap
+            for (int i = 0; i < chipImagesCount; i++) {
+                JLabel chipLabel = new JLabel(new ImageIcon(chipImage));
+                chipLabel.setBounds(startX, startY, 30, 50); // Position the chip
+                chipsPanel.add(chipLabel); // Add each chip image to the panel
+                startX += overlapOffset; // Adjust X position for overlap
+                // Check if we need to start a new row after reaching the chipsPerRow limit
+            if ((i + 1) % chipsPerRow == 0) {
+                startX = 0; // Reset X position to start a new row
+                startY += 25; // Move Y position down for the new row
+            }
+            }
+
+        chipsPanel.revalidate();
+        chipsPanel.repaint();
+    } else {
+        System.err.println("Chip image not found: " + chipImageName);
+    }
+}
     
     public void showButtons(boolean visible) {
         buttonPanel.setVisible(visible);
@@ -347,8 +462,9 @@ public class GameStage extends JFrame implements GameListener {
                 updateCommunityCardImages(getGame().getGameState().getCommunityCards());
                 
                 if (bettingPotLabel != null) {
-                    bettingPotLabel.setText("Pot: " + getGame().getBettingSystem().getPot()
+                    bettingPotLabel.setText("Betting Pot: " + getGame().getBettingSystem().getPot()
                             + "       Current Bet: " + getGame().getGameState().getCurrentBet());
+                    onBettingSystemUpdated();
                 }
                 
                 if (announcementLabels[0] != null) {
@@ -430,8 +546,6 @@ public class GameStage extends JFrame implements GameListener {
         
         
     }   
-
-    
     }
 
    

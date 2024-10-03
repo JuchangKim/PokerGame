@@ -91,6 +91,8 @@ public class PokerGame extends FileManager {
         resetGame();
         notifyGameUpdated();
         
+        
+        
         playRound(); //Play a round of poker
         Thread.sleep(1000); // Delay to simulate real gameplay
        
@@ -263,7 +265,6 @@ public class PokerGame extends FileManager {
         System.out.println("Your turn. Your hand: " + player.getHand() + "\n");
         System.out.println("Current Pot: " + getBettingSystem().getPot() + ", Current Bet: " + getGameState().getCurrentBet() + "\n");
         
-        setAnnouncement(player.getName() + " called.", getGameState().getPlayers().indexOf(player) + 1);
         
     }
     
