@@ -23,7 +23,7 @@ public class PokerGame extends FileManager {
     private String response;
     private GameStage gameStage;
     private List<GameListener> listeners = new ArrayList<>(); // To connect the GameStage
-    private String announcement;
+    private String[] announcement;
     private String round;
     private boolean isFinished;
     
@@ -63,7 +63,13 @@ public class PokerGame extends FileManager {
         }
         getBettingSystem().resetPot();  // Reset the betting pot
         getDeck().shuffleDeck();  // Shuffle the deck for the new game
-        // Any other necessary resets
+        
+        // Initialize the announcements array with the size of players
+    announcement = new String[6]; // Allocate announcements for each player
+    for (int i = 0; i < announcement.length; i++) {
+        announcement[i] = " "; // Initialize with empty strings
+    }
+    notifyGameUpdated();
     }
     
     //add a neew player to the game
@@ -76,7 +82,60 @@ public class PokerGame extends FileManager {
     //Start the poker game loop, allowing players to play multiple rounds
         
     public void startGame(String username) throws InterruptedException {
-    this.username = username;
+
+        this.username = username;
+        
+        // Attempt to create a new save file for the game or load the existing one
+        if (FileManager.createNewSaveFile(username)) {
+            System.out.println("New save file created: " + username);
+        } else {
+            System.out.println("Save file already exists. Loading game state...");
+        }
+        
+        // Reset each player's status at the start of a new game.
+        resetGame();
+        notifyGameUpdated();
+        
+        
+        
+        playRound(); //Play a round of poker
+        Thread.sleep(1000); // Delay to simulate real gameplay
+       
+        notifyGameUpdated();
+        
+        System.out.println("Do you want to play another game? (yes/no)");
+        
+        Thread.sleep(1000);
+        
+        // Prepare the game log
+//        String log = "";
+//        for (Player p : gameState.getPlayers()) {
+//            if (p.isFolded()) {
+//                log += p.getName() + " : Folded, Chips : " + p.getChips() + "\n";
+//                this.setAnnouncement(p.getName() + " : Folded, Chips : " + p.getChips() + "\n", gameState.getPlayers().indexOf(p) + 1);
+//            } else {
+//                log += p.getName() + " : " + p.getHand() + " : " + p.getHand().getHandRank() + " , Chips : " + p.getChips() + "\n";
+//                this.setAnnouncement(p.getName() + " : " + p.getHand() + " : " + p.getHand().getHandRank() + " , Chips : " + p.getChips() + "\n", gameState.getPlayers().indexOf(p) + 1);
+//            }
+//        }
+//        log += "Winner is : " + gameState.getWinner() + "\n";
+        this.setAnnouncement("Winner is : " + gameState.getWinner() + "\n", 0);
+
+
+         setIsFinished(true);
+        if (getResponse().equalsIgnoreCase("yes")) {
+            // If the user wants to play another game, continue, and the log is already appended
+            FileManager.saveGame(this, username); // Save game state to the database
+        } else if (getResponse().equalsIgnoreCase("no")) {
+            // Save the current game state and exit
+            FileManager.saveGame(this, username); // Save game state to the database
+    
+            // Exit the game
+            System.out.println("Game state saved and exiting...");
+            // Optional: You may add logic to close the game or exit the loop
+        } else {
+            System.out.println("Invalid input. Please enter 'yes' or 'no'.");
+        }
 
     // Attempt to create a new save file for the game or load the existing one
     if (FileManager.createNewSaveFile(username)) {
@@ -98,47 +157,23 @@ public class PokerGame extends FileManager {
 
     Thread.sleep(1000);
 
-    // Prepare the game log
-    StringBuilder playerCardRanks = new StringBuilder();
-    String computerPlayerName = "";
-    for (Player p : gameState.getPlayers()) {
-        if (!p.getName().equals(username)) {
-            computerPlayerName = p.getName();
-        }
-        if (p.isFolded()) {
-            playerCardRanks.append(p.getName()).append(" : Folded, ");
-        } else {
-            playerCardRanks.append(p.getName()).append(" : ").append(p.getHand().getHandRank()).append(", ");
-        }
-    }
-    // Remove the last comma and space
-    if (playerCardRanks.length() > 2) {
-        playerCardRanks.setLength(playerCardRanks.length() - 2);
-    }
+    
 
-    // Append the log to the database using FileManager
-    // Get the winning player's hand (assuming winner is of type Player and playerHand can be retrieved)
-Player winner = gameState.getWinner();
-Hand winningHand = new Hand(gameState.getCommunityCards()); // Get community cards first
-//winningHand.addCards(Arrays.asList(winner.getHoleCards())); // Add the winner's hole cards
 
-// Evaluate the winning hand to get the hand rank (if needed)
-PokerRules.evaluateHand(winningHand); // This assumes the evaluateHand method assigns the rank correctly
 
 // Append the log to the database using FileManager
-FileManager.appendToGameLog(username, playerCardRanks.toString(), gameState.getWinner().getName(), winningHand.toString());
+//FileManager.appendToGameLog(username, playerCardRanks.toString(), gameState.getWinner().getName(), winningHand.toString());
 
     
        //FileManager.appendToGameLog(username, playerCardRanks.toString(), gameState.getWinner().getName());
 
-    // Update the winner's total wins in the database
-    for (Player p : gameState.getPlayers()) {
-        if (p.getName().equals(gameState.getWinner().getName())) {
-            int totalWins = FileManager.countTotalWins(p.getName());
-            FileManager.updateUserWins(p.getName(), totalWins);
-            System.out.println(p.getName() + " total wins updated: " + totalWins);
-        }
-    }
+    
+    
+    // Count and display total wins for each player
+//        for (Player p : gameState.getPlayers()) {
+//            int totalWins = FileManager.countTotalWins(p.getName());
+//            System.out.println(p.getName() + " total wins: " + totalWins);
+//        }
 
     setIsFinished(true);
     
@@ -154,9 +189,10 @@ FileManager.appendToGameLog(username, playerCardRanks.toString(), gameState.getW
             int totalWins = FileManager.countTotalWins(p.getName());
             System.out.println(p.getName() + " total wins: " + totalWins);
         }
+        
 
         // Exit the game
-        System.out.println("Game state saved and exiting...");
+        System.out.println("Game saved and exiting...");
         // Optional: You may add logic to close the game or exit the loop
     } else {
         System.out.println("Invalid input. Please enter 'yes' or 'no'.");
@@ -207,7 +243,7 @@ FileManager.appendToGameLog(username, playerCardRanks.toString(), gameState.getW
         
         notifyGameUpdated();
         
-        this.setRound("Determining The Winnder");
+        this.setRound("Determining The Winner");
         GameStateAction determineWinnerState = new DetermineWinnerState();
         determineWinnerState.play(this); // Determine the winner of the round
         notifyGameUpdated();
@@ -230,7 +266,7 @@ FileManager.appendToGameLog(username, playerCardRanks.toString(), gameState.getW
         
         if (playersInGame == 1 && lastPlayer != null) {
             System.out.println("All other players have folded. " + lastPlayer.getName() + " is the winner!\n");
-            this.setAnnouncement("All other players have folded. " + lastPlayer.getName() + " is the winner!\n");
+            this.setAnnouncement("All other players have folded. " + lastPlayer.getName() + " is the winner!\n", 0);
             gameState.setWinner(lastPlayer); // Set the last remaining player as the winner.
             lastPlayer.addNumOfWin(); // Increment the player's win count.
             lastPlayer.addToChips(getBettingSystem().getPot()); // Add the pot to the player's chips.
@@ -254,6 +290,9 @@ FileManager.appendToGameLog(username, playerCardRanks.toString(), gameState.getW
         
         System.out.println(roundName + " Round\n");
         
+        System.out.println(roundName + " Round\n");
+        this.setRound(roundName + " Round\n");
+        notifyGameUpdated();
         System.out.println("Community Cards: " + getGameState().getCommunityCards() + "\n");
         
         for (Player player : getGameState().getPlayers()) {
@@ -270,26 +309,17 @@ FileManager.appendToGameLog(username, playerCardRanks.toString(), gameState.getW
     public void playerTurn(Player player) throws InterruptedException {
         if (getGameState().getPlayers().get(0).getName().equals(player.getName())) {
             // Notify all listeners that it's the user's turn
+            this.setAnnouncement("Choose Your Option", 5);
+            notifyGameUpdated();
             for (GameListener listener : listeners) {
                 listener.onPlayerTurn(player);
             }
-            userTurn(player);  // Proceed with the user's turn
+            this.setAnnouncement(" ", 5);
+            notifyGameUpdated();
         } else {
             computerTurn(player);  // Handle the computer's turn
         }
     }
-    
-    
-    //Handles the user's turn, presenting options to call, fold, raise, check, or exit the game
-    private void userTurn(Player player) throws InterruptedException {
-        System.out.println("Your turn. Your hand: " + player.getHand() + "\n");
-        System.out.println("Current Pot: " + getBettingSystem().getPot() + ", Current Bet: " + getGameState().getCurrentBet() + "\n");
-        
-        // Buttons will handle the actions, no need for scanner input
-        
-    }
-    
-    
     
     //Handles a computer player's turn, making decisions based on random chance.
     private void computerTurn(Player player) throws InterruptedException {
@@ -301,11 +331,14 @@ FileManager.appendToGameLog(username, playerCardRanks.toString(), gameState.getW
                     player.call(callAmount);
                     getBettingSystem().addToPot(callAmount);
                     player.setCurrentBet(getGameState().getCurrentBet());
+                    setAnnouncement(player.getName() + " called.", getGameState().getPlayers().indexOf(player) + 1);
                 } else {
+                    setAnnouncement(player.getName() + " folded.", getGameState().getPlayers().indexOf(player) + 1);
                     player.fold();
                 }
                 break;
             case 2: //Fold
+                setAnnouncement(player.getName() + " folded.", getGameState().getPlayers().indexOf(player) + 1);
                 player.fold();
                 break;
             case 3: //Raise
@@ -316,13 +349,15 @@ FileManager.appendToGameLog(username, playerCardRanks.toString(), gameState.getW
                     getBettingSystem().addToPot(increaseAmount);
                     getGameState().setCurrentBet(raiseAmount);
                     player.setCurrentBet(getGameState().getCurrentBet());
+                    setAnnouncement(player.getName() + " raised.", getGameState().getPlayers().indexOf(player) + 1);
                 } else {
+                    setAnnouncement(player.getName() + " folded.", getGameState().getPlayers().indexOf(player) + 1);
                     player.fold();
                 }
                 break;
         }
         System.out.println(player.getName() + " chose to " + (choice == 1 ? "Call" : choice == 2 ? "Fold" : "Raise"));
-        this.setAnnouncement(player.getName() + " chose to " + (choice == 1 ? "Call" : choice == 2 ? "Fold" : "Raise"));
+        this.setAnnouncement(player.getName() + " chose to " + (choice == 1 ? "Call" : choice == 2 ? "Fold" : "Raise"), getGameState().getPlayers().indexOf(player) + 1);
         notifyGameUpdated();
         
         
@@ -374,16 +409,19 @@ FileManager.appendToGameLog(username, playerCardRanks.toString(), gameState.getW
     /**
      * @return the announcement
      */
-    public String getAnnouncement() {
+    public String[] getAnnouncement() {
         return announcement;
     }
     
     /**
      * @param announcement the announcement to set
+     * @param index
      */
-    public void setAnnouncement(String announcement) {
-        this.announcement = announcement;
+    public void setAnnouncement(String announcement, int index) {
+    if (index >= 0 && index < this.announcement.length) {
+        this.announcement[index] = announcement;
     }
+}
     
     /**
      * @return the round

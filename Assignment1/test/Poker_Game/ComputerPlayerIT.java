@@ -33,7 +33,8 @@ public class ComputerPlayerIT {
     }
     
     @After
-    public void t    /**
+    public void tearDown() {
+    }    /**
      * Test of makeDecision method, of class ComputerPlayer.
      */
     @Test
@@ -45,7 +46,6 @@ public class ComputerPlayerIT {
         fail("The test case is a prototype.");
     }
 
-earDown() {
-    }
+
     
 }

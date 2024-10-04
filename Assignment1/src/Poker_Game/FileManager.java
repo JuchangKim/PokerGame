@@ -85,7 +85,7 @@ public class FileManager {
                             // Computer player does not exist, insert new record
                             String gameInsertQuery = "INSERT INTO \"GAME\" (USER_ID, USER_CHIPS, COMPUTER_PLAYER_NAME, COMPUTER_CHIPS) VALUES ("
                                     + userId + ", " + game.getGameState().getPlayers().get(0).getChips() + ", '"
-                                    + player.getName().replace(" ", "_") + "', " + player.getChips() + ")";
+                                    + player.getName() + "', " + player.getChips() + ")";
                             statement.executeUpdate(gameInsertQuery);
                         }
                     }
