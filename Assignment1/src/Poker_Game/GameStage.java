@@ -262,10 +262,9 @@ public class GameStage extends JFrame implements GameListener {
                     updateUI(); // Update the UI after game has started
                     
                     // When the game finishes, close the GameStage and open PlayAgainMenu
-                    if (getGame().isFinished()) {  // Assuming you have a method isGameFinished() in PokerGame
-                        // Close the GameStage window
+                    
                         new PlayAgainMenu(getGame(), GameStage.this).setVisible(true);  // Show PlayAgainMenu
-                    }
+                    
                     
                 } catch (Exception e) {
                     SwingUtilities.invokeLater(() -> announcementLabels[1].setText("Failed to start game: " + e.getMessage()));

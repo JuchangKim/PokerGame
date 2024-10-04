@@ -37,7 +37,7 @@ public class PokerGame extends FileManager {
         scanner = new Scanner(System.in);
         
         response = "";
-        isFinished = false;
+        setIsFinished(false);
     }
     
     public interface GameStateListener {
@@ -157,46 +157,13 @@ public class PokerGame extends FileManager {
 
     Thread.sleep(1000);
 
-    
-
-
-
-// Append the log to the database using FileManager
-//FileManager.appendToGameLog(username, playerCardRanks.toString(), gameState.getWinner().getName(), winningHand.toString());
-
-    
-       //FileManager.appendToGameLog(username, playerCardRanks.toString(), gameState.getWinner().getName());
-
-    
-    
     // Count and display total wins for each player
-//        for (Player p : gameState.getPlayers()) {
-//            int totalWins = FileManager.countTotalWins(p.getName());
-//            System.out.println(p.getName() + " total wins: " + totalWins);
-//        }
-
-    setIsFinished(true);
-    
-    if (getResponse().equalsIgnoreCase("yes")) {
-        // If the user wants to play another game, continue, and the log is already appended
-        FileManager.saveGame(this, username); // Save game state to the database
-    } else if (getResponse().equalsIgnoreCase("no")) {
-        // Save the current game state and exit
-        FileManager.saveGame(this, username); // Save game state to the database
-
-        // Count and display total wins for each player
         for (Player p : gameState.getPlayers()) {
             int totalWins = FileManager.countTotalWins(p.getName());
             System.out.println(p.getName() + " total wins: " + totalWins);
         }
         
-
-        // Exit the game
-        System.out.println("Game saved and exiting...");
-        // Optional: You may add logic to close the game or exit the loop
-    } else {
-        System.out.println("Invalid input. Please enter 'yes' or 'no'.");
-    }
+    setIsFinished(true);
 }
     
     //playRound() was generated with ChatGPT
@@ -473,7 +440,7 @@ public class PokerGame extends FileManager {
     /**
      * @param isFinished the isFinished to set
      */
-    public void setIsFinished(boolean isFinished) {
+    private void setIsFinished(boolean isFinished) {
         this.isFinished = isFinished;
     }
     

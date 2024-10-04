@@ -4,6 +4,8 @@
  */
 package Poker_Game;
 
+import java.util.List;
+
 /**
  *
  * @author billi
@@ -29,19 +31,23 @@ public class UserGameLog extends javax.swing.JFrame {
     // Method to load and display the user's game log
     private void displayUserLog() {
         StringBuilder logContent = new StringBuilder();
-        PokerGame game = FileManager.loadGame(username);
-        if (game != null) {
-            for (Player player : game.getGameState().getPlayers()) {
-                logContent.append("Player Name: ").append(player.getName()).append("\n");
-                logContent.append("Player Balance: ").append(player.getChips()).append("\n");
-                logContent.append("Number of Wins: ").append(player.getNumOfWin()).append("\n");
-                logContent.append("Current Bet: ").append(game.getGameState().getCurrentBet()).append("\n");
-                logContent.append("\n");
-            }
-        } else {
-            logContent.append("No game log found for user: ").append(username);
+    
+    // Use the FileManager to read the game log entries for the specified username
+    List<String> gameLogs = FileManager.readGameLog(username);
+    
+    if (!gameLogs.isEmpty()) {
+        logContent.append("Game Log for User: ").append(username).append("\n");
+        
+        // Iterate over the log entries and append them to the logContent
+        for (String logEntry : gameLogs) {
+            logContent.append(logEntry).append("\n");
         }
-        UserGameLogTextArea1.setText(logContent.toString());
+    } else {
+        logContent.append("No game log found for user: ").append(username);
+    }
+    
+    // Set the content to the UserGameLogTextArea1
+    UserGameLogTextArea1.setText(logContent.toString());
     }
 
     /**

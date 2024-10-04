@@ -67,7 +67,7 @@ public class FileManager {
                 if (player != game.getGameState().getPlayers().get(0)) { // Skip the user player to avoid duplicate handling
                     // Check if computer player data already exists
                     String checkGameQuery = "SELECT COUNT(*) FROM \"GAME\" WHERE USER_ID = " + userId
-                            + " AND COMPUTER_PLAYER_NAME = '" + player.getName().replace(" ", "_") + "'";
+                            + " AND COMPUTER_PLAYER_NAME = '" + player.getName() + "'";
                     try ( ResultSet gameRs = statement.executeQuery(checkGameQuery)) {
                         int count = 0;
                         if (gameRs.next()) {
@@ -79,7 +79,7 @@ public class FileManager {
                             String updateGameQuery = "UPDATE \"GAME\" SET USER_CHIPS = " + game.getGameState().getPlayers().get(0).getChips()
                                     + ", COMPUTER_CHIPS = " + player.getChips()
                                     + " WHERE USER_ID = " + userId
-                                    + " AND COMPUTER_PLAYER_NAME = '" + player.getName().replace(" ", "_") + "'";
+                                    + " AND COMPUTER_PLAYER_NAME = '" + player.getName() + "'";
                             statement.executeUpdate(updateGameQuery);
                         } else {
                             // Computer player does not exist, insert new record
@@ -129,7 +129,7 @@ public class FileManager {
     int pot = 0, currentBet = 0;
 
     // Adjusted query to exclude 'COMPUTER_PLAYER_NAME'
-    String query = "SELECT g.USER_CHIPS, g.COMPUTER_CHIPS, g.GAME_INFO, u.USERNAME "
+    String query = "SELECT g.USER_CHIPS, g.COMPUTER_PLAYER_NAME, g.COMPUTER_CHIPS, g.GAME_INFO, u.USERNAME "
             + "FROM POKER.GAME g "
             + "JOIN POKER.\"USER\" u ON g.USER_ID = u.ID "
             + "WHERE u.USERNAME = '" + userName + "'";
@@ -146,7 +146,7 @@ public class FileManager {
                 userAdded = true;
             }
             // Assuming the computer player is still fetched from COMPUTER_CHIPS (assuming a fixed number of computers)
-            players.add(new Player("Computer", rs.getInt("COMPUTER_CHIPS"))); // Add computer players
+            players.add(new Player(rs.getString("COMPUTER_PLAYER_NAME"), rs.getInt("COMPUTER_CHIPS"))); // Add computer players
         }
 
         gameState = new GameState(players, communityCards, pot, currentBet);
@@ -297,27 +297,48 @@ public class FileManager {
     }
 
     // Reads all log entries from the GAMELOG table in the database for a specific user.
-    public static List<String> readGameLog(String userName) {
-        List<String> logEntries = new ArrayList<>();
-        String query = "SELECT USERNAME_NAME FROM GAMELOG WHERE USER_ID = (SELECT ID FROM USER WHERE USERNAME = '" + userName + "')";
+public static List<String> readGameLog(String userName) {
+    List<String> logEntries = new ArrayList<>();
+    
+    // Directly concatenating the username into the SQL query
+    String query = "SELECT PLAYER_CARD_RANK_PER_ROUND, WINNER_OF_ROUND, WINNING_HAND, LOG_DATE " +
+                   "FROM GAMELOG WHERE USER_ID = (SELECT ID FROM \"USER\" WHERE USERNAME = '" + userName + "')";
 
-        try ( Connection conn = DBManager.getConnection();  Statement statement = conn.createStatement();  ResultSet rs = statement.executeQuery(query)) {
+    try (Connection conn = DBManager.getConnection(); 
+         Statement statement = conn.createStatement(); 
+         ResultSet rs = statement.executeQuery(query)) {
 
-            while (rs.next()) {
-                logEntries.add(rs.getString("USERNAME_NAME")); // Assuming the log entries are stored in the COMPUTER_PLAYER_NAME column
-            }
-
-            if (logEntries.isEmpty()) {
-                System.out.println("There are no log entries for user: " + userName);
-            } else {
-                System.out.println("Log entries read from the database for user: " + userName);
-            }
-
-        } catch (SQLException e) {
-            System.err.println("Error reading log entries from the database: " + e.getMessage());
+        // Loop through the result set and build the log entries
+        while (rs.next()) {
+            StringBuilder logEntry = new StringBuilder();
+            
+            // Append player card rank per round
+            logEntry.append("Player Card Rank: ").append(rs.getString("PLAYER_CARD_RANK_PER_ROUND")).append("\n");
+            
+            // Append winner of round
+            logEntry.append("Winner: ").append(rs.getString("WINNER_OF_ROUND")).append("\n");
+            
+            // Append winning hand
+            logEntry.append("Winning Hand: ").append(rs.getString("WINNING_HAND")).append("\n");
+            
+            // Append log date
+            logEntry.append("Log Date: ").append(rs.getTimestamp("LOG_DATE")).append("\n");
+            
+            logEntry.append("\n");  // Add a new line between entries
+            logEntries.add(logEntry.toString());  // Add each log entry to the list
         }
 
-        return logEntries;
+        if (logEntries.isEmpty()) {
+            System.out.println("There are no log entries for user: " + userName);
+        } else {
+            System.out.println("Log entries read from the database for user: " + userName);
+        }
+
+    } catch (SQLException e) {
+        System.err.println("Error reading log entries from the database: " + e.getMessage());
     }
+
+    return logEntries;
+}
 
 }
