@@ -321,6 +321,18 @@ public class PokerGame extends FileManager {
         }
     }
     
+    
+    //Handles the user's turn, presenting options to call, fold, raise, check, or exit the game
+    private void userTurn(Player player) throws InterruptedException {
+        System.out.println("Your turn. Your hand: " + player.getHand() + "\n");
+        System.out.println("Current Pot: " + getBettingSystem().getPot() + ", Current Bet: " + getGameState().getCurrentBet() + "\n");
+        
+        // Buttons will handle the actions, no need for scanner input
+        
+    }
+    
+    
+    
     //Handles a computer player's turn, making decisions based on random chance.
     private void computerTurn(Player player) throws InterruptedException {
         int choice = (int) (Math.random() * 3) + 1; //Randomly select an action
