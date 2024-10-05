@@ -63,7 +63,7 @@ public class PokerGame extends FileManager {
         }
         getBettingSystem().resetPot();  // Reset the betting pot
         getDeck().shuffleDeck();  // Shuffle the deck for the new game
-        
+        notifyGameUpdated();
         // Initialize the announcements array with the size of players
     announcement = new String[6]; // Allocate announcements for each player
     for (int i = 0; i < announcement.length; i++) {
@@ -89,14 +89,12 @@ public class PokerGame extends FileManager {
         if (FileManager.createNewSaveFile(username)) {
             System.out.println("New save file created: " + username);
         } else {
-            System.out.println("Save file already exists. Loading game state...");
+            System.out.println("Save file already exists. Loading game...");
         }
         
         // Reset each player's status at the start of a new game.
         resetGame();
         notifyGameUpdated();
-        
-        
         
         playRound(); //Play a round of poker
         Thread.sleep(1000); // Delay to simulate real gameplay
@@ -120,49 +118,18 @@ public class PokerGame extends FileManager {
 //        }
 //        log += "Winner is : " + gameState.getWinner() + "\n";
         this.setAnnouncement("Winner is : " + gameState.getWinner() + "\n", 0);
-
-
-         setIsFinished(true);
-        if (getResponse().equalsIgnoreCase("yes")) {
-            // If the user wants to play another game, continue, and the log is already appended
-            FileManager.saveGame(this, username); // Save game state to the database
-        } else if (getResponse().equalsIgnoreCase("no")) {
-            // Save the current game state and exit
-            FileManager.saveGame(this, username); // Save game state to the database
-    
-            // Exit the game
-            System.out.println("Game state saved and exiting...");
-            // Optional: You may add logic to close the game or exit the loop
-        } else {
-            System.out.println("Invalid input. Please enter 'yes' or 'no'.");
-        }
-
-    // Attempt to create a new save file for the game or load the existing one
-    if (FileManager.createNewSaveFile(username)) {
-        System.out.println("New save file created: " + username);
-    } else {
-        System.out.println("Save file already exists. Loading game state...");
-    }
-
-    // Reset each player's status at the start of a new game.
-    resetGame();
-    notifyGameUpdated();
-
-    playRound(); //Play a round of poker
-    Thread.sleep(1000); // Delay to simulate real gameplay
-
-    notifyGameUpdated();
-
-    System.out.println("Do you want to play another game? (yes/no)");
-
-    Thread.sleep(1000);
-
+        
+        
     // Count and display total wins for each player
         for (Player p : gameState.getPlayers()) {
             int totalWins = FileManager.countTotalWins(p.getName());
             System.out.println(p.getName() + " total wins: " + totalWins);
         }
         
+
+    FileManager.saveGame(this, this.getGameState().getPlayers().get(0).getName());
+
+    
     setIsFinished(true);
 }
     
@@ -240,10 +207,13 @@ public class PokerGame extends FileManager {
             FileManager.saveGame(this, this.getGameState().getPlayers().get(0).getName());
             getBettingSystem().resetPot(); // Reset the pot for the next round.
             
+            notifyGameUpdated();
+            
             for (Player p : getGameState().getPlayers()) {
                 System.out.println(p.getName() + " has " + p.getChips() + " chips \n");
+                this.setAnnouncement(p.getName() + " has " + p.getChips() + " chips \n", getGameState().getPlayers().indexOf(p) + 1);
             }
-            
+            notifyGameUpdated();
             return true; // Indicate that the round should end
         }
         
@@ -254,8 +224,6 @@ public class PokerGame extends FileManager {
     //Plays a betting round for a specified phase of the game such as Flop, Turn, River
     private void playBettingRound(String roundName) throws InterruptedException {
         this.setRound(roundName);
-        
-        System.out.println(roundName + " Round\n");
         
         System.out.println(roundName + " Round\n");
         this.setRound(roundName + " Round\n");
@@ -288,18 +256,7 @@ public class PokerGame extends FileManager {
         }
     }
     
-    
-    //Handles the user's turn, presenting options to call, fold, raise, check, or exit the game
-    private void userTurn(Player player) throws InterruptedException {
-        System.out.println("Your turn. Your hand: " + player.getHand() + "\n");
-        System.out.println("Current Pot: " + getBettingSystem().getPot() + ", Current Bet: " + getGameState().getCurrentBet() + "\n");
-        
-        // Buttons will handle the actions, no need for scanner input
-        
-    }
-    
-    
-    
+ 
     //Handles a computer player's turn, making decisions based on random chance.
     private void computerTurn(Player player) throws InterruptedException {
         int choice = (int) (Math.random() * 3) + 1; //Randomly select an action

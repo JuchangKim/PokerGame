@@ -48,7 +48,9 @@ public class DetermineWinnerState implements GameStateAction {
                     
                     // Print out the player's hand and its rank.
                     System.out.println(p.getName() + " has " + playerHand.getHandRank() + "\n");
-                    game.setAnnouncement(p.getName() + " has " + playerHand.getHandRank(), game.getGameState().getPlayers().indexOf(p) + 1);
+                    game.setAnnouncement(p.getName() + " has " + playerHand.getHandRank() 
+                            + " Chips: " + p.getChips(), game.getGameState().getPlayers().indexOf(p) + 1);
+                    game.notifyGameUpdated();
                     Thread.sleep(1000); //Deal of 1 ssecond between display of players hands
                 }
             }

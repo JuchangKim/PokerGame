@@ -21,6 +21,7 @@ public class InitializeState implements GameStateAction {
         game.getGameState().getCommunityCards().clear();
         game.getGameState().setPot(0);
         game.getGameState().setCurrentBet(10);
+        game.notifyGameUpdated();
         
         // Loop through each player to prepare them for the new round.
         for (Player player : game.getGameState().getPlayers()) {
@@ -47,7 +48,10 @@ public class InitializeState implements GameStateAction {
         // Display each player's current state after the initial setup.
         for (Player player : game.getGameState().getPlayers()) {
             System.out.println(player);
+            game.setAnnouncement(player.toString(), game.getGameState().getPlayers().indexOf(player) + 1);
             Thread.sleep(1000); // Delay of 1 second between displaying each player's state
+            game.notifyGameUpdated();
         }
+        
     }
 }
