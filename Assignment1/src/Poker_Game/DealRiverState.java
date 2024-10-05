@@ -15,7 +15,7 @@ public class DealRiverState implements GameStateAction {
         // This method plays the river phase (round 3 - final round) of the game by dealing one community card
         // and introducing a delay to simulate real-time gameplay.
         game.getGameState().getCommunityCards().add(game.getDeck().getCard());
-        
+        game.notifyGameUpdated();
         Thread.sleep(1000); // Introduce delay
     }
 }

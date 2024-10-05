@@ -1,0 +1,12 @@
+lily : [Three of Hearts, Four of Clubs, Five of Clubs, Seven of Clubs, Eight of Hearts, Jack of Diamonds, Jack of Spades] : One Pair , Chips : 650
+Computer 1 : Folded, Chips : 950
+Computer 2 : Folded, Chips : 990
+Computer 3 : [Three of Hearts, Three of Spades, Five of Clubs, Seven of Clubs, Eight of Hearts, Jack of Diamonds, King of Spades] : One Pair , Chips : 1580
+Winner is : Player Computer 3 has a chips of 1580
+
+lily : [Five of Diamonds, Seven of Spades, Seven of Clubs, Seven of Hearts, Eight of Hearts, Ten of Clubs, Queen of Spades] : Three Of A Kind , Chips : 1300
+Computer 1 : Folded, Chips : 880
+Computer 2 : Folded, Chips : 890
+Computer 3 : [Seven of Spades, Seven of Clubs, Eight of Hearts, Nine of Clubs, Ten of Clubs, Queen of Spades, King of Hearts] : One Pair , Chips : 1100
+Winner is : Player lily has a chips of 1300
+

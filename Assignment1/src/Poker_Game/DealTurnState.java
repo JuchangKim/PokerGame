@@ -15,7 +15,7 @@ public class DealTurnState implements GameStateAction {
         // This method plays the turn phase (Round 2) of the game by dealing one community card
         // and introducing a delay to simulate real-time gameplay.
         game.getGameState().getCommunityCards().add(game.getDeck().getCard());
-        
+        game.notifyGameUpdated();
         Thread.sleep(1000); // Introduce delay
     }
 }
