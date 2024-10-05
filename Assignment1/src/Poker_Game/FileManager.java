@@ -300,38 +300,43 @@ public class FileManager {
 public static List<String> readGameLog(String userName) {
     List<String> logEntries = new ArrayList<>();
     
-    // Directly concatenating the username into the SQL query
-    String query = "SELECT PLAYER_CARD_RANK_PER_ROUND, WINNER_OF_ROUND, WINNING_HAND, LOG_DATE " +
-                   "FROM GAMELOG WHERE USER_ID = (SELECT ID FROM \"USER\" WHERE USERNAME = '" + userName + "')";
+    // Modified query to retrieve all necessary fields from GAMELOG and USER tables
+    String query = "SELECT g.USERNAME_NAME, g.WINNER_OF_ROUND, g.WINNING_HAND, g.PLAYER_CARD_RANK_PER_ROUND, g.LOG_DATE "
+            + "FROM GAMELOG g "
+            + "JOIN \"USER\" u ON g.USER_ID = u.ID "
+            + "WHERE u.USERNAME = '" + userName + "'";
 
-    try (Connection conn = DBManager.getConnection(); 
-         Statement statement = conn.createStatement(); 
+    try (Connection conn = DBManager.getConnection();
+         Statement statement = conn.createStatement();
          ResultSet rs = statement.executeQuery(query)) {
 
         // Loop through the result set and build the log entries
         while (rs.next()) {
             StringBuilder logEntry = new StringBuilder();
-            
-            // Append player card rank per round
-            logEntry.append("Player Card Rank: ").append(rs.getString("PLAYER_CARD_RANK_PER_ROUND")).append("\n");
-            
-            // Append winner of round
-            logEntry.append("Winner: ").append(rs.getString("WINNER_OF_ROUND")).append("\n");
-            
-            // Append winning hand
-            logEntry.append("Winning Hand: ").append(rs.getString("WINNING_HAND")).append("\n");
-            
+
             // Append log date
             logEntry.append("Log Date: ").append(rs.getTimestamp("LOG_DATE")).append("\n");
             
-            logEntry.append("\n");  // Add a new line between entries
-            logEntries.add(logEntry.toString());  // Add each log entry to the list
+            // Append player username
+            logEntry.append("Username: ").append(rs.getString("USERNAME_NAME")).append("\n");
+
+            // Append winner of the round
+            logEntry.append("Winner: ").append(rs.getString("WINNER_OF_ROUND")).append("\n");
+
+            // Append winning hand
+            logEntry.append("Winning Hand: ").append(rs.getString("WINNING_HAND")).append("\n");
+
+            // Append player's card rank per round
+            logEntry.append("Player Card Rank: ").append(rs.getString("PLAYER_CARD_RANK_PER_ROUND")).append("\n");
+
+            logEntry.append("\n"); // Add a new line between entries
+            logEntries.add(logEntry.toString()); // Add each log entry to the list
         }
 
         if (logEntries.isEmpty()) {
             System.out.println("There are no log entries for user: " + userName);
         } else {
-            System.out.println("Log entries read from the database for user: " + userName);
+            System.out.println("Log entries read from the database for user: " + userName + "\n");
         }
 
     } catch (SQLException e) {

@@ -36,7 +36,7 @@ public class UserGameLog extends javax.swing.JFrame {
     List<String> gameLogs = FileManager.readGameLog(username);
     
     if (!gameLogs.isEmpty()) {
-        logContent.append("Game Log for User: ").append(username).append("\n");
+        logContent.append("Game Log for User: ").append(username).append("\n\n");
         
         // Iterate over the log entries and append them to the logContent
         for (String logEntry : gameLogs) {
