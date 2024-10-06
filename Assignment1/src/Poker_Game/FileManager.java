@@ -33,9 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 public class FileManager {
-    
-    
-
+   
     public static void saveGame(PokerGame game, String userName) {
         Connection conn = null;
         Statement statement = null;
@@ -131,7 +129,7 @@ public class FileManager {
         int pot = 0, currentBet = 0;
 
         // Adjusted query to exclude 'COMPUTER_PLAYER_NAME'
-        String query = "SELECT g.USER_CHIPS, g.COMPUTER_PLAYER_NAME, g.COMPUTER_CHIPS, g.GAME_INFO, u.USERNAME "
+        String query = "SELECT g.USER_CHIPS, g.COMPUTER_PLAYER_NAME, g.COMPUTER_CHIPS, u.USERNAME "
                 + "FROM POKER.GAME g "
                 + "JOIN POKER.\"USER\" u ON g.USER_ID = u.ID "
                 + "WHERE u.USERNAME = '" + userName + "'";
@@ -319,6 +317,4 @@ public class FileManager {
 
         return logEntries;
     }
-
-
 }

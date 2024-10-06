@@ -47,8 +47,7 @@ public class DBManager {
     }
     return conn;
     }
-    
-    
+       
 
     //Establish connection
     public void establishConnection() {

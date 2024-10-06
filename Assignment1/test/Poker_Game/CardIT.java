@@ -126,24 +126,44 @@ public class CardIT {
         }
     }
 
+//    @Test
+//    public void testToString() {
+//        try {
+//            System.out.println("Testing toString method of card...");
+//            String redCardString = cardRed.toString();
+//            System.out.println("Red card string: " + redCardString);
+//            assertEquals("toString should return 'Ace of Hearts'", "Ace of Hearts", redCardString);
+//
+//            String blackCardString = cardBlack.toString();
+//            System.out.println("Black card string: " + blackCardString);
+//            assertEquals("toString should return 'Jack of Spades'", "Jack of Spades", blackCardString);
+//
+//            System.out.println("testToString PASSED\n\n");
+//        } catch (AssertionError e) {
+//            System.out.println("testToString FAILED\n\n: " + e.getMessage());
+//            throw e;
+//        }
+//    }
+    
     @Test
-    public void testToString() {
-        try {
-            System.out.println("Testing toString method of card...");
-            String redCardString = cardRed.toString();
-            System.out.println("Red card string: " + redCardString);
-            assertEquals("toString should return 'Ace of Hearts'", "Ace of Hearts", redCardString);
+public void testToString() {
+    try {
+        System.out.println("Testing toString method of card...");
+        String redCardString = cardRed.toString();
+        System.out.println("Red card string: " + redCardString);
+        assertEquals("toString should return 'Ace of Hearts'", "Ace of Hearts", redCardString);
 
-            String blackCardString = cardBlack.toString();
-            System.out.println("Black card string: " + blackCardString);
-            assertEquals("toString should return 'Jack of Spades'", "Jack of Spades", blackCardString);
+        String blackCardString = cardBlack.toString();
+        System.out.println("Black card string: " + blackCardString);
+        assertEquals("toString should return 'Jack of Spades'", "Jack of Spades", blackCardString);
 
-            System.out.println("testToString PASSED\n\n");
-        } catch (AssertionError e) {
-            System.out.println("testToString FAILED\n\n: " + e.getMessage());
-            throw e;
-        }
+        System.out.println("testToString PASSED\n\n");
+    } catch (AssertionError e) {
+        System.out.println("testToString FAILED\n\n: " + e.getMessage());
+        throw e;
     }
+}
+
 
     @Test
     public void testGetFrontImageIcon() {

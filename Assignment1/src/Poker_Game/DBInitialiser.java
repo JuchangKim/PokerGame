@@ -20,18 +20,14 @@ import java.sql.Timestamp;
 public class DBInitialiser {
 
     private static Connection conn;
-    
-    
-
+       
     public DBInitialiser(Connection conn) {
         this.conn = conn;
         createTables();
         alterTablesAddDateColumn();
         
     }
-    
-    
-
+        
     public void createTables() {
         try (Statement statement = conn.createStatement()) {
             // Check and create "USER" table if it doesn't exist
@@ -68,57 +64,50 @@ public class DBInitialiser {
             e.printStackTrace();
         }
     }
-    
     public void alterTablesAddDateColumn() {
-        try (Statement statement = conn.createStatement()) {
-            // Add DATE column to USER table
-            if (!columnExists("USER", "CREATED_AT")) {
-                String alterUserTable = "ALTER TABLE \"USER\" ADD COLUMN CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
-                statement.executeUpdate(alterUserTable);
-                System.out.println("Added CREATED_AT column to USER table.");
-            }
+    try (Statement statement = conn.createStatement()) {
+        // Existing code for adding columns...
 
-            // Add DATE column to GAMELOG table
-            if (!columnExists("GAMELOG", "LOG_DATE")) {
-                String alterGameLogTable = "ALTER TABLE GAMELOG ADD COLUMN LOG_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
-                statement.executeUpdate(alterGameLogTable);
-                System.out.println("Added LOG_DATE column to GAMELOG table.");
-            }
-
-            // Add DATE column to GAME table
-            if (!columnExists("GAME", "GAME_DATE")) {
-                String alterGameTable = "ALTER TABLE GAME ADD COLUMN GAME_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
-                statement.executeUpdate(alterGameTable);
-                System.out.println("Added GAME_DATE column to GAME table.");
-            }
-        } catch (SQLException e) {
-            System.err.println("Error altering tables to add date columns: " + e.getMessage());
-            e.printStackTrace();
+        // Check and drop the game_info column if it exists
+        if (columnExists("GAME", "GAME_INFO")) {
+            String dropGameInfoColumn = "ALTER TABLE GAME DROP COLUMN GAME_INFO";
+            statement.executeUpdate(dropGameInfoColumn);
+            System.out.println("Dropped GAME_INFO column from GAME table.");
         }
+    } catch (SQLException e) {
+        System.err.println("Error altering tables to drop columns: " + e.getMessage());
+        e.printStackTrace();
     }
+}
     
-    
-//    public void filterRecentUsernames() {
-//    String query = "SELECT gl.* " +
-//                   "FROM GAMELOG gl " +
-//                   "JOIN ( " +
-//                   "    SELECT USERNAME, MAX(CREATED_AT) AS MostRecent " +
-//                   "    FROM \"USER\" " +
-//                   "    GROUP BY USERNAME " +
-//                   ") AS recent_users " +
-//                   "ON gl.USERNAME_NAME = recent_users.USERNAME " +
-//                   "AND gl.LOG_DATE = recent_users.MostRecent";
+//    public void alterTablesAddDateColumn() {
+//        try (Statement statement = conn.createStatement()) {
+//            // Add DATE column to USER table
+//            if (!columnExists("USER", "CREATED_AT")) {
+//                String alterUserTable = "ALTER TABLE \"USER\" ADD COLUMN CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
+//                statement.executeUpdate(alterUserTable);
+//                System.out.println("Added CREATED_AT column to USER table.");
+//            }
 //
-//    try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
-//        while (rs.next()) {
-//            // Process each game log record
-//            // For example: System.out.println(rs.getString("USERNAME_NAME") + " : " + rs.getTimestamp("LOG_DATE"));
+//            // Add DATE column to GAMELOG table
+//            if (!columnExists("GAMELOG", "LOG_DATE")) {
+//                String alterGameLogTable = "ALTER TABLE GAMELOG ADD COLUMN LOG_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
+//                statement.executeUpdate(alterGameLogTable);
+//                System.out.println("Added LOG_DATE column to GAMELOG table.");
+//            }
+//
+//            // Add DATE column to GAME table
+//            if (!columnExists("GAME", "GAME_DATE")) {
+//                String alterGameTable = "ALTER TABLE GAME ADD COLUMN GAME_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
+//                statement.executeUpdate(alterGameTable);
+//                System.out.println("Added GAME_DATE column to GAME table.");
+//            }
+//        } catch (SQLException e) {
+//            System.err.println("Error altering tables to add date columns: " + e.getMessage());
+//            e.printStackTrace();
 //        }
-//    } catch (SQLException e) {
-//        System.err.println("Error filtering recent usernames: " + e.getMessage());
 //    }
-//}
-    
+       
     // Method to check if a column exists in a table
     public boolean columnExists(String tableName, String columnName) throws SQLException {
     DatabaseMetaData metaData = conn.getMetaData();
@@ -134,4 +123,6 @@ public class DBInitialiser {
             return rs.next();  // Return true if table exists
         }
     }
+    
+    
 }

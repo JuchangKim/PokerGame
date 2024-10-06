@@ -160,26 +160,48 @@ public class HandIT {
         }
     }
 
+//    @Test
+//    public void testToString() {
+//        System.out.println("\n\nRunning test: testToString");
+//        try {
+//            // Create card images (dummy images for testing)
+//            Image frontImage1 = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+//            Image backImage1 = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+//
+//            hand.addCard(new Card(14, "Hearts", frontImage1, backImage1)); // Ace
+//            hand.addCard(new Card(13, "Spades", frontImage1, backImage1)); // King
+//
+//            // The expected output format must match the updated toString method of Card
+//            String expected = "[King of Spades value is: 13, Ace of Hearts value is: 14]";
+//            assertEquals(expected, hand.toString());
+//
+//            System.out.println("Test passed: testToString");
+//        } catch (AssertionError e) {
+//            System.out.println("Test failed: testToString");
+//            throw e;
+//        }
+//    }
     @Test
-    public void testToString() {
-        System.out.println("\n\nRunning test: testToString");
-        try {
-            // Create card images (dummy images for testing)
-            Image frontImage1 = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-            Image backImage1 = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+public void testToString() {
+    System.out.println("\n\nRunning test: testToString");
+    try {
+        // Create card images (dummy images for testing)
+        Image frontImage1 = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Image backImage1 = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 
-            hand.addCard(new Card(14, "Hearts", frontImage1, backImage1)); // Ace
-            hand.addCard(new Card(13, "Spades", frontImage1, backImage1)); // King
+        hand.addCard(new Card(14, "Hearts", frontImage1, backImage1)); // Ace
+        hand.addCard(new Card(13, "Spades", frontImage1, backImage1)); // King
 
-            // The expected output format must match the updated toString method of Card
-            String expected = "[King of Spades value is: 13, Ace of Hearts value is: 14]";
-            assertEquals(expected, hand.toString());
+        // Update the expected output format to match the updated toString method of Card
+        String expected = "[King of Spades, Ace of Hearts]";
+        assertEquals(expected, hand.toString());
 
-            System.out.println("Test passed: testToString");
-        } catch (AssertionError e) {
-            System.out.println("Test failed: testToString");
-            throw e;
-        }
+        System.out.println("Test passed: testToString");
+    } catch (AssertionError e) {
+        System.out.println("Test failed: testToString");
+        throw e;
     }
+}
+
 }
 

@@ -143,8 +143,8 @@ public class Card {
     @Override
     public String toString() {
         // Returns a string with the card's name and suit (e.g., "Ace of Spades")
-       // return (convertValueToName() + " of " + this.suit + " value is : " +this.value);
-        return (convertValueToName() + " of " + this.suit + " value is: " + this.value);
+       return (convertValueToName() + " of " + this.suit);
+        //return (convertValueToName() + " of " + this.suit + " value is: " + this.value);
     }
     
 }
