@@ -23,6 +23,7 @@ public class Card {
     
 
     // Constructor to initialize the card with a value and suit
+    //public Card(int value, String suit, Image image, Image image1) {
     public Card(int value, String suit, Image image, Image image1) {
         // Assign the value and suit to the card
         this.value = value;
@@ -39,8 +40,8 @@ public class Card {
         }
         
     }
-    
-    
+
+       
     public ImageIcon getFrontImageIcon() {
         return card_front;
     }

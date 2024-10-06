@@ -86,5 +86,6 @@ public class GameState implements Serializable {
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
+   
 }
 

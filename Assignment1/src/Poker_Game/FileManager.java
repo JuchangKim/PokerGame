@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Set;
 
 public class FileManager {
+    
+    
 
     public static void saveGame(PokerGame game, String userName) {
         Connection conn = null;
@@ -121,138 +123,112 @@ public class FileManager {
     }
 
     // This method will load the game state from the database for a given user
-    public static PokerGame loadGame(String userName) {
-    GameState gameState = null;
-    PokerGame game = new PokerGame();
-    List<Player> players = new ArrayList<>();
-    List<Card> communityCards = new ArrayList<>();
-    int pot = 0, currentBet = 0;
+        public static PokerGame loadGame(String userName) {
+        GameState gameState = null;
+        PokerGame game = new PokerGame();
+        List<Player> players = new ArrayList<>();
+        List<Card> communityCards = new ArrayList<>();
+        int pot = 0, currentBet = 0;
 
-    // Adjusted query to exclude 'COMPUTER_PLAYER_NAME'
-    String query = "SELECT g.USER_CHIPS, g.COMPUTER_PLAYER_NAME, g.COMPUTER_CHIPS, g.GAME_INFO, u.USERNAME "
-            + "FROM POKER.GAME g "
-            + "JOIN POKER.\"USER\" u ON g.USER_ID = u.ID "
-            + "WHERE u.USERNAME = '" + userName + "'";
+        // Adjusted query to exclude 'COMPUTER_PLAYER_NAME'
+        String query = "SELECT g.USER_CHIPS, g.COMPUTER_PLAYER_NAME, g.COMPUTER_CHIPS, g.GAME_INFO, u.USERNAME "
+                + "FROM POKER.GAME g "
+                + "JOIN POKER.\"USER\" u ON g.USER_ID = u.ID "
+                + "WHERE u.USERNAME = '" + userName + "'";
 
-    try (Connection conn = DBManager.getConnection();
-         Statement statement = conn.createStatement();
-         ResultSet rs = statement.executeQuery(query)) {
+        try ( Connection conn = DBManager.getConnection();  Statement statement = conn.createStatement();  ResultSet rs = statement.executeQuery(query)) {
 
-        // Read all results and build player list
-        boolean userAdded = false;
-        while (rs.next()) {
-            if (!userAdded) {
-                players.add(new Player(rs.getString("USERNAME"), rs.getInt("USER_CHIPS"))); // Add user first
-                userAdded = true;
+            // Read all results and build player list
+            boolean userAdded = false;
+            while (rs.next()) {
+                if (!userAdded) {
+                    players.add(new Player(rs.getString("USERNAME"), rs.getInt("USER_CHIPS"))); // Add user first
+                    userAdded = true;
+                }
+                // Assuming the computer player is still fetched from COMPUTER_CHIPS (assuming a fixed number of computers)
+                players.add(new Player(rs.getString("COMPUTER_PLAYER_NAME"), rs.getInt("COMPUTER_CHIPS"))); // Add computer players
             }
-            // Assuming the computer player is still fetched from COMPUTER_CHIPS (assuming a fixed number of computers)
-            players.add(new Player(rs.getString("COMPUTER_PLAYER_NAME"), rs.getInt("COMPUTER_CHIPS"))); // Add computer players
+
+            gameState = new GameState(players, communityCards, pot, currentBet);
+            game.setGameState(gameState);
+            System.out.println("Game loaded successfully from the database.");
+            return game;
+
+        } catch (SQLException e) {
+            System.err.println("Error loading game from database: " + e.getMessage());
         }
-
-        gameState = new GameState(players, communityCards, pot, currentBet);
-        game.setGameState(gameState);
-        System.out.println("Game loaded successfully from the database.");
-        return game;
-
-    } catch (SQLException e) {
-        System.err.println("Error loading game from database: " + e.getMessage());
+        return null;
     }
-    return null;
-}
 
     // This method retrieves a list of saved users (by username) from the USER table.
-    
-    
     // Use a subquery to select only the most recent user record
-    public static Set<String> getSavedGameFiles() {
-    Set<String> savedGames = new HashSet<>();
+        public static Set<String> getSavedGameFiles() {
+        Set<String> savedGames = new HashSet<>();
 
-    // Simple query to get the most recent usernames without using PARTITION or ROW_NUMBER
-    String query = "SELECT USERNAME FROM \"POKER\".\"USER\" ORDER BY CREATED_AT DESC";
+        // Simple query to get the most recent usernames without using PARTITION or ROW_NUMBER
+        String query = "SELECT USERNAME FROM \"POKER\".\"USER\" ORDER BY CREATED_AT DESC";
 
-    try (Connection conn = DBManager.getConnection(); 
-         Statement statement = conn.createStatement(); 
-         ResultSet rs = statement.executeQuery(query)) {
+        try ( Connection conn = DBManager.getConnection();  Statement statement = conn.createStatement();  ResultSet rs = statement.executeQuery(query)) {
 
-        while (rs.next()) {
-            savedGames.add(rs.getString("USERNAME"));
+            while (rs.next()) {
+                savedGames.add(rs.getString("USERNAME"));
+            }
+
+            if (savedGames.isEmpty()) {
+                System.out.println("There are no saved games.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving saved games: " + e.getMessage());
         }
 
-        if (savedGames.isEmpty()) {
-            System.out.println("There are no saved games.");
-        }
-    } catch (SQLException e) {
-        System.err.println("Error retrieving saved games: " + e.getMessage());
+        return savedGames;
     }
-
-    return savedGames;
-}
+    
 
     // This method creates a new user save file in the database.
-    public static boolean createNewSaveFile(String userName) {
-    Set<String> savedGames = getSavedGameFiles();  // Load existing usernames
+        public static boolean createNewSaveFile(String userName) {
+        Set<String> savedGames = getSavedGameFiles();  // Load existing usernames
 
-    // Check if the username is already in the Set (which means it's already in the DB)
-    if (savedGames.contains(userName)) {
-        System.out.println("User already exists: " + userName);
-        return false;
+        // Check if the username is already in the Set (which means it's already in the DB)
+        if (savedGames.contains(userName)) {
+            System.out.println("User already exists: " + userName);
+            return false;
+        }
+
+        String query = "INSERT INTO \"POKER\".\"USER\" (\"USERNAME\", \"CHIPS\", \"NUMBER_OF_WINS\") VALUES ('" + userName + "', 1000, 0)";
+
+        try ( Connection conn = DBManager.getConnection();  Statement statement = conn.createStatement()) {
+            statement.executeUpdate(query);
+            System.out.println("New save file created for user: " + userName);
+            return true;
+
+        } catch (SQLException e) {
+            System.err.println("Error creating new save file: " + e.getMessage());
+            return false;
+        }
     }
-
-    String query = "INSERT INTO \"POKER\".\"USER\" (\"USERNAME\", \"CHIPS\", \"NUMBER_OF_WINS\") VALUES ('" + userName + "', 1000, 0)";
-
-    try ( Connection conn = DBManager.getConnection();  Statement statement = conn.createStatement()) {
-        statement.executeUpdate(query);
-        System.out.println("New save file created for user: " + userName);
-        return true;
-
-    } catch (SQLException e) {
-        System.err.println("Error creating new save file: " + e.getMessage());
-        return false;
-    }
-}
 
     /// This method inserts a log entry into the GameLog table.
     public static void appendToGameLog(String userName, String playerCardRankPerRound, String winnerOfRound, String winningHand) {
-    String query = "INSERT INTO GAMELOG (USER_ID, USERNAME_NAME, PLAYER_CARD_RANK_PER_ROUND, WINNER_OF_ROUND, WINNING_HAND) VALUES "
-            + "((SELECT ID FROM \"USER\" WHERE USERNAME = ? FETCH FIRST ROW ONLY), ?, ?, ?, ?)";
+        String query = "INSERT INTO GAMELOG (USER_ID, USERNAME_NAME, PLAYER_CARD_RANK_PER_ROUND, WINNER_OF_ROUND, WINNING_HAND) VALUES "
+                + "((SELECT ID FROM \"USER\" WHERE USERNAME = ? FETCH FIRST ROW ONLY), ?, ?, ?, ?)";
 
-    try (Connection conn = DBManager.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try ( Connection conn = DBManager.getConnection();  PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-        pstmt.setString(1, userName);  // Use the username for subquery
-        pstmt.setString(2, userName);  // For USERNAME_NAME column
-        pstmt.setString(3, playerCardRankPerRound);  // For PLAYER_CARD_RANK_PER_ROUND column
-        pstmt.setString(4, winnerOfRound);  // For WINNER_OF_ROUND column
-        pstmt.setString(5, winningHand);  // For WINNING_HAND column
+            pstmt.setString(1, userName);  // Use the username for subquery
+            pstmt.setString(2, userName);  // For USERNAME_NAME column
+            pstmt.setString(3, playerCardRankPerRound);  // For PLAYER_CARD_RANK_PER_ROUND column
+            pstmt.setString(4, winnerOfRound);  // For WINNER_OF_ROUND column
+            pstmt.setString(5, winningHand);  // For WINNING_HAND column
 
-        pstmt.executeUpdate();
-        System.out.println("Log entry added for user: " + userName);
+            pstmt.executeUpdate();
+            System.out.println("Log entry added for user: " + userName);
 
-    } catch (SQLException e) {
-        System.err.println("Error appending to game log: " + e.getMessage());
-        e.printStackTrace();
+        } catch (SQLException e) {
+            System.err.println("Error appending to game log: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
-}
-
-    
-//    public static void appendToGameLog(String userName, String playerCardRankPerRound, String winnerOfRound) {
-//        String query = "INSERT INTO GAMELOG (USER_ID, USERNAME_NAME, PLAYER_CARD_RANK_PER_ROUND, WINNER_OF_ROUND) VALUES "
-//                + "((SELECT ID FROM \"USER\" WHERE USERNAME = ? FETCH FIRST ROW ONLY), ?, ?, ?)";
-//
-//        try ( Connection conn = DBManager.getConnection();  PreparedStatement pstmt = conn.prepareStatement(query)) {
-//
-//            pstmt.setString(1, userName);   // Use the username for subquery
-//            pstmt.setString(2, userName);   // For USERNAME_NAME column
-//            pstmt.setString(3, playerCardRankPerRound);  // For PLAYER_CARD_RANK_PER_ROUND column
-//            pstmt.setString(4, winnerOfRound);  // For WINNER_OF_ROUND column
-//
-//            pstmt.executeUpdate();
-//            System.out.println("Log entry added for user: " + userName);
-//
-//        } catch (SQLException e) {
-//            System.err.println("Error appending to game log: " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//    }
 
 
     public static void updateUserWins(String username, int totalWins) {
@@ -297,53 +273,52 @@ public class FileManager {
     }
 
     // Reads all log entries from the GAMELOG table in the database for a specific user.
-public static List<String> readGameLog(String userName) {
-    List<String> logEntries = new ArrayList<>();
-    
-    // Modified query to retrieve all necessary fields from GAMELOG and USER tables
-    String query = "SELECT g.USERNAME_NAME, g.WINNER_OF_ROUND, g.WINNING_HAND, g.PLAYER_CARD_RANK_PER_ROUND, g.LOG_DATE "
-            + "FROM GAMELOG g "
-            + "JOIN \"USER\" u ON g.USER_ID = u.ID "
-            + "WHERE u.USERNAME = '" + userName + "'";
+    public static List<String> readGameLog(String userName) {
+        List<String> logEntries = new ArrayList<>();
 
-    try (Connection conn = DBManager.getConnection();
-         Statement statement = conn.createStatement();
-         ResultSet rs = statement.executeQuery(query)) {
+        // Modified query to retrieve all necessary fields from GAMELOG and USER tables
+        String query = "SELECT g.USERNAME_NAME, g.WINNER_OF_ROUND, g.WINNING_HAND, g.PLAYER_CARD_RANK_PER_ROUND, g.LOG_DATE "
+                + "FROM GAMELOG g "
+                + "JOIN \"USER\" u ON g.USER_ID = u.ID "
+                + "WHERE u.USERNAME = '" + userName + "'";
 
-        // Loop through the result set and build the log entries
-        while (rs.next()) {
-            StringBuilder logEntry = new StringBuilder();
+        try ( Connection conn = DBManager.getConnection();  Statement statement = conn.createStatement();  ResultSet rs = statement.executeQuery(query)) {
 
-            // Append log date
-            logEntry.append("Log Date: ").append(rs.getTimestamp("LOG_DATE")).append("\n");
-            
-            // Append player username
-            logEntry.append("Username: ").append(rs.getString("USERNAME_NAME")).append("\n");
+            // Loop through the result set and build the log entries
+            while (rs.next()) {
+                StringBuilder logEntry = new StringBuilder();
 
-            // Append winner of the round
-            logEntry.append("Winner: ").append(rs.getString("WINNER_OF_ROUND")).append("\n");
+                // Append log date
+                logEntry.append("Log Date: ").append(rs.getTimestamp("LOG_DATE")).append("\n");
 
-            // Append winning hand
-            logEntry.append("Winning Hand: ").append(rs.getString("WINNING_HAND")).append("\n");
+                // Append player username
+                logEntry.append("Username: ").append(rs.getString("USERNAME_NAME")).append("\n");
 
-            // Append player's card rank per round
-            logEntry.append("Player Card Rank: ").append(rs.getString("PLAYER_CARD_RANK_PER_ROUND")).append("\n");
+                // Append winner of the round
+                logEntry.append("Winner: ").append(rs.getString("WINNER_OF_ROUND")).append("\n");
 
-            logEntry.append("\n"); // Add a new line between entries
-            logEntries.add(logEntry.toString()); // Add each log entry to the list
+                // Append winning hand
+                logEntry.append("Winning Hand: ").append(rs.getString("WINNING_HAND")).append("\n");
+
+                // Append player's card rank per round
+                logEntry.append("Player Card Rank: ").append(rs.getString("PLAYER_CARD_RANK_PER_ROUND")).append("\n");
+
+                logEntry.append("\n"); // Add a new line between entries
+                logEntries.add(logEntry.toString()); // Add each log entry to the list
+            }
+
+            if (logEntries.isEmpty()) {
+                System.out.println("There are no log entries for user: " + userName);
+            } else {
+                System.out.println("Log entries read from the database for user: " + userName + "\n");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error reading log entries from the database: " + e.getMessage());
         }
 
-        if (logEntries.isEmpty()) {
-            System.out.println("There are no log entries for user: " + userName);
-        } else {
-            System.out.println("Log entries read from the database for user: " + userName + "\n");
-        }
-
-    } catch (SQLException e) {
-        System.err.println("Error reading log entries from the database: " + e.getMessage());
+        return logEntries;
     }
 
-    return logEntries;
-}
 
 }
