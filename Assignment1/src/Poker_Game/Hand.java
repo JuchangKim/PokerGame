@@ -26,12 +26,24 @@ public class Hand {
     }
     
     // Constructor that initializes the hand with a given list of cards
-    public Hand(List<Card> cards) {
+//    public Hand(List<Card> cards) {
         // Create a new list of cards and sort them by their value
-        this.cards = new ArrayList<>(cards);
-        this.cards.sort(Comparator.comparingInt(Card::getValue));
-        this.handRank = "";
-    }
+//        this.cards = new ArrayList<>(cards);
+//        this.cards.sort(Comparator.comparingInt(Card::getValue));
+//        this.handRank = "";
+//    }
+    
+    public Hand(List<Card> cards) {
+    // Create a new list of cards and sort them by their value
+    this.cards = new ArrayList<>(cards);
+    this.cards.sort(Comparator.comparingInt(Card::getValue));
+    
+    // Debugging output to check sorted order of cards
+    System.out.println("Sorted cards: " + this.cards);
+    
+    this.handRank = "";
+}
+
 
     // Method to get the list of cards in the hand
     public List<Card> getCards() {
@@ -46,9 +58,24 @@ public class Hand {
     
     // Override the toString method to return a string representation of the hand
     @Override
-    public String toString() {
-        return cards.toString();
+public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("[");
+    for (int i = 0; i < cards.size(); i++) {
+        sb.append(cards.get(i).toString());
+        if (i < cards.size() - 1) {
+            sb.append(", ");
+        }
     }
+    sb.append("]");
+    return sb.toString();
+}
+
+
+//    @Override
+//    public String toString() {
+//        return cards.toString();
+//    }
 
     // Method to clear all cards from the hand
     public void clear() {
@@ -64,5 +91,7 @@ public class Hand {
     public void setHandRank(String s) {
         this.handRank = s;
     }
+    
+    
 }
 
