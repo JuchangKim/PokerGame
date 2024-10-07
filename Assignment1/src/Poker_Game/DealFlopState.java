@@ -15,7 +15,7 @@ public class DealFlopState implements GameStateAction {
         for (int i = 0; i < 3; i++) {
             game.getGameState().getCommunityCards().add(game.getDeck().getCard());
         }
-        
+        game.notifyGameUpdated();
         Thread.sleep(1000); // Introduce delay to simulaate real-time dealing of the flop
     }
 }
