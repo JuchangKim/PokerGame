@@ -245,6 +245,7 @@ public class GameStage extends JFrame implements GameListener {
     }
     
     
+    
     private void startGameInBackground() {
         SwingWorker<Void, String> gameWorker;
         gameWorker = new SwingWorker<>() {
