@@ -8,10 +8,9 @@ import java.util.Map;
 import java.util.Scanner;
 
 
-//The PokerGame class manages the overall flow of a poker game. It extends the FileManager class
+//The PokerGame class manages the overall flow of a poker game. It extends the PokerGameCore abstract class
 //for handling file operations related to game state and logs.
 
-//public class PokerGame extends PokerGameCore implements FileManager {
 public class PokerGame extends PokerGameCore {
     
     private Scanner scanner;
