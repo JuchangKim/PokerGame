@@ -126,6 +126,7 @@ public class PokerGame extends FileManager {
             System.out.println(p.getName() + " total wins: " + totalWins);
         }
         
+        notifyGameUpdated();
 
     FileManager.saveGame(this, this.getGameState().getPlayers().get(0).getName());
 
@@ -136,7 +137,7 @@ public class PokerGame extends FileManager {
     //playRound() was generated with ChatGPT
     //Plays a single round of poker, including dealing cards and handling bets
     private void playRound() throws InterruptedException {
-        this.setRound("Starting Game");
+        setAnnouncement("Starting new round...", 0);
         GameStateAction initializeState = new InitializeState();
         initializeState.play(this); // Initialize the game state
         
@@ -146,8 +147,7 @@ public class PokerGame extends FileManager {
             return; // If only one player is in the game, end the round
         }
         
-        
-        
+        setAnnouncement("The flop round", 0);
         GameStateAction flopState = new DealFlopState();
         flopState.play(this); //Deal the flop
         playBettingRound("The Flop"); // Play the betting round for the flop
@@ -159,7 +159,7 @@ public class PokerGame extends FileManager {
         }
         notifyGameUpdated();
         
-        
+        setAnnouncement("The turn round", 0);
         GameStateAction turnState = new DealTurnState();
         turnState.play(this); //Deal the turn
         playBettingRound("The Turn"); // Play the betting round for the turn
@@ -170,7 +170,7 @@ public class PokerGame extends FileManager {
         }
         notifyGameUpdated();
         
-        
+        setAnnouncement("The river round", 0);
         GameStateAction riverState = new DealRiverState();
         riverState.play(this); //Deal the river
         playBettingRound("The River"); // Play the betting round for the river
@@ -226,9 +226,10 @@ public class PokerGame extends FileManager {
         this.setRound(roundName);
         
         System.out.println(roundName + " Round\n");
-        this.setRound(roundName + " Round\n");
+        
         notifyGameUpdated();
         System.out.println("Community Cards: " + getGameState().getCommunityCards() + "\n");
+        
         
         for (Player player : getGameState().getPlayers()) {
             if (player.getIsInGame()) {

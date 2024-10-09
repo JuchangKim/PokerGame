@@ -90,5 +90,7 @@ public class DetermineWinnerState implements GameStateAction {
             System.out.println("No winner this round.");
             game.setAnnouncement("No winner this round.", 5);
         }
+        // Notify the UI to update all players' cards to show the front side
+        game.notifyGameUpdated();
     }
 }
