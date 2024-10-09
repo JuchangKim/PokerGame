@@ -18,32 +18,31 @@ import javax.swing.JOptionPane;
  */
 public class AddPlayerNames extends javax.swing.JFrame {
 
+    static String name;
+    private PokerGame game;
+    private PokerCLI pokerCLI;
 
-       static String name;
-       private PokerGame game;
-       private PokerCLI pokerCLI;
     /**
      * Creates new form AddPlayerNames
      */
-    
+
     public AddPlayerNames() {
         initComponents();
         game = new PokerGame();
         pokerCLI = new PokerCLI();
-        
+
     }
 
     public AddPlayerNames(PokerCLI pokerCLI) {
         initComponents();
         this.pokerCLI = pokerCLI;
     }
-    
+
 //    public String[] getPlayerIds() {
 //        String[] pids = GameState.getPlayers().toArray(new String[GameState.getPlayers().size()]);
 //        
 //        return pids;
 //    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -154,20 +153,35 @@ public class AddPlayerNames extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void SaveButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveButton1ActionPerformed
-       if (PleaseEnterNameTextField1.getText().isEmpty()) {
+        
+        name = PleaseEnterNameTextField1.getText().trim();
+        
+        if (name.isEmpty() || name == null) {
         JLabel message = new JLabel("Please enter your name");
         message.setFont(new Font("Arial", Font.BOLD, 24));
         JOptionPane.showMessageDialog(null, message);
-    } else {
-        name = PleaseEnterNameTextField1.getText().trim();
+        PleaseEnterNameTextField1.setText("");
         
-        if (name.contains(" ")) {
+    } 
+        
+        // Check if the input name exceeds 15 characters
+        else if (name.length() > 15) {
+            
+            JLabel message = new JLabel("Name cannot exceed 15 characters");
+            message.setFont(new Font("Arial", Font.BOLD, 24));
+            JOptionPane.showMessageDialog(null, message);
+            PleaseEnterNameTextField1.setText("");
+              // Exit the method
+        }
+        
+        else if (name.contains(" ")) {
+            
             JLabel message = new JLabel("There can only be one player");
-            message.setFont(new Font("Arial", Font.BOLD, 48));
+            message.setFont(new Font("Arial", Font.BOLD, 24));
             JOptionPane.showMessageDialog(null, message); 
             PleaseEnterNameTextField1.setText("");
-            return;  // Exit the method if there's already a player
-        }
+              // Exit the method bacause two players can not be input.
+        } else {
         
         // Add player and update label
         NameofPlayerLabel1.setText(name);
@@ -179,7 +193,7 @@ public class AddPlayerNames extends javax.swing.JFrame {
         
         this.dispose();  // Close current frame
         pokerCLI.start(name);  // Start the game
-        
+                        
     }//GEN-LAST:event_SaveButton1ActionPerformed
     }
     private void PleaseEnterNameTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PleaseEnterNameTextField1ActionPerformed
@@ -220,7 +234,7 @@ public class AddPlayerNames extends javax.swing.JFrame {
 
         /* Create and display the form */
         new AddPlayerNames().setVisible(true);
-        
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

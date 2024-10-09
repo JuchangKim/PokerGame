@@ -53,14 +53,13 @@ public class PokerGame extends PokerGameCore {
             System.out.println(p.getName() + " total wins: " + totalWins);
         }
         
-        FileManager.saveGame(this, this.getGameState().getPlayers().get(0).getName());
-        
         setIsFinished(true);
     }
 
     @Override
     protected void playRound() throws InterruptedException {
-        this.setRound("Starting Game");
+        setAnnouncement("Starting Game", 0);
+
         GameStateAction initializeState = new InitializeState();
         initializeState.play(this);
         
@@ -70,6 +69,9 @@ public class PokerGame extends PokerGameCore {
             return;
         }
         
+
+        setAnnouncement("The flop round", 0);
+
         GameStateAction flopState = new DealFlopState();
         flopState.play(this);
         playBettingRound("The Flop");
@@ -79,7 +81,11 @@ public class PokerGame extends PokerGameCore {
         if (onePlayerIsInGame()) {
             return;
         }
+
+        notifyGameUpdated();
         
+        setAnnouncement("The turn round", 0);
+
         GameStateAction turnState = new DealTurnState();
         turnState.play(this);
         playBettingRound("The Turn");
@@ -89,14 +95,18 @@ public class PokerGame extends PokerGameCore {
         if (onePlayerIsInGame()) {
             return;
         }
+
+        notifyGameUpdated();
         
+        setAnnouncement("The river round", 0);
+
         GameStateAction riverState = new DealRiverState();
         riverState.play(this);
         playBettingRound("The River");
         
         notifyGameUpdated();
         
-        this.setRound("Determining The Winner");
+        setAnnouncement("Determining The Winner", 0);
         GameStateAction determineWinnerState = new DetermineWinnerState();
         determineWinnerState.play(this);
         notifyGameUpdated();
@@ -107,9 +117,10 @@ public class PokerGame extends PokerGameCore {
         this.setRound(roundName);
         
         System.out.println(roundName + " Round\n");
-        this.setRound(roundName + " Round\n");
+        
         notifyGameUpdated();
         System.out.println("Community Cards: " + getGameState().getCommunityCards() + "\n");
+        
         
         for (Player player : getGameState().getPlayers()) {
             if (player.getIsInGame()) {
