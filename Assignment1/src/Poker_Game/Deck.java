@@ -5,7 +5,6 @@
 package Poker_Game;
 
 import java.awt.Image;
-import java.awt.MediaTracker;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
@@ -26,42 +25,6 @@ public class Deck {
     }
     
     // Method to reset the deck by clearing it and adding all 52 cards
-//    public void reset() {
-//        
-//        String[] suits = {"spades", "clubs", "hearts", "diamonds"};
-//        String[] values = {"two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king", "ace"};
-//        
-//        //clear the current deck
-//        this.deck.clear();
-//        
-//        //adding the card values which are value(rank), suit, image (this code is genreated by chatGPT).
-//        for (String suit : suits) {
-//        for (int i = 0; i < values.length; i++) {  // Start from 0 to access the first element "two"
-//            String cardName = values[i] + "_of_" + suit + ".png"; // Construct filename based on naming convention
-//            String imageName = "/Poker_Game/CardImages/" + cardName; 
-//            String image1Name = "/Poker_Game/CardImages/cards_back.png";
-//            java.net.URL imgUrl = getClass().getResource(imageName);
-//            java.net.URL imgUrl2 = getClass().getResource(image1Name);
-//            
-//            if (imgUrl == null) {
-//                System.err.println("Resource not found: " + imageName);
-//                continue; // Skip this card if the image is not found
-//            }
-//            ImageIcon card_front = new ImageIcon(imgUrl);
-//            ImageIcon card_back = new ImageIcon(imgUrl2);
-//            // Resize the image
-//            Image image = card_front.getImage().getScaledInstance(70, 100, Image.SCALE_SMOOTH);
-//            Image image2 = card_back.getImage().getScaledInstance(70, 100, Image.SCALE_SMOOTH);
-//            
-//            card_front = new ImageIcon(image); // Recreate ImageIcon with the new size
-//            card_back = new ImageIcon(image2);
-//            
-//            int cardValue = i + 2; // Card values need to start from 2 for "two"
-//            this.deck.add(new Card(cardValue, suit, card_front.getImage(), card_back.getImage())); // Add card with image
-//        }
-//    }
-//    }
-    
     public void reset() {
 
     // Change the suits to match the expected values in the Card class

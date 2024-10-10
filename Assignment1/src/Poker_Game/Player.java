@@ -11,8 +11,6 @@ package Poker_Game;
  * @author user
  */
 
-import java.util.Arrays;
-import java.util.Scanner;
 
 public class Player {
     
@@ -85,8 +83,6 @@ public class Player {
         return chips;
     }
     
-   
-    
     public Card[] getHoleCards() {
         return holeCards;
     }
@@ -111,17 +107,7 @@ public class Player {
 
         this.hand.addCard(card);
     }
-//        public void addCardToHand(Card card) {
-//    if (this.holeCards[0] == null) {
-//            this.holeCards[0] = card;
-//        } else if (this.holeCards[1] == null) {
-//            this.holeCards[1] = card;
-//        }
-//        this.hand.addCard(card);
-//}
 
-
-   
     public boolean getIsInGame() {
         return isInGame;
     }
@@ -166,40 +152,26 @@ public class Player {
             this.hand = new Hand();
         }
     }
-//    public void clearHand() {
-//        this.holeCards = new Card[2]; // Clear hole cards
-//        this.hand.clear(); //clear the hand
-//    }
 
     // Player calls, matching the current bet
     public void call(int Amount) {
       bet(Amount);
     }
 
-    /**
-     * @return the folded
-     */
+
     public boolean isFolded() {
         return folded;
     }
 
-    /**
-     * @param folded the folded to set
-     */
+
     public void setFolded(boolean folded) {
         this.folded = folded;
     }
 
-    /**
-     * @return the numOfWin
-     */
     public int getNumOfWin() {
         return numOfWin;
     }
 
-    /**
-     * @param numOfWin the numOfWin to set
-     */
     public void setNumOfWin(int numOfWin) {
         this.numOfWin = numOfWin;
     }

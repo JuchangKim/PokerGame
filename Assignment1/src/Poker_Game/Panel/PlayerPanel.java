@@ -28,7 +28,8 @@ public class PlayerPanel {
         this.player = player;
         initializePanel();
     }
-
+    
+    // Set up the each player panel and chips panel
     private void initializePanel() {
         panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -57,6 +58,7 @@ public class PlayerPanel {
         return chipsPanel;
     }
 
+    // the user information which are chips and name are updating every round
     public void updatePlayerInfo(Player player, boolean isUserPlayer) {
         this.player = player;
         playerNameLabel.setText(player.getName());
@@ -64,6 +66,7 @@ public class PlayerPanel {
         updateCards(isUserPlayer);
     }
 
+    // when determine winner state, all player cards are show up front side cards
     private void updateCards(boolean isUserPlayer) {
         playerCardPanel.removeAll();
         List<Card> cards = player.getHand().getCards();
@@ -84,8 +87,7 @@ public class PlayerPanel {
         playerCardPanel.repaint();
     }
     
-    
-
+    // Keep updating player chips panel
     public void updateChipsPanel(int chipCount) {
         chipsPanel.removeAll();
         String chipImageName = "/Poker_Game/CardImages/9_chips.png"; // Example path for the chip image
@@ -113,7 +115,7 @@ public class PlayerPanel {
                     startY += 25; // Move Y position down for the new row
                 }
             }
-
+            chipsPanel.setLayout(null); // Layout for manual positioning of chips
             chipsPanel.revalidate();
             chipsPanel.repaint();
         } else {

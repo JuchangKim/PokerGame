@@ -8,7 +8,6 @@ package Poker_Game;
  *
  * @author user
  */
-import java.awt.Image;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,9 +79,6 @@ public class GameState implements Serializable {
             
     }
 
-    /**
-     * @param players the players to set
-     */
     public void setPlayers(List<Player> players) {
         this.players = players;
     }

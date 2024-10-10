@@ -17,6 +17,7 @@ public class CommunityCardsPanel {
     private JPanel panel;
     private JLabel communityCardsLabel;
 
+    // Set up the community cards which are under the betting pot
     public CommunityCardsPanel() {
         panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.GREEN); // Set background color
@@ -34,6 +35,7 @@ public class CommunityCardsPanel {
         return panel;
     }
 
+    // Update community card every round
     public void updateCommunityCards(List<Card> communityCards) {
         JPanel cardsPanel = (JPanel) panel.getComponent(1);
         cardsPanel.removeAll();

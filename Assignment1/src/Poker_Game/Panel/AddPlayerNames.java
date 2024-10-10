@@ -65,7 +65,7 @@ public class AddPlayerNames extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         SaveButton1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        SaveButton1.setText("SAVE");
+        SaveButton1.setText("ENTER");
         SaveButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 SaveButton1ActionPerformed(evt);
@@ -174,14 +174,14 @@ public class AddPlayerNames extends javax.swing.JFrame {
             PleaseEnterNameTextField1.setText("");
               // Exit the method
         }
-        
+        // Exit the method bacause two players can not be input
         else if (name.contains(" ")) {
             
             JLabel message = new JLabel("There can only be one player");
             message.setFont(new Font("Arial", Font.BOLD, 24));
             JOptionPane.showMessageDialog(null, message); 
             PleaseEnterNameTextField1.setText("");
-              // Exit the method bacause two players can not be input.
+              
         } else {
         
         // Add player and update label

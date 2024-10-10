@@ -4,16 +4,10 @@
  */
 package Poker_Game.Panel;
 
-import java.util.ArrayList;
-import Poker_Game.PokerGame;
-import Poker_Game.GameStage;
-import Poker_Game.GameStage;
-import Poker_Game.PokerCLI;
+
 import Poker_Game.PokerCLI;
 import Poker_Game.PokerGame;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -122,10 +116,7 @@ public class PlayAgainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_NoButton1ActionPerformed
 
     private void YesButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_YesButton1ActionPerformed
-        
-        
-        
-        game.setResponse("yes");
+
         gameStage.dispose();
         this.dispose();  // Close current frame
         PokerCLI pokerCLI = new PokerCLI();

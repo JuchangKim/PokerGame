@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 public class ControlButtonPanel extends JPanel {
     private JButton callButton, foldButton, raiseButton, checkButton;
 
+    // User control button interface which are call, fold, raise, check buttons
     public ControlButtonPanel(ActionListener listener) {
         setLayout(new FlowLayout());
         setBounds(450, 450, 400, 70);

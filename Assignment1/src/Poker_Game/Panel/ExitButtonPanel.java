@@ -14,6 +14,7 @@ import java.awt.*;
 public class ExitButtonPanel extends JPanel {
     private JButton exitButton;
 
+    // Set up exit button which can exit game anytime
     public ExitButtonPanel() {
         setLayout(new FlowLayout());
         setBounds(750, 50, 100, 70);

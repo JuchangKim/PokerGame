@@ -15,6 +15,7 @@ public class PokerController {
         this.game = game;
     }
 
+    // depends on click button, different method is running.
     public void performAction(String action, Player player) throws InterruptedException {
         switch (action.toLowerCase()) {
             case "call":
@@ -36,6 +37,7 @@ public class PokerController {
         game.notifyGameUpdated();  // Notify the view of the game state change
     }
 
+    // when user click call, user's chips betting
     private void handleCall(Player player) {
         int callAmount = game.getGameState().getCurrentBet() - player.getCurrentBet();
         if (player.getChips() >= callAmount) {
@@ -46,11 +48,13 @@ public class PokerController {
         game.setAnnouncement(player.getName() + " Choose Call", 1);
     }
 
+    // when user click fold, user quit current game
     private void handleFold(Player player) {
         game.setAnnouncement(player.getName() + " Choose Fold", 1);
         player.fold();
     }
 
+    // when user click raise, user's chips are betting
     private void handleRaise(Player player) {
         int raiseAmount = game.getGameState().getCurrentBet() * 2;
         if (player.getChips() >= raiseAmount) {
@@ -63,6 +67,7 @@ public class PokerController {
         game.setAnnouncement(player.getName() + " Choose Raise", 1);
     }
 
+    // when user click check, user skip the current round.
     private void handleCheck(Player player) {
         if (game.getGameState().getCurrentBet() > player.getCurrentBet()) {
             game.setAnnouncement("You need to call before you can check.", 1);
@@ -70,6 +75,7 @@ public class PokerController {
         game.setAnnouncement(player.getName() + " Choose Check", 1);
     }
 
+    // when user click exit game, the game is saved and exit current game
     private void handleExit() {
         FileManager.saveGame(game, game.getGameState().getPlayers().get(0).getName());
         System.exit(0);

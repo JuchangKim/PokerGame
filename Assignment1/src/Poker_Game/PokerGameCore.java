@@ -5,6 +5,7 @@
 package Poker_Game;
 
 import Poker_Game.Database.FileManager;
+import Poker_Game.Panel.GameStage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public abstract class PokerGameCore extends FileManager {
     protected String[] announcement;
     protected String round;
     protected boolean isFinished;
-    protected String response;
+    private GameStage gameStage;
 
     public PokerGameCore() {
         List<Player> players = new ArrayList<>();
@@ -34,7 +35,6 @@ public abstract class PokerGameCore extends FileManager {
             announcement[i] = " ";
         }
         round = "";
-        response = "";
         isFinished = false;
     }
 
@@ -157,12 +157,11 @@ public abstract class PokerGameCore extends FileManager {
     protected void setIsFinished(boolean isFinished) {
         this.isFinished = isFinished;
     }
-    
-    public String getResponse() {
-        return response;
-    }
-    
-    public void setResponse(String response) {
-        this.response = response;
+
+    /**
+     * @return the gameStage
+     */
+    public GameStage getGameStage() {
+        return gameStage;
     }
 }

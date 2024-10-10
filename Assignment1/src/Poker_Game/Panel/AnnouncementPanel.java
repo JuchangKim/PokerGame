@@ -14,9 +14,10 @@ import javax.swing.border.Border;
 import java.awt.*;
 
 public class AnnouncementPanel {
-    private JPanel panel;  // Encapsulate a JPanel
+    private JPanel panel;  
     private JLabel[] announcementLabels;
 
+    // Set up the announcement panel and contents which are empty first
     public AnnouncementPanel(Border border) {
         panel = new JPanel(); // Create an inner JPanel
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));

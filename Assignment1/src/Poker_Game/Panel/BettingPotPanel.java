@@ -18,6 +18,7 @@ public class BettingPotPanel extends JPanel {
     private JLabel bettingPotLabel;
     private int currentChipCount;
 
+    // Basic set up the Bettin pot panel and represent string with betting pot and current bet.
     public BettingPotPanel() {
         chipSize = 30;
         currentChipCount = 0;  // Initial chip count

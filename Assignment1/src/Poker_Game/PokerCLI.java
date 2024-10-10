@@ -1,5 +1,6 @@
 package Poker_Game;
 
+import Poker_Game.Panel.StandardGameStage;
 import Poker_Game.Database.FileManager;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class PokerCLI {
             }
 
             // Assuming GameStage is a GUI class that needs the game object
-            new GameStage(game).setVisible(true);
+            new StandardGameStage(game).setVisible(true);
 
         } catch (Exception ex) {
             System.err.println("An error occurred: " + ex.getMessage());

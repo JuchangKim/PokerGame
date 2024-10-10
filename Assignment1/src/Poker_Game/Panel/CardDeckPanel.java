@@ -12,6 +12,7 @@ package Poker_Game.Panel;
 import javax.swing.*;
 import java.awt.*;
 
+// Set up the card deck in the panel next to the betting pot panel
 public class CardDeckPanel extends JPanel {
     public CardDeckPanel() {
         setLayout(null);
