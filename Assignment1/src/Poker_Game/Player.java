@@ -11,8 +11,6 @@ package Poker_Game;
  * @author user
  */
 
-import java.util.Arrays;
-import java.util.Scanner;
 
 public class Player {
     
@@ -34,6 +32,7 @@ public class Player {
         this.holeCards = new Card[2];
         this.hand = new Hand();
         this.numOfWin = 0;
+        this.folded = false;
     }
 
     public Hand getHand() {
@@ -84,8 +83,6 @@ public class Player {
         return chips;
     }
     
-   
-    
     public Card[] getHoleCards() {
         return holeCards;
     }
@@ -96,16 +93,21 @@ public class Player {
     
     // Add a card to the player's hand and hole cards
     public void addCardToHand(Card card) {
-    if (this.holeCards[0] == null) {
+        if (card == null) {
+            throw new IllegalArgumentException("Cannot add null card");
+        }
+
+        if (this.holeCards[0] == null) {
             this.holeCards[0] = card;
         } else if (this.holeCards[1] == null) {
             this.holeCards[1] = card;
+        } else {
+            throw new IllegalStateException("Cannot add more than two hole cards");
         }
+
         this.hand.addCard(card);
-}
+    }
 
-
-   
     public boolean getIsInGame() {
         return isInGame;
     }
@@ -143,8 +145,12 @@ public class Player {
     
     // Clear the player's hand and hole cards
     public void clearHand() {
-        this.holeCards = new Card[2]; // Clear hole cards
-        this.hand.clear(); //clear the hand
+        this.holeCards = new Card[2];
+        if (this.hand != null) {
+            this.hand.clear();
+        } else {
+            this.hand = new Hand();
+        }
     }
 
     // Player calls, matching the current bet
@@ -152,30 +158,20 @@ public class Player {
       bet(Amount);
     }
 
-    /**
-     * @return the folded
-     */
+
     public boolean isFolded() {
         return folded;
     }
 
-    /**
-     * @param folded the folded to set
-     */
+
     public void setFolded(boolean folded) {
         this.folded = folded;
     }
 
-    /**
-     * @return the numOfWin
-     */
     public int getNumOfWin() {
         return numOfWin;
     }
 
-    /**
-     * @param numOfWin the numOfWin to set
-     */
     public void setNumOfWin(int numOfWin) {
         this.numOfWin = numOfWin;
     }

@@ -9,7 +9,9 @@ package Poker_Game;
  * @author user
  */
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ImageIcon;
 
 public class GameState implements Serializable {
     
@@ -19,7 +21,8 @@ public class GameState implements Serializable {
     private int pot;                        // The total amount of chips in the pot
     private int currentBet;                 // The current bet amount in the game
     private Player winner;                  // The player who won the game
-
+    
+    
     public GameState(List<Player> players, List<Card> communityCards, int pot, int currentBet) {
         this.players = players;
         this.communityCards = communityCards;
@@ -36,6 +39,18 @@ public class GameState implements Serializable {
         return communityCards;
     }
 
+    public List<ImageIcon> getCommunityCardsImages() {
+        
+        List<ImageIcon> images = new ArrayList<>();
+        
+        for(Card card : communityCards)
+        {
+            images.add(card.getFrontImageIcon());
+        }
+        
+        return images;
+    }
+    
     public int getPot() {
         return pot;
     }
@@ -59,4 +74,14 @@ public class GameState implements Serializable {
     public void setWinner(Player winner) {
         this.winner = winner;
     }
+    public boolean isEmpty(){
+        return getPlayers().isEmpty();
+            
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+   
 }
+

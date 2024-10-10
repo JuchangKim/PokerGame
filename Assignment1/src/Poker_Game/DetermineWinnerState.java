@@ -4,6 +4,7 @@
  */
 package Poker_Game;
 
+import Poker_Game.Database.FileManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,29 +37,47 @@ public class DetermineWinnerState implements GameStateAction {
                     
                     // Create a new Hand object for the player using all their available cards
                     Hand playerHand = new Hand(allCards);
-                    p.setHand(playerHand);
+                    
                     
                     // Evaluate the player's hand to determine its rank.
                     PokerRules.evaluateHand(playerHand);
                     
+                    //Once you determine the winner, pass the winning hand to the FileManager for GameLog Table
+                    String winningHand = winner != null ? playerHand.toString() : "None";
+                    FileManager.appendToGameLog(p.getName(), playerHand.getHandRank(), winner.getName(), winningHand);
+
+                    
                     // Print out the player's hand and its rank.
-                    System.out.println(p.getName() + " has " + p.getHand() + " : " + playerHand.getHandRank() + "\n");
+                    System.out.println(p.getName() + " has " + playerHand.getHandRank() + "\n");
+                    game.setAnnouncement(p.getName() + " has " + playerHand.getHandRank() 
+                            + " Chips: " + p.getChips(), game.getGameState().getPlayers().indexOf(p) + 1);
+                    game.notifyGameUpdated();
                     Thread.sleep(1000); //Deal of 1 ssecond between display of players hands
                 }
             }
         
         // Announce the winner of the round.
         System.out.println("The winner is " + winner.getName() + "!\n");
-        
+        game.setAnnouncement("The winner is " + winner.getName() + "!\n", 5);
         // Set the winner in the game's state.
         game.getGameState().setWinner(winner);
         
         // Increment the winner's number of wins.
         winner.addNumOfWin();
         
+        // Update the winner's total wins in the database
+    for (Player p : game.getGameState().getPlayers()) {
+        if (p.getName().equals(game.getGameState().getWinner().getName())) {
+            int totalWins = FileManager.countTotalWins(p.getName());
+            FileManager.updateUserWins(p.getName(), totalWins);
+            System.out.println(p.getName() + " total wins updated: " + totalWins);
+        }
+    }
+        
         // If there is a winner, award them the pot and reset the pot for the next round
         if (winner != null) {
             winner.addToChips(game.getBettingSystem().getPot()); // Winner takes all
+            FileManager.saveGame(game, game.getGameState().getPlayers().get(0).getName());
             game.getBettingSystem().resetPot(); // Clear the pot for the next game
             
             // Print out each player's chip count after the round
@@ -70,6 +89,9 @@ public class DetermineWinnerState implements GameStateAction {
             
             // If there is no winner, announce that no one won this round
             System.out.println("No winner this round.");
+            game.setAnnouncement("No winner this round.", 5);
         }
+        // Notify the UI to update all players' cards to show the front side
+        game.notifyGameUpdated();
     }
 }

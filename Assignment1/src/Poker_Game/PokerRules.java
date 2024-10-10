@@ -87,7 +87,7 @@ public class PokerRules {
                 List<Card> allCards = new ArrayList<>(communityCards);
                 allCards.addAll(Arrays.asList(player.getHoleCards()));
                 Hand playerHand = new Hand(allCards);
-                player.setHand(playerHand);
+                
                 
                 // Compare the player's hand with the current best hand
                 int playerRank = evaluateHand(playerHand);
