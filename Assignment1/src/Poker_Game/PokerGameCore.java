@@ -4,6 +4,7 @@
  */
 package Poker_Game;
 
+import Poker_Game.Database.FileManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public abstract class PokerGameCore extends FileManager {
         listeners.add(listener);
     }
 
-    protected void notifyGameUpdated() {
+    public void notifyGameUpdated() {
         for (GameListener listener : listeners) {
             listener.onGameStateUpdated();
         }

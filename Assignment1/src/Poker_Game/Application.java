@@ -4,6 +4,8 @@
  */
 package Poker_Game;
 
+import Poker_Game.Panel.WelcomeMenu;
+
 /**
  *
  * @author Juchang Kim
