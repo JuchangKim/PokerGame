@@ -1,0 +1,14 @@
+billy : [Two of Spades, Two of Clubs, Four of Clubs, Seven of Spades, Nine of Spades, Jack of Clubs, Ace of Hearts] : One Pair , Chips : 930
+Computer 1 : Folded, Chips : 980
+Computer 2 : [Two of Spades, Two of Clubs, Four of Clubs, Eight of Spades, Nine of Spades, Nine of Hearts, Ace of Hearts] : Two Pair , Chips : 1130
+Computer 3 : Folded, Chips : 960
+Computer 4 : Folded, Chips : 1000
+Winner is : Player Computer 2 has a chips of 1130
+
+billy : Folded, Chips : 930
+Computer 1 : [Three of Diamonds, Five of Spades, Seven of Clubs, Nine of Diamonds, Ten of Hearts, Queen of Diamonds, King of Spades] : High Card , Chips : 1520
+Computer 2 : Folded, Chips : 1110
+Computer 3 : Folded, Chips : 920
+Computer 4 : [Three of Hearts, Five of Spades, Seven of Clubs, Nine of Diamonds, Ten of Diamonds, Queen of Diamonds, King of Spades] : High Card , Chips : 520
+Winner is : Player Computer 1 has a chips of 1520
+

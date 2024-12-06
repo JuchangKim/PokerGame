@@ -1,0 +1,25 @@
+Player Name: tim
+Player Balance: 1000
+Number of Wins: 0
+Current Bet: 10
+
+Player Name: Computer 1
+Player Balance: 1000
+Number of Wins: 0
+Current Bet: 10
+
+Player Name: Computer 2
+Player Balance: 1000
+Number of Wins: 0
+Current Bet: 10
+
+Player Name: Computer 3
+Player Balance: 1000
+Number of Wins: 0
+Current Bet: 10
+
+Player Name: Computer 4
+Player Balance: 1000
+Number of Wins: 0
+Current Bet: 10
+

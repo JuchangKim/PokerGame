@@ -1,0 +1,25 @@
+Player Name: billy
+Player Balance: 930
+Number of Win: 0
+Current Bet: 640
+
+Player Name: Computer 1
+Player Balance: 1520
+Number of Win: 1
+Current Bet: 640
+
+Player Name: Computer 2
+Player Balance: 1110
+Number of Win: 1
+Current Bet: 640
+
+Player Name: Computer 3
+Player Balance: 920
+Number of Win: 0
+Current Bet: 640
+
+Player Name: Computer 4
+Player Balance: 520
+Number of Win: 0
+Current Bet: 640
+
