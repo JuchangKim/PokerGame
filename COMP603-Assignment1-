@@ -1,0 +1,490 @@
+[33mcommit 2761301314a4590609ee7d9c2fc186f1acb628c2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mJuchang-Kim-22180242[m[33m, [m[1;31morigin/Juchang-Kim-22180242[m[33m)[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Wed Sep 25 19:02:54 2024 +1200
+
+    Built the modle view controller pattern and implemented card images in each player.
+
+[33mcommit 6f865228544028bacebd17759335912d00e76d34[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Tue Sep 24 00:42:50 2024 +1200
+
+    Updating GUI which is Game Stage Part.
+
+[33mcommit 912f76fe29bcdb990ab8d61a729d31c28f3dd7cb[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Sep 19 16:10:55 2024 +1200
+
+    Updating GameStage.java to make visiul the flow of the game
+
+[33mcommit d6b5a0abd708a170f44642160f993ae6b6f732e9[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Mon Sep 16 19:18:25 2024 +1200
+
+    Organizing value and intregrating panel and command line function.
+
+[33mcommit e29644b487dbaa917f573993eef014d74c7a2276[m
+Merge: a23d515 650ac58
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Mon Sep 16 13:15:08 2024 +1200
+
+    Merge branch 'Billie-Jean-Laing-0783064' of https://github.com/Billie501/COMP603-Assignment1- into Juchang-Kim-22180242
+     this is merging from Bille-Jean to JC to import the GUI frame image of
+     cards.
+
+[33mcommit 650ac581082840472740e2ec54934cb3e78ffad8[m[33m ([m[1;31morigin/Billie-Jean-Laing-0783063[m[33m)[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Thu Sep 12 13:55:40 2024 +1200
+
+    Connecting list of Users Menu to Game Log Menu
+
+[33mcommit 06ce6a5bee72ccbe1af9eb350ed36cbc5fd324e4[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Thu Sep 12 13:47:46 2024 +1200
+
+    GameStage form added
+
+[33mcommit 09d95134ae0f1327c3c6d2e18b82d245fd661d1f[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Tue Sep 10 17:15:14 2024 +1200
+
+    Changes to card Images
+
+[33mcommit e8ad94e1051a35841be6af90c295e5adf2a2acd9[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Tue Sep 10 16:40:10 2024 +1200
+
+    Changes to card Images
+
+[33mcommit 5938c22bd1ecf46270ec3405d031c5e2d8df02f0[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Sat Sep 7 18:17:25 2024 +1200
+
+    Adding Playing Cards
+
+[33mcommit a1f3a966d3e1cb786a8e5417c4a06bf1d0f6c766[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Mon Sep 2 17:30:49 2024 +1200
+
+    UserGameLog updated
+
+[33mcommit 4a57e14218ca1d585fc93dba2bc4c24b696a02aa[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Mon Sep 2 15:49:06 2024 +1200
+
+    Additions to AddPlayerNames and WelcomeMenu
+
+[33mcommit f9000c8cc119a722cae124591f7576ea41a5d5bf[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Fri Aug 30 18:39:39 2024 +1200
+
+    Welcome Menu, Bet Option Menu, Play Again Menu, List of Users Menu
+
+[33mcommit 533031318a6c7c57065da28e647b9fd841bbf0a0[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Fri Aug 30 17:23:46 2024 +1200
+
+    Chips and Card Images
+
+[33mcommit a23d51532aa4821458f72c838fc1f32703fc6d31[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Mon Aug 26 17:55:06 2024 +1200
+
+    WelcomePanel and Chips class
+
+[33mcommit 87ae39c7c0c0e409603d083da107ff24178275f0[m[33m ([m[1;32mJC[m[33m)[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Mon Aug 26 17:17:03 2024 +1200
+
+    Update FileManager.java
+
+[33mcommit 09ff831edce1222ee8741d2b7eef9d5145edb53f[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Mon Aug 26 16:58:20 2024 +1200
+
+    ChatGPT comments
+
+[33mcommit d2deec7d9cd3176191814aeac8665b911b0afdd5[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Mon Aug 26 13:40:58 2024 +1200
+
+    there is explanation about no user when there is no user in the game
+
+[33mcommit c38b64dc4a3b70914d14590001cf0e43afda92a4[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Fri Aug 23 15:56:25 2024 +1200
+
+    there is explanation about no user when there is no user in the game
+
+[33mcommit 92d224e4e0eb1164f66f206c0ec6dd7103969924[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Fri Aug 23 15:50:42 2024 +1200
+
+    there is explanation about no record when the user log is nothing
+
+[33mcommit 20db2054b47f9035e8171f891cdc5fde65b4c453[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Fri Aug 23 14:44:00 2024 +1200
+
+    spelling error
+
+[33mcommit 5384b665126f1af3c2e0811589a7dea9a1339933[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Fri Aug 23 14:35:01 2024 +1200
+
+    Added comment to to Poker CLI
+
+[33mcommit 84c16c70e9c8000a5bb9623f7b716d7bb4815527[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Fri Aug 23 13:33:15 2024 +1200
+
+    Added comments to methods for all classes
+
+[33mcommit 00337b5dd81af5f59ce446c70323bf676851e63c[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 15:34:23 2024 +1200
+
+    Update DetermineWinnerState.java
+
+[33mcommit 36ba302faaa3a595c0dba948028f39da04a00664[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 15:33:28 2024 +1200
+
+    Update FileManager.java
+
+[33mcommit 3d73b20e7cb838abafbb9498f7d163f94cf50a15[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 15:32:46 2024 +1200
+
+    Update InitializeState.java
+
+[33mcommit 793764dafa3bc9c10565ca7a1f98928036f8cceb[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 15:32:30 2024 +1200
+
+    Update Player.java
+
+[33mcommit bf8f8c780f2989b70ed42e9da6f86702d1a4b37a[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 15:32:13 2024 +1200
+
+    Update PokerCLI.java
+
+[33mcommit d6bb8c8db7f366febb2e7b448a36993c07fc4fae[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 15:31:53 2024 +1200
+
+    Update PokerGame.java
+
+[33mcommit 83f536ab3e7ccb52f42ad2a80ba4091eaed7a0c1[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 15:31:37 2024 +1200
+
+    Update PokerRules.java
+
+[33mcommit 7089f30b227d76fe863618de316f31006983fee7[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 12:05:49 2024 +1200
+
+    Update BettingSystem.java
+
+[33mcommit eaced54275cfa94b1a1bee72be01cf253e64f0db[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 12:05:23 2024 +1200
+
+    Update ComputerPlayer.java
+
+[33mcommit bbe65f0efe0f15c6b965a5b118557b2c7f2fa25c[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 12:04:30 2024 +1200
+
+    Update DetermineWinnerState.java
+
+[33mcommit 65b475bb5e075f92c77645b2b368e7495182d353[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 12:04:07 2024 +1200
+
+    Update FileManager.java
+
+[33mcommit fa0c99b881bb9b933dd8943c6c70f4da45c78433[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 12:03:48 2024 +1200
+
+    Update GameState.java
+
+[33mcommit 1ea7d8785db64bb30bc4598fc2b5ba39277f16c6[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 12:03:19 2024 +1200
+
+    Update Hand.java
+
+[33mcommit 07a2bded755e9f44de60c6f24ed624b0535dbbbf[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 12:03:04 2024 +1200
+
+    Update InitializeState.java
+
+[33mcommit 7532cc4a0b0d6a631f9d488f38e5d4255b58acfd[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 12:02:50 2024 +1200
+
+    Update Player.java
+
+[33mcommit c544f78fdb24161975d3b2b4b3123ab5964e713c[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 12:02:37 2024 +1200
+
+    Update PokerCLI.java
+
+[33mcommit 9f23c1547acb7dfe091a63079d9f25cbfb994635[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 12:02:21 2024 +1200
+
+    Update PokerGame.java
+
+[33mcommit 33505b3551b2b791fdbaa1366a400b2c7c81c3de[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 12:02:03 2024 +1200
+
+    Update PokerRules.java
+
+[33mcommit baf3e4f30c2b388d0e0fe14315fcbfb53ecae847[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 02:07:15 2024 +1200
+
+    Update Hand.java
+
+[33mcommit 8813b86dd865325cb7811161a1e45d8843974512[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 02:06:58 2024 +1200
+
+    Update InitializeState.java
+
+[33mcommit 213b8e8febadad8779a93f436f934ef6576c753d[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 02:06:39 2024 +1200
+
+    Update Player.java
+
+[33mcommit bb8c050cffc486e00ea0d0ad9056ba0cbd34f60d[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 02:06:24 2024 +1200
+
+    Update PokerCLI.java
+
+[33mcommit 9d873ce7e2efc19b1471350ef17c1ed642052175[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 02:05:33 2024 +1200
+
+    Update PokerRules.java
+
+[33mcommit 6d3a5a66156b696b99ffddbfc1fe8d37af6fdf28[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 01:49:58 2024 +1200
+
+    Delete src/Poker_Game directory
+
+[33mcommit c60b76a31a9e11ddd16b73bab46b54a7bafe8327[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 01:49:28 2024 +1200
+
+    Delete build/classes/Poker_Game directory
+
+[33mcommit 62cd8e5e1660d44657eac17c22311cd367f4d51b[m
+Merge: fb364cb 11d4bab
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 01:47:34 2024 +1200
+
+    Update project and there are some ambigous about the file manager class which can store 'winner', 'communitycard' which are sure why those are needed to be stored.
+
+[33mcommit fb364cb154675a833a726cf686ff62c4d1885417[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 01:32:23 2024 +1200
+
+    Update project and there are some ambigous about the file manager class which can store 'winner', 'communitycard' which are sure why those are needed to be stored.
+
+[33mcommit 11d4bab8a2b89da7a3686e2f08e939c7dd6ccabb[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 01:27:49 2024 +1200
+
+    Delete src/Poker_Game directory
+
+[33mcommit 6886a17848f93be16bdb7490a9b4858b28ba97d1[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 01:27:40 2024 +1200
+
+    Delete saved_games directory
+
+[33mcommit ec6bedfbe248e73da2f5ef8a5b13a099bfa305bd[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 01:27:30 2024 +1200
+
+    Delete nbproject directory
+
+[33mcommit 920c1f7d9a264e830a2842a43749d544ffb59216[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 01:27:21 2024 +1200
+
+    Delete build/classes directory
+
+[33mcommit 0cbe10aeaf9ff3bc265ab6a0452e829a3f423124[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 01:22:28 2024 +1200
+
+    Update project and there are some ambigous about the file manager class which can store 'winner', 'communitycard' which are sure why those are needed to be stored.
+
+[33mcommit 83f6f2b4d2a3d694ec5e66208b4f4723f9e98022[m
+Merge: 8a88433 75ff1b7
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Aug 22 01:16:43 2024 +1200
+
+    Merge branch 'main' of https://github.com//Billie501/COMP603-Assignment1-
+
+[33mcommit 75ff1b7ac77a46b4f8e2aceeb2241c5884f75afa[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Wed Aug 21 15:54:16 2024 +1200
+
+    Added try and catch to application class
+
+[33mcommit 8a88433c9ea4424ef7b2aef6b109e601e1495d92[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Tue Aug 20 00:12:33 2024 +1200
+
+    Initial commit with project files and updates
+
+[33mcommit c8b03b242694c60bb74606cbf073db6634839273[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Fri Aug 16 11:00:17 2024 +1200
+
+    Updated FileManager Class added 2 additional function: readGameLog() and appendToGameLog() as per assignment requirements although they need to be called into the game somehow
+
+[33mcommit 57d4ff8197eb070ddf8e9def7733e0856a6134b3[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Mon Aug 12 18:59:07 2024 +1200
+
+    Updated FileManager Class and GameState. In GameState I added getWinner() and setWinner()
+
+[33mcommit 6cab85890c72a340e2b98ef1454414dbd0a9b26a[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Tue Aug 6 20:14:15 2024 +1200
+
+    Update PokerGame.java
+
+[33mcommit a58025850b67111b4437fe6e9fad578eb046832f[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Tue Aug 6 20:13:31 2024 +1200
+
+    Update Player.java
+
+[33mcommit 2d2ca6d134aec2e70e822deb0420f98fc765999c[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Tue Aug 6 20:12:07 2024 +1200
+
+    Add files via upload
+
+[33mcommit 6c73ed72cd422532ba04d99e0bfff917fd245371[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Tue Aug 6 20:11:35 2024 +1200
+
+    Update GameState.java
+
+[33mcommit c464c0b6039a70fc68fe64ad9e3ecfed5c87d2cc[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Tue Aug 6 20:10:49 2024 +1200
+
+    Add files via upload
+    
+    Those are the each round behaviour and GameStateAction is interface.
+
+[33mcommit ef9af306cf49f0f8b42c91a35d68629542c6df50[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Tue Aug 6 19:09:08 2024 +1200
+
+    Update BettingSystem.java
+
+[33mcommit 64cb5624ed54741db3fbefd9f1095504fea3250f[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Tue Aug 6 19:08:12 2024 +1200
+
+    Update ComputerPlayer.java
+
+[33mcommit 6fe200cf34c48fb41ebebc9d0da8a3b1caba921d[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Tue Aug 6 19:07:15 2024 +1200
+
+    Update Hand.java
+
+[33mcommit d18b40994357655be182efc32c272d0824520e75[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Tue Aug 6 19:06:22 2024 +1200
+
+    Update Player.java
+
+[33mcommit 8521cb3c76b6858b0864f3d91232108d19243745[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Tue Aug 6 19:05:58 2024 +1200
+
+    Update PokerCLI.java
+
+[33mcommit 53296a404bb67d18a09196d371447c69f6c688d2[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Tue Aug 6 19:05:43 2024 +1200
+
+    Update PokerGame.java
+
+[33mcommit a17d11f792eabbc7aaa4f02708ba58ab9e5ff289[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Mon Aug 5 12:27:54 2024 +1200
+
+    Delete Assignment1/src/Poker_Game/ComputerPlayers.java
+
+[33mcommit 49d1004cd30d16319ae6921c0e30998f24eda562[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Mon Aug 5 12:25:52 2024 +1200
+
+    Update Player.java
+
+[33mcommit f6f1cd4138b99d09fa25d8d36973888cadba374d[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Wed Jul 31 14:01:50 2024 +1200
+
+    Update PokerGame.java
+
+[33mcommit 9965a966ca0239c81f1df7737c68bbb51655ad9d[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Wed Jul 31 14:01:31 2024 +1200
+
+    Update Player.java
+
+[33mcommit 41d9d655849212dfc2bb9f9d395c0beb73c39275[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Wed Jul 31 13:45:38 2024 +1200
+
+    Update PokerGame.java
+    
+    Uploaded porker game class but the when determine the winner still has some error those need to be sort out.
+
+[33mcommit 88ea6eeed3d0a5fd24ee3fccb39ab26967a0dfe3[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Wed Jul 31 11:53:41 2024 +1200
+
+    Updated ComputerPlayer class to remove individual methods and override makeDecision class
+
+[33mcommit 919a35e00ac53f74e3135dad3727abf0d68e84f9[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Wed Jul 31 11:39:57 2024 +1200
+
+    Player class updated with makeDecision method, raise method, fold method, check method, and bet method
+
+[33mcommit 852e6bb8072e9eb0dfea2e34b62977eb9298ab2e[m
+Author: Billie501 <132241423+Billie501@users.noreply.github.com>
+Date:   Wed Jul 31 10:59:07 2024 +1200
+
+    ComputerPlayer class created
+
+[33mcommit d15888279d249c4a44a318a9bc4f34a69b4e2576[m
+Author: JuchangKim <132308875+JuchangKim@users.noreply.github.com>
+Date:   Thu Jul 25 11:45:08 2024 +0900
+
+    Add files via upload
+    
+    This is additional class to control behaviour of the computer players which are not a user player.
