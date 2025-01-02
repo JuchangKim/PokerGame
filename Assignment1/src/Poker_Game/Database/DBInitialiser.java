@@ -36,8 +36,7 @@ public class DBInitialiser {
                         + "ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, "
                         + "USERNAME VARCHAR(50) NOT NULL, "
                         + "CHIPS INT DEFAULT 0, "
-                        + "NUMBER_OF_WINS INT DEFAULT 0)"
-                        + "CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
+                        + "NUMBER_OF_WINS INT DEFAULT 0)";
                 statement.executeUpdate(createUserTable);
                 System.out.println("\"USER\" table created successfully!");
             } else {

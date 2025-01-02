@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Thu Jan 02 23:56:21 NZDT 2025:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0194-26a8-c359-00003d045408 
+Fri Jan 03 00:34:44 NZDT 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0194-26cb-e5e0-00003df05fe8 
 on database directory C:\Users\user\Documents\GitHub\PoKerGame\PokerGame\Assignment1\PokerGameDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@18ef96 
 Loaded from file:/C:/Users/user/Documents/GitHub/PoKerGame/PokerGame/Assignment1/db-derby-10.14.2.0-lib/db-derby-10.14.2.0-lib/lib/derby.jar
 java.vendor=Oracle Corporation

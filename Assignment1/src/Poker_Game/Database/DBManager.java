@@ -61,6 +61,22 @@ public class DBManager {
             // Establish the connection and assign it to the class field
             
             conn = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+            
+            // Create the schema if it doesn't exist
+        try (Statement statement = conn.createStatement()) {
+            String createSchemaQuery = "CREATE SCHEMA POKER";
+            statement.executeUpdate(createSchemaQuery);
+            System.out.println("Schema 'POKER' created successfully.");
+        } catch (SQLException e) {
+            // Schema already exists, ignore
+            if (e.getSQLState().equals("X0Y68")) { // SQLState for "schema already exists"
+                System.out.println("Schema 'POKER' already exists.");
+            } else {
+                throw e; // Rethrow if another error occurred
+            }
+        }
+
+            
             conn.setSchema("POKER");
             System.out.println("Connection established successfully!");
 
