@@ -1,7 +1,7 @@
-Fri Jan 03 00:29:12 NZDT 2025 : Apache Derby Network Server - 10.14.2.0 - (1828579) started and ready to accept connections on port 1527
+Fri Jan 03 01:26:37 NZDT 2025 : Apache Derby Network Server - 10.14.2.0 - (1828579) started and ready to accept connections on port 1527
 ----------------------------------------------------------------
-Fri Jan 03 00:29:14 NZDT 2025:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0194-26c6-d5bf-00002e84394e 
+Fri Jan 03 01:26:37 NZDT 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0194-26fb-640c-00002e84394e 
 on database directory C:\Users\user\Documents\GitHub\PoKerGame\PokerGame\Assignment1\db-derby-10.14.2.0-lib\db-derby-10.14.2.0-lib\lib\PokerGameDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@30946e09 
 Loaded from file:/C:/Users/user/Documents/GitHub/PoKerGame/PokerGame/Assignment1/db-derby-10.14.2.0-lib/db-derby-10.14.2.0-lib/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -12,3 +12,9 @@ os.arch=amd64
 os.version=10.0
 derby.system.home=C:\Users\user\Documents\GitHub\PoKerGame\PokerGame\Assignment1\db-derby-10.14.2.0-lib\db-derby-10.14.2.0-lib\lib
 Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Fri Jan 03 01:28:45 NZDT 2025: Shutting down Derby engine
+----------------------------------------------------------------
+Fri Jan 03 01:28:45 NZDT 2025:
+Shutting down instance a816c00e-0194-26fb-640c-00002e84394e on database directory C:\Users\user\Documents\GitHub\PoKerGame\PokerGame\Assignment1\db-derby-10.14.2.0-lib\db-derby-10.14.2.0-lib\lib\PokerGameDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@30946e09 
+----------------------------------------------------------------

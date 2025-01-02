@@ -1,5 +1,5 @@
-Thu Jan 02 23:26:16 NZDT 2025 : Apache Derby Network Server - 10.14.2.0 - (1828579) started and ready to accept connections on port 1527
-Thu Jan 02 23:26:19 NZDT 2025 Thread[DRDAConnThread_2,5,main] Cleanup action starting
+Fri Jan 03 01:48:36 NZDT 2025 : Apache Derby Network Server - 10.14.2.0 - (1828579) started and ready to accept connections on port 1527
+Fri Jan 03 01:48:37 NZDT 2025 Thread[DRDAConnThread_2,5,main] Cleanup action starting
 java.sql.SQLException: Database 'PokerGameDB' not found.
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
 	at org.apache.derby.impl.jdbc.SQLExceptionFactory.getSQLException(Unknown Source)
@@ -53,7 +53,7 @@ ERROR XJ004: Database 'PokerGameDB' not found.
 	at org.apache.derby.impl.drda.DRDAConnThread.run(Unknown Source)
 ============= end nested exception, level (1) ===========
 Cleanup action completed
-Thu Jan 02 23:26:19 NZDT 2025 Thread[DRDAConnThread_2,5,main] (DATABASE = PokerGameDB), (DRDAID = {1}), Database 'PokerGameDB' not found.
+Fri Jan 03 01:48:37 NZDT 2025 Thread[DRDAConnThread_2,5,main] (DATABASE = PokerGameDB), (DRDAID = {1}), Database 'PokerGameDB' not found.
 ----------------------------------------------------------------
-Thu Jan 02 23:26:31 NZDT 2025: Shutting down Derby engine
+Fri Jan 03 01:48:51 NZDT 2025: Shutting down Derby engine
 ----------------------------------------------------------------
