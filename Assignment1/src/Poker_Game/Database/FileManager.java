@@ -165,26 +165,28 @@ public class FileManager {
     // This method retrieves a list of saved users (by username) from the USER table.
     // Use a subquery to select only the most recent user record
         public static Set<String> getSavedGameFiles() {
-        Set<String> savedGames = new HashSet<>();
+    Set<String> savedGames = new HashSet<>();
 
-        // Simple query to get the most recent usernames without using PARTITION or ROW_NUMBER
-        String query = "SELECT USERNAME FROM \"POKER\".\"USER\" ORDER BY CREATED_AT DESC";
+    String query = "SELECT USERNAME FROM \"USER\" ORDER BY CREATED_AT DESC";
 
-        try ( Connection conn = DBManager.getConnection();  Statement statement = conn.createStatement();  ResultSet rs = statement.executeQuery(query)) {
+    try (Connection conn = DBManager.getConnection();
+         Statement statement = conn.createStatement();
+         ResultSet rs = statement.executeQuery(query)) {
 
-            while (rs.next()) {
-                savedGames.add(rs.getString("USERNAME"));
-            }
-
-            if (savedGames.isEmpty()) {
-                System.out.println("There are no saved games.");
-            }
-        } catch (SQLException e) {
-            System.err.println("Error retrieving saved games: " + e.getMessage());
+        while (rs.next()) {
+            savedGames.add(rs.getString("USERNAME"));
         }
 
-        return savedGames;
+        if (savedGames.isEmpty()) {
+            System.out.println("There are no saved games.");
+        }
+    } catch (SQLException e) {
+        System.err.println("Error retrieving saved games: " + e.getMessage());
     }
+
+    return savedGames;
+}
+
     
 
     // This method creates a new user save file in the database.

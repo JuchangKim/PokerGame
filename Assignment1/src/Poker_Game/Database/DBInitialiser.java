@@ -36,7 +36,8 @@ public class DBInitialiser {
                         + "ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, "
                         + "USERNAME VARCHAR(50) NOT NULL, "
                         + "CHIPS INT DEFAULT 0, "
-                        + "NUMBER_OF_WINS INT DEFAULT 0)";
+                        + "NUMBER_OF_WINS INT DEFAULT 0)"
+                        + "CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
                 statement.executeUpdate(createUserTable);
                 System.out.println("\"USER\" table created successfully!");
             } else {
@@ -58,55 +59,67 @@ public class DBInitialiser {
             } else {
                 System.out.println("GAMELOG table already exists.");
             }
-            // ... (GAME table creation remains the same)
+            // Check and create "GAME" table if it doesn't exist
+        if (!tableExists(statement, "GAME")) {
+            String createGameTable = "CREATE TABLE GAME (" +
+                    "ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, " +
+                    "USER_ID INT NOT NULL, " +
+                    "USER_CHIPS INT NOT NULL, " +
+                    "COMPUTER_PLAYER_NAME VARCHAR(50) NOT NULL, " +
+                    "COMPUTER_CHIPS INT NOT NULL, " +
+                    "GAME_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+                    "FOREIGN KEY (USER_ID) REFERENCES \"USER\"(ID))";
+            statement.executeUpdate(createGameTable);
+            System.out.println("GAME table created successfully!");
+        } else {
+            System.out.println("GAME table already exists.");
+        }
         } catch (SQLException e) {
             System.err.println("Error creating tables: " + e.getMessage());
             e.printStackTrace();
         }
     }
-    public void alterTablesAddDateColumn() {
-    try (Statement statement = conn.createStatement()) {
-        // Existing code for adding columns...
-
-        // Check and drop the game_info column if it exists
-        if (columnExists("GAME", "GAME_INFO")) {
-            String dropGameInfoColumn = "ALTER TABLE GAME DROP COLUMN GAME_INFO";
-            statement.executeUpdate(dropGameInfoColumn);
-            System.out.println("Dropped GAME_INFO column from GAME table.");
-        }
-    } catch (SQLException e) {
-        System.err.println("Error altering tables to drop columns: " + e.getMessage());
-        e.printStackTrace();
-    }
-}
-    
 //    public void alterTablesAddDateColumn() {
-//        try (Statement statement = conn.createStatement()) {
-//            // Add DATE column to USER table
-//            if (!columnExists("USER", "CREATED_AT")) {
-//                String alterUserTable = "ALTER TABLE \"USER\" ADD COLUMN CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
-//                statement.executeUpdate(alterUserTable);
-//                System.out.println("Added CREATED_AT column to USER table.");
-//            }
-//
-//            // Add DATE column to GAMELOG table
-//            if (!columnExists("GAMELOG", "LOG_DATE")) {
-//                String alterGameLogTable = "ALTER TABLE GAMELOG ADD COLUMN LOG_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
-//                statement.executeUpdate(alterGameLogTable);
-//                System.out.println("Added LOG_DATE column to GAMELOG table.");
-//            }
-//
-//            // Add DATE column to GAME table
-//            if (!columnExists("GAME", "GAME_DATE")) {
-//                String alterGameTable = "ALTER TABLE GAME ADD COLUMN GAME_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
-//                statement.executeUpdate(alterGameTable);
-//                System.out.println("Added GAME_DATE column to GAME table.");
-//            }
-//        } catch (SQLException e) {
-//            System.err.println("Error altering tables to add date columns: " + e.getMessage());
-//            e.printStackTrace();
+//    try (Statement statement = conn.createStatement()) {
+//        // Add `CREATED_AT` column to `USER` table if it doesn't exist
+//        if (!columnExists("USER", "CREATED_AT")) {
+//            String alterUserTable = "ALTER TABLE \"USER\" ADD COLUMN CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
+//            statement.executeUpdate(alterUserTable);
+//            System.out.println("Added CREATED_AT column to USER table.");
 //        }
+//    } catch (SQLException e) {
+//        System.err.println("Error altering tables to add date columns: " + e.getMessage());
+//        e.printStackTrace();
 //    }
+//}
+    
+    public void alterTablesAddDateColumn() {
+        try (Statement statement = conn.createStatement()) {
+            // Add DATE column to USER table
+            if (!columnExists("USER", "CREATED_AT")) {
+                String alterUserTable = "ALTER TABLE \"USER\" ADD COLUMN CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
+                statement.executeUpdate(alterUserTable);
+                System.out.println("Added CREATED_AT column to USER table.");
+            }
+
+            // Add DATE column to GAMELOG table
+            if (!columnExists("GAMELOG", "LOG_DATE")) {
+                String alterGameLogTable = "ALTER TABLE GAMELOG ADD COLUMN LOG_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
+                statement.executeUpdate(alterGameLogTable);
+                System.out.println("Added LOG_DATE column to GAMELOG table.");
+            }
+
+            // Add DATE column to GAME table
+            if (!columnExists("GAME", "GAME_DATE")) {
+                String alterGameTable = "ALTER TABLE GAME ADD COLUMN GAME_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
+                statement.executeUpdate(alterGameTable);
+                System.out.println("Added GAME_DATE column to GAME table.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error altering tables to add date columns: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
        
     // Method to check if a column exists in a table
     public boolean columnExists(String tableName, String columnName) throws SQLException {

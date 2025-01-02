@@ -18,7 +18,7 @@ public class DBManager {
     
     private static final String USER_NAME = "poker"; //your DB username
     private static final String PASSWORD = "poker"; //your DB password
-    private static final String URL = "jdbc:derby:PokerGameEmbd; create=true";  //url of the DB host
+    private static final String URL = "jdbc:derby:PokerGameDB;create=true";  //url of the DB host
 
     private static Connection conn = null;
 

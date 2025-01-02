@@ -3,32 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
-            <file>file:/C:/Users/billi/OneDrive/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/Card.java</file>
-            <file>file:/C:/Users/billi/OneDrive/Documents/GitHub/COMP603-Assignment1-/Assignment1/test/Poker_Game/CardIT.java</file>
-            <file>file:/C:/Users/billi/OneDrive/Documents/GitHub/COMP603-Assignment1-/Assignment1/test/Poker_Game/HandIT.java</file>
-=======
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/PlayAgainMenu.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/CommunityCardsPanel.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/ControlButtonPanel.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/InitializeState.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/DealTurnState.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/DealRiverState.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/FileManager.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/PokerController.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/GameStage.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/PokerCLI.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/Player.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/CardDeckPanel.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/DealFlopState.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/PlayerPanel.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/GameState.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/BettingPotPanel.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/AnnouncementPanel.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/ExitButtonPanel.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/AddPlayerNames.java</file>
-            <file>file:/C:/Users/user/Documents/GitHub/COMP603-Assignment1-/Assignment1/src/Poker_Game/PokerGame.java</file>
->>>>>>> Stage_Refactor
+            <file>file:/C:/Users/user/Documents/GitHub/PoKerGame/PokerGame/Assignment1/src/Poker_Game/Database/FileManager.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/PoKerGame/PokerGame/Assignment1/src/Poker_Game/Database/DBInitialiser.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/PoKerGame/PokerGame/Assignment1/src/Poker_Game/Database/DBManager.java</file>
+            <file>file:/C:/Users/user/Documents/GitHub/PoKerGame/PokerGame/Assignment1/src/Poker_Game/PokerCLI.java</file>
         </group>
     </open-files>
 </project-private>
